@@ -4,7 +4,6 @@ import json
 
 sys.path.append(os.path.split(os.path.abspath(__name__))[0].rsplit(os.sep, 0)[0])
 import livewebsocket
-import configs
 
 
 def test_dm_list():

@@ -3,7 +3,7 @@ import json
 import msgs
 from websockets import server
 import logging
-import logger
+from depends import logger
 
 dm_dic = []  # 弹幕列表
 connect_list = set()  # 连接合集

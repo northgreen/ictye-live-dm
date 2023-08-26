@@ -2,12 +2,10 @@ from aiohttp import web
 import livewebsocket
 import asyncio
 import msgs
-import configs
 import json
 import logging
-import logger
+from depends import logger, configs
 import pluginsystem
-import inspect
 
 confi = None
 

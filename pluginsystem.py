@@ -1,7 +1,6 @@
 import asyncio
-import logger
+from depends import logger, configs
 import logging
-import configs
 import os
 import importlib
 import plugin_erroers
