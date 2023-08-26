@@ -1,5 +1,5 @@
 import logging
-import configs
+from depends import configs
 
 def logging_setup():
     config = configs.config()
