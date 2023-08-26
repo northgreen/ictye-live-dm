@@ -60,6 +60,7 @@ def run_server(configs):
 
 
 config = configs.config()
+pluginsystem.confi = config
 
 logger.logging_setup()
 loggers = logging.getLogger(__name__)

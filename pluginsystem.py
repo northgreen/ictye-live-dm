@@ -1,16 +1,17 @@
 import asyncio
-from depends import logger, configs
+from depends import logger
 import logging
 import os
 import importlib
 import plugin_erroers
 import importlib.util
 
+confi = None
+
 
 class Plugin:
     def __init__(self):
 
-        confi = configs.config()
 
         mlogger = logging.getLogger(__name__)
 

@@ -3,4 +3,4 @@ rubbis/
 __pycache__/
 .hintrc/
 .vscode/
-.hintrc
+/.hintrc
