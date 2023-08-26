@@ -1,0 +1,5 @@
+rubbis/
+.idea/
+__pycache__/
+.hintrc/
+.vscode/
