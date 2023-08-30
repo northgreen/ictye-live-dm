@@ -22,13 +22,35 @@ async def http_socket(request):
     return web.Response(text=json.dumps(msgs.socket_responce(confi).to_dict()))
 
 
+async def http_plugin(request):
+    log = logging.getLogger(__name__)
+    log.info(f"request for {request.match_info['name']}")
+    return web.FileResponse(path=f"web/plugin/{request.match_info['name']}")
+
+
+async def http_style(request):
+    log = logging.getLogger(__name__)
+    log.info(f"request for {request.match_info['name']}")
+    return web.FileResponse(path=f"web/style/{request.match_info['name']}")
+
+
+async def http_js(request):
+    log = logging.getLogger(__name__)
+    log.info(f"request for {request.match_info['name']}")
+    return web.FileResponse(path=f"web/js/{request.match_info['name']}")
+
+
 async def http_server(configs):
     # http服务器
 
     print("http server started")
 
     app = web.Application()
-    app.add_routes([web.get("/", http_handler), web.get("/websocket", http_socket)])
+    app.add_routes([web.get("/", http_handler),
+                    web.get("/websocket", http_socket),
+                    web.get("/plugin/{name}", http_plugin),
+                    web.get("/style/{name}", http_style),
+                    web.get("/js/{name}", http_js)])
 
     runner = web.AppRunner(app)
     await runner.setup()
@@ -37,7 +59,6 @@ async def http_server(configs):
 
 
 async def message_loop():
-    print("aaaaaa")
     while True:
         msgs = await livewebsocket.pluginsystem.get_plugin_message()
         livewebsocket.dm_dic.extend(msgs)

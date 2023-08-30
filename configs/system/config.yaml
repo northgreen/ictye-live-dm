@@ -1,5 +1,5 @@
 #端口
-port: 4566
+port: 12345
 host: "127.0.0.1"
 #弹幕姬前端页面
 index: "./web/living room dm.html"
@@ -13,7 +13,7 @@ plugins:
   others_plugin:
     -
 
-#调试开关，非开发人员勿动
+#调试开关，非开发人员勿动(动吧，随便动（bushi)
 debug: 1
 
 #日志级别
