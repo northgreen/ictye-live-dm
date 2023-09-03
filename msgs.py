@@ -47,3 +47,20 @@ class socket_responce:
     def to_dict(self):
         return {"code": self.code,
                 "local": self.local}
+
+class msg_who:
+    def __init__(self,type,name,face):
+        self.type = type
+        self.name = name
+        self.face = face
+
+    def to_dict(self):
+        return {"name":self.name,"type":self.type,"face":self.face}
+
+class msg_picl:
+    def __init__(self,border,pic_url):
+        self.border = border
+        self.pic_url = pic_url
+
+    def to_dict(self):
+        return {"border":self.border,"pic_url":self.pic_url}
