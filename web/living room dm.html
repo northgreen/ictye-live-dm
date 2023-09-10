@@ -3,9 +3,15 @@
 <head>
     <meta charset="utf-8">
     <title>[dm]</title>
-    <link rel="stylesheet" type="text/css" href="style/defult_style.css">
     <script type="text/javascript" src="js/requirejs.js"></script>
     <script type="text/javascript" src="js/mainjs.js"></script>
+    <script type="text/javascript">
+        require(["plugin/defult_plugin_mather"],function (defult){
+            defult.ok();
+        });
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="style/defult_style.css">
 </head>
 
 <body>
