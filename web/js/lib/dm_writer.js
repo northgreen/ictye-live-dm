@@ -1,7 +1,5 @@
 define(
-    function($) {
-        console.log("defult plugin mather is ready");
-
+    function () {
         var ok = function (){console.log("debug:defult_ok")}; //测试用函数
 
             //计算弹幕存在时间
@@ -20,7 +18,7 @@ define(
         }
 
         //处理info消息
-        var _create_info = function (msgbody) {
+        var create_info = function (msgbody) {
                 /*创建消息*/
                 msgbody = ms.message_body;
                 let msg = `<div class="special-info">
@@ -39,7 +37,7 @@ define(
         }
 
         //处理弹幕消息
-        var _create_dm = function (msgbody) {
+        var create_dm = function (msgbody) {
                  /*创建普通弹幕*/
                  /*
                    * 身份等级：
@@ -103,28 +101,9 @@ define(
 
         }
 
-        //用于弹幕回调，可以处理
-        var create_dm = function (msg) {
-
-
-                if (ms.message_class === "default"){
-                        if(ms.msgtype === "dm"){
-                                _create_dm(msg.message_body)
-                        }
-                        else if (ms.msgtype === "info"){
-                                _create_info(msg.message_body)
-                        }
-                        else {
-                                msg = "ok2";
-                        }
-                }
-        };
-
-
-        // 暴露接口
         return {
-                ok: ok,
-                create_dm: create_dm
-        };
-}
+            create_info:create_info,
+            create_dm:create_dm
+        }
+    }
 )

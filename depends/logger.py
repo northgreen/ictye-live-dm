@@ -1,8 +1,5 @@
 import logging
-from depends import configs
 
-
-def logging_setup():
-    config = configs.config()
+def logging_setup(config):
 
     logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s,%(name)s] %(levelname)s : %(message)s")

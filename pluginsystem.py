@@ -6,12 +6,11 @@ import importlib
 import plugin_erroers
 import importlib.util
 
-confi = None
+confi = {}  # 配置
 
 
 class Plugin:
     def __init__(self):
-
 
         mlogger = logging.getLogger(__name__)
 
@@ -35,7 +34,7 @@ class Plugin:
                     else:
                         raise plugin_erroers.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
             except IndexError as e:
-                mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
+                mlogger.error(f"failed to import plugin :\n{plugin_name:{str(e)}}")
 
         # 导入额外插件
         for plugin_file in confi["plugins"]["others_plugin"]:
@@ -54,7 +53,7 @@ class Plugin:
                     else:
                         raise plugin_erroers.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
             except ImportError as e:
-                mlogger.error(f"faild to import plugin {plugin_name:{str(e)}}")
+                mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
 
     async def get_plugin_message(self):
         # 消息提取回环
@@ -63,7 +62,6 @@ class Plugin:
             async for messages in plugin:
                 message_list.append(messages)
         return message_list
-
 
     async def message_analyzer(self, message):
         # 漫游消息映射插件
@@ -114,4 +112,4 @@ class Plugin:
         self.analyzer_plugin_list.remove(obj)
 
 
-logger.logging_setup()
+logger.logging_setup(confi)

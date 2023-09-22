@@ -8,7 +8,7 @@ from depends import logger
 dm_dic = []  # 弹幕列表
 connect_list = set()  # 连接合集
 pluginsystem = None
-
+config = {}
 
 class dm:
     """
@@ -36,7 +36,7 @@ class dm:
 
 
 async def dm_send(socket):
-    logger.logging_setup()
+    logger.logging_setup(config)
     loggers = logging.getLogger(__name__)
 
     loggers.info("socket connected,we will push dm to client")
@@ -104,7 +104,7 @@ async def websocket_main(configs):
     websocket主函数，通过configs传递参数字典
     """
 
-    logger.logging_setup()
+    logger.logging_setup(configs)
     loggers = logging.getLogger(__name__)
     loggers.info("websocket server started")
     await server.serve(websockets, configs["host"], configs["websocket"]["port"])
