@@ -48,19 +48,35 @@ class socket_responce:
         return {"code": self.code,
                 "local": self.local}
 
+
 class msg_who:
-    def __init__(self,type,name,face):
-        self.type = type
+    def __init__(self, usr_type, name, face):
+        self.type = usr_type
         self.name = name
         self.face = face
 
     def to_dict(self):
-        return {"name":self.name,"type":self.type,"face":self.face}
+        return {"name": self.name, "usr_type": self.type, "face": self.face}
+
 
 class msg_picl:
-    def __init__(self,border,pic_url):
+    def __init__(self, border, pic_url):
         self.border = border
         self.pic_url = pic_url
 
     def to_dict(self):
-        return {"border":self.border,"pic_url":self.pic_url}
+        return {"border": self.border, "pic_url": self.pic_url}
+
+
+class msg_box:
+    def __init__(self,message_class:str,
+                 msg_type:str,
+                 message_body:dict):
+        self.message_class = message_class
+        self.msg_type = msg_type
+        self.message_body = message_body
+
+    def to_dict(self):
+        return {"message_class":self.message_class,
+                "msg_type":self.msg_type,
+                "message_body":self.message_body}

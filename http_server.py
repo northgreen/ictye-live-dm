@@ -12,10 +12,15 @@ async def http_handler(request):  # 主文件请求
     return web.FileResponse(path="web/living room dm.html", status=200)
 
 
-async def http_socket(request):
+async def http_socket_get(request):
     log = logging.getLogger(__name__)
     log.info("return for socket")
     return web.Response(text=json.dumps(msgs.socket_responce(config).to_dict()))
+
+
+async def http_websocket(request):
+    ws = "ws://{}:{}".format(config["host"], config["websocket"]["port"])
+    return web.WebSocketResponse
 
 
 async def http_plugin(request):
@@ -55,12 +60,13 @@ async def http_server(configs):
 
     app = web.Application()
     app.add_routes([web.get("/", http_handler),
-                    web.get("/websocket", http_socket),
+                    web.get("/get_websocket", http_socket_get),
                     web.get("/js/plugin/{name}", http_plugin),
                     web.get("/style/{name}", http_style),
                     web.get("/js/{name}", http_js),
                     web.get("/js/lib/{name}", http_lib),
-                    web.get("/js/script/{name}", http_script)
+                    web.get("/js/script/{name}", http_script),
+                    web.get("/websocket", http_websocket)
                     ])
 
     runner = web.AppRunner(app)

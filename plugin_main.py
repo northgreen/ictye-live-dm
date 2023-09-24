@@ -1,7 +1,7 @@
 import plugin_erroers
 import msgs
 import asyncio
-
+import typing
 
 class Plugin_Main:
 
@@ -24,7 +24,9 @@ class Plugin_Main:
         raise plugin_erroers.UnexpactedPluginMessage('插件入口方法没有实现')
 
     async def plugin_main(self):
-        # 插件名义上的主方法，会被调用，但是没有实际作用，此方法停止时插件也会被视为运行完毕
+        """
+        插件的主方法，此方法停止时插件也会被视为运行完毕
+        """
         pass
 
     def plugin_type(self):
@@ -33,6 +35,7 @@ class Plugin_Main:
         return self.type
 
     # 通过异步迭代器的方法，插件能向软件发送消息
+    @typing.final
     async def __anext__(self):
         if self.plugin_type() == "message":
             if self.message_list:
@@ -47,7 +50,6 @@ class Plugin_Main:
     async def message_loop(self, message):
         """
         插件获取消息消息回环，将会接受消息
-
         """
         if self.plugin_type() == "analyzer":
             raise plugin_erroers.UnexpactedPluginMessage("不符合插件类型的插件实现")

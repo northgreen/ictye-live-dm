@@ -17,13 +17,17 @@ class Plugin:
         self.message_plugin_list = []
         self.analyzer_plugin_list = []
 
+        # FIXME(ictye): 存在插件不能项目化的缺陷
+
         # 加载默认插件目录
         for plugin_file in os.listdir(confi['plugins']['default_path']):
             try:
                 if os.path.splitext(plugin_file)[1] == ".py":
                     plugin_name = os.path.splitext(plugin_file)[0]
                     pathname = os.path.basename(confi['plugins']['default_path'])
+
                     mlogger.info(f"found a plugin '{plugin_name}' in {pathname}")
+
                     plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
                     plugin_class = getattr(plugin_module, "Plugin_Main")
                     plugin_interface = plugin_class()
@@ -76,10 +80,11 @@ class Plugin:
         # 消息过滤
         message_filtered = message
         for plugins in self.analyzer_plugin_list:
-            try:
-                plugins.message_filter(message_filtered)
-            except Exception as e:
-                mlogger.error(f"a error is happened:{str(e)}")
+            if not plugins:
+                try:
+                    plugins.message_filter(message_filtered)
+                except Exception as e:
+                    mlogger.error(f"a error is happened:{str(e)}")
         return message_filtered
 
     async def plugin_main_runner(self):

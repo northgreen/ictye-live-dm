@@ -1,6 +1,6 @@
 define(["../lib/dm_writer"],
     function(dm_writer) {
-        console.log("defult plugin mather is ready");
+        console.log("defult plugin mather is ready")
 
         var plugin_init = function () {
                 console.log("debug:defult_ok")
@@ -23,6 +23,6 @@ define(["../lib/dm_writer"],
         return {
                 dm_halder: dm_halder,
                 plugin_init:plugin_init
-        };
+        }
 }
 )

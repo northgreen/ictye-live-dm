@@ -45,10 +45,10 @@ async def dm_send(socket):
 
     async for dms in dmlist:
         if not socket.closed:
-            mdm = pluginsystem.Plugin.message_filter(dms)
-            pluginsystem.Plugin.message_analyzer(mdm)
-            loggers.info(f"sending message {mdm.to_dict()}")
-            await socket.send(mdm.to_dict)
+            mdm = await pluginsystem.message_filter(dms)
+            await pluginsystem.message_analyzer(mdm)
+            loggers.info(f"sending message {mdm}")
+            await socket.send(json.dumps(mdm))
         else:
             asyncio.current_task().cancel()
             try:

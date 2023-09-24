@@ -5,13 +5,18 @@ if __name__ == "__main__":
     import pluginsystem
     import livewebsocket
     import asyncio
+    import os
+
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
     async def message_loop():
         while True:
             msgs = await plugin_sys.get_plugin_message()
+            logging.getLogger(__name__).debug(f"geting message {msgs}")
             livewebsocket.dm_dic.extend(msgs)
-            await asyncio.sleep(5)
+            await asyncio.sleep(2)
+
 
     def run_server():
         loop = asyncio.get_event_loop()
@@ -24,19 +29,21 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             pass
 
+
     # 获取配置
     config = configs.config()
     # 传递配置
     http_server.config = config
     pluginsystem.confi = config
     livewebsocket.config = config
-    #获取插件系统
+    # 获取插件系统
     plugin_sys = pluginsystem.Plugin()
-    #获取logger
+    livewebsocket.pluginsystem = plugin_sys
+    # 获取logger
     logger.logging_setup(config)
     loggers = logging.getLogger(__name__)
 
-    #启动服务器
+    # 启动服务器
     loggers.info("project starting")
     loggers.info("金克拉，你有了吗？")
     run_server()
