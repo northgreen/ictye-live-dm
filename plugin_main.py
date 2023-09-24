@@ -2,10 +2,16 @@ import plugin_erroers
 import msgs
 import asyncio
 import typing
+import depends.configs
+
 
 class Plugin_Main:
 
+    @typing.final
     def __init__(self):
+        """
+        不要用这个而是用plugin_init来进行插件的初始化
+        """
         self.type = None
         self.stop = 0
         if self.plugin_type() == "message":
@@ -29,24 +35,6 @@ class Plugin_Main:
         """
         pass
 
-    def plugin_type(self):
-        if not self.type:
-            self.type = self.plugin_init()
-        return self.type
-
-    # 通过异步迭代器的方法，插件能向软件发送消息
-    @typing.final
-    async def __anext__(self):
-        if self.plugin_type() == "message":
-            if self.message_list:
-                return self.message_list.pop(0)
-            else:
-                raise StopAsyncIteration()
-
-    def __aiter__(self):
-        if self.plugin_type() == "message":
-            return self
-
     async def message_loop(self, message):
         """
         插件获取消息消息回环，将会接受消息
@@ -61,8 +49,36 @@ class Plugin_Main:
         """
         return message
 
+    @typing.final
+    def __aiter__(self):
+        if self.plugin_type() == "message":
+            return self
+
+    @typing.final
     def plugin_stop(self):
         asyncio.current_task().cancel()
 
     def plugin_callback(self):
         print(f"plugin is done")
+
+    @typing.final
+    def plugin_getconfig(self):
+        """
+        获取配置
+        """
+        return depends.configs.config()
+
+    # 通过异步迭代器的方法，插件能向软件发送消息
+    @typing.final
+    async def __anext__(self):
+        if self.plugin_type() == "message":
+            if self.message_list:
+                return self.message_list.pop(0)
+            else:
+                raise StopAsyncIteration()
+
+    @typing.final
+    def plugin_type(self):
+        if not self.type:
+            self.type = self.plugin_init()
+        return self.type
