@@ -1,6 +1,5 @@
 import json
 
-
 import plugin_main
 import msgs
 import asyncio
@@ -20,21 +19,28 @@ class Plugin_Main(plugin_main.Plugin_Main):
 
         def create_dm():
             message_list = ["一转九五三六", "好哎", "挖，主播好卡哇伊", "恭喜恭喜"]
-            return msgs.dm(message_list[random.randint(0, 3)],
+            return msgs.dm(random.choice(message_list),
                            create_user()).to_dict()
 
         def create_info():
-            pass
+            message_list = ["一转九五三六", "好哎", "挖，主播好卡哇伊", "恭喜恭喜"]
+            pic = ["a", "b", "c"]
+            return msgs.info(random.choice(message_list),
+                             create_user(),
+                             msgs.pic(random.choice([True, False]),
+                                      random.choice(pic)).to_dict()
+                             ).to_dict()
 
         loop = 1000
         while not loop == 0:
             loop = loop - 1
             print("已经产生一个消息")
-            # if random.randint(0,1) == 0:
-            if True:
+            if random.choice([True, False]):
+                print("msg")
                 msg = msgs.msg_box("default", "dm", create_dm()).to_dict()
             else:
-                create_info()
+                print("info")
+                msg = msgs.msg_box("default", "info", create_info()).to_dict()
             self.message_list.append(msg)
             await asyncio.sleep(3)
 

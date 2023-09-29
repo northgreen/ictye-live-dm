@@ -40,12 +40,12 @@ define(["crypto-js/md5"],
         var create_info = function (msgbody) {
                 /*创建消息*/
                 let msg = `<div class="special-info">
-                            <img src="./usrico.png" class="infousrico">
+                            <img src="${msgbody.who.face}" class="infousrico">
                                 <div class="info-text" class="rightimg">
                                    ${msgbody.msg} 
                                 </div>
-                                <div class="rightimg-nobother">
-                                    <img src="./小花花.png.png" class="rightimg">
+                                <div class="${msgbody.pic.border?"rightimg-bother":"rightimg_noborder"}">
+                                    <img src="${msgbody.pic.pic_url}" class="rightimg">
                                 </div>
                         </div>`
                 let time

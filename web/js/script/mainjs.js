@@ -64,6 +64,6 @@ define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
         }
     }
 
-    window.onload = main
+    main()
     }
 )
