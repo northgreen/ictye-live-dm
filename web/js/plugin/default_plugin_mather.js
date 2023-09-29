@@ -6,15 +6,17 @@ define(["../lib/dm_writer"],
                 console.log("debug:defult_ok")
         }
 
-        var dm_halder = function (message) {
-                if(ms.msgtype === "dm"){
-                        dm_writer.create_dm(msg.message_body)
+        var dm_halder = function (ms) {
+                if(ms.msg_type === "dm"){
+                        dm_writer.create_dm(ms.message_body)
+                        console.debug("creating dm"+ms.message_body)
                 }
-                else if (ms.msgtype === "info"){
-                        dm_writer.create_info(msg.message_body)
+                else if (ms.msg_type === "info"){
+                        dm_writer.create_info(ms.message_body)
+                        console.debug("creating dm"+ms.message_body)
                 }
                 else {
-                        return msg
+                        return ms
                 }
         }
 

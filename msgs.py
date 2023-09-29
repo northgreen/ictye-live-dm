@@ -64,11 +64,11 @@ class socket_responce:
 
 
 class msg_who:
-    def __init__(self, usr_type: int,
+    def __init__(self, type: int,
                  name: str,
                  face: str):
 
-        self.type = usr_type
+        self.type = type
         self.name = name
         self.face = face
 

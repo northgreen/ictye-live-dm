@@ -1,26 +1,44 @@
-define(
-    function () {
+require.config({
+  packages: [
+        {
+            name: 'crypto-js',
+            location: 'https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/',
+            main: 'index'
+        }
+    ]
+});
+define(["crypto-js/md5"],
+    function (md5) {
         var ok = function (){console.log("debug:defult_ok")}; //测试用函数
 
             //计算弹幕存在时间
-        var make_time = function (content = ""){return content.message_body.time === void 0 ? content.message_body.time : content.message_body.msg.length * 5}
+        var make_time = function (content = ""){return  content.length}
 
             //添加弹幕
         var __add_element = function (content = "",msg_time){
 
-                let id = Math.round(Math.random() * 1000000000)
+                let id = md5(Math.round(Math.random() * 1000000000).toString() + content)
+                console.log("id:"+id)
 
                 /*创建元素到dom*/
                 let dm = document.createElement("div")
+                dm.setAttribute("id",id)
                 dm.innerHTML = content
                 let body = document.getElementsByClassName("danmuji")[0]
                 body.appendChild(dm)
+                
+                setTimeout(function (id = Number,element) {
+                    dm.classList.add("faded_out")
+                    dm.addEventListener("animationend",function () {
+                        dm.parentElement.removeChild(dm)
+                        console.info("removed "+id)
+                    })
+                },msg_time*1000,id,dm)
         }
 
         //处理info消息
         var create_info = function (msgbody) {
                 /*创建消息*/
-                msgbody = ms.message_body
                 let msg = `<div class="special-info">
                             <img src="./usrico.png" class="infousrico">
                                 <div class="info-text" class="rightimg">
@@ -30,8 +48,12 @@ define(
                                     <img src="./小花花.png.png" class="rightimg">
                                 </div>
                         </div>`
-
-                let time = make_time(msgbody.msg)
+                let time
+                if ("time" in msgbody){
+                    time = msgbody.time
+                }else {
+                    time = make_time(msgbody.msg)
+                }
                 __add_element(msg,time)
 
         }
@@ -51,7 +73,7 @@ define(
                  */
             let usr
 
-            switch (msgbody.who.usr_type) {
+            switch (msgbody.who.type) {
                 case 0:
                     usr = "ptrect"
                     break
@@ -74,6 +96,7 @@ define(
                     usr = "zbrect"
                     break
                 default:
+                    usr = "ptrect"
 
             }
 
@@ -81,7 +104,7 @@ define(
                            <div class="dmlaft">
                                <div class="lbox" >
                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="33" height="31">
-                                       <rect width="100%" height="100%" class={usr}/>
+                                       <rect width="100%" height="100%" class=${usr} />
                                    </svg>
                                </div>
 
@@ -94,8 +117,12 @@ define(
                            ${msgbody.msg}
                        </div>
                    </div>`;
-
-                 let time = make_time(msgbody.msg)
+                let time
+                 if ("time" in msgbody){
+                     time = msgbody.time
+                 }else {
+                     time = make_time(msgbody.msg)
+                 }
                  __add_element(msg,time)
 
         }

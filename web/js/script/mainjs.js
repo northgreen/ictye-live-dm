@@ -2,7 +2,7 @@ require.config({
     baseUrl:"/"
 })
 define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
-    function ($){
+    function ($,pm){
     function main()
     {
                 console.log("lod ready")
@@ -44,11 +44,15 @@ define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
                     console.info("connect to seriver success")
                     connect_ok = 1
                 }else if (connect_ok === 1) {
-                    let data
-                    data = $.create_dm(event.data) //处理标准消息
-                    if (!data) {
-                        //TODO:处理非标准消息
+                    console.info("cok is "+event.data)
+                    let msg = JSON.parse(event.data)
+                    if (msg.message_class === "default"){
+                        let data = $.dm_halder(msg)
+                        if (data !== void 0) {
+                            //TODO:处理非标准消息
+                        }
                     }
+
                 }
             })
             socket.onopen=function(){
@@ -60,6 +64,6 @@ define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
         }
     }
 
-    window.onload=main()
+    window.onload = main
     }
 )

@@ -1,5 +1,6 @@
 define(
     function (){
+        console.info("plugin system is ready")
         let plugin_load = function (){
             //TODO:插件加载
         }
@@ -10,7 +11,7 @@ define(
 
         return {
             plugin_load: plugin_load,
-            message_hader: message_hader
+            message_halders: message_hader
         }
     }
 )

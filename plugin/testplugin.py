@@ -15,7 +15,7 @@ class Plugin_Main(plugin_main.Plugin_Main):
         def create_user():
             usrname_list = ["guest1", "guest2", "guest3"]
             usericon_list = ["ico1", "ico2", "ico3"]
-            return msgs.msg_who(random.randint(1, 6), usrname_list[random.randint(0, 2)],
+            return msgs.msg_who(random.randint(0, 6), usrname_list[random.randint(0, 2)],
                                 usericon_list[random.randint(0, 2)]).to_dict()
 
         def create_dm():
@@ -36,7 +36,7 @@ class Plugin_Main(plugin_main.Plugin_Main):
             else:
                 create_info()
             self.message_list.append(msg)
-            await asyncio.sleep(10)
+            await asyncio.sleep(3)
 
     def plugin_callback(self):
         print(f"plugin {__name__} is done")
