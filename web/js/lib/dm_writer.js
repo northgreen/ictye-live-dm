@@ -70,7 +70,7 @@ define(["crypto-js/md5"],
                   * 4 ：总督/高级付费用户
                   * 5 ：管理员/房管
                   * 6 ：主播
-                 */
+            */
             let usr
 
             switch (msgbody.who.type) {
