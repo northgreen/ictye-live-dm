@@ -1,9 +1,9 @@
 define(["../lib/dm_writer"],
     function(dm_writer) {
-        console.log("defult plugin mather is ready")
+        console.log("default plugin mather is ready")
 
         var plugin_init = function () {
-                console.log("debug:defult_ok")
+                console.log("debug:default_ok")
         }
 
         var dm_halder = function (ms) {
@@ -24,7 +24,8 @@ define(["../lib/dm_writer"],
         // 暴露接口
         return {
                 dm_halder: dm_halder,
-                plugin_init:plugin_init
+                plugin_init:plugin_init,
+                message_class: "default"
         }
 }
 )
