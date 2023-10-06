@@ -37,12 +37,12 @@ define(["js/script/plugin_manager"],
     let connect_ok = void 0
 function websocket(ura){
         if("WebSocket" in window) {
-            var socket = new WebSocket(ura)
+            let socket = new WebSocket(ura)
             socket.addEventListener("message",function(event){
                 console.log('Message from server ', event.data)
 
                 if (event.data === "{\"code\": 200, \"msg\": \"connect ok\"}"){
-                    console.info("connect to seriver success")
+                    console.info("connect to server success")
                     connect_ok = 1
                 }else if (connect_ok === 1) {
                     console.info("cok is "+event.data)
@@ -56,7 +56,7 @@ function websocket(ura){
             }
         }
         else {
-            alert("err! your bloser is not sopported!!!")
+            alert("err! your browser is not supported!!!")
         }
     }
 
