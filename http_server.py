@@ -4,12 +4,12 @@ import json
 import logging
 import os
 
-config = None
+config = dict()
 
 
 async def http_handler(request):  # 主文件请求
     log = logging.getLogger(__name__)
-    log.info("return for mainpage")
+    log.info("return for main_page")
     return web.FileResponse(path="web/living room dm.html", status=200)
 
 
@@ -27,6 +27,7 @@ async def http_websocket(request):
 async def http_plugin(request):
     log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
+    # TODO(ictye):实现软js插件
     return web.FileResponse(path=f"web/js/plugin/{request.match_info['name']}")
 
 
@@ -57,10 +58,17 @@ async def http_script(request):
 async def http_api_plugin(request):
     log = logging.getLogger(__name__)
     log.info(f"request for web plugin list")
-    plugin_list = {"code":200,
-                  "list": [os.path.splitext(file_name)[0] for file_name in os.listdir("./web/js/plugin") if file_name.endswith('.js')]}
+    # TODO(ictye): 实现软js插件
+    plugin_list = {"code": 200,
+                   "list": [os.path.splitext(file_name)[0] for file_name in os.listdir("./web/js/plugin") if
+                            file_name.endswith('.js')]}
 
     return web.json_response(plugin_list)
+
+
+async def http_cgi(request):
+    # TODO(ictye):完成cgi实现
+    pass
 
 
 async def http_server(configs):
@@ -77,7 +85,8 @@ async def http_server(configs):
                     web.get("/js/lib/{name}", http_lib),
                     web.get("/js/script/{name}", http_script),
                     web.get("/websocket", http_websocket),
-                    web.get("/api/plugin_list", http_api_plugin)
+                    web.get("/api/plugin_list", http_api_plugin),
+                    web.get("/cgi/{family}/{name}", http_cgi)
                     ])
 
     runner = web.AppRunner(app)
