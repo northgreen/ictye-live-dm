@@ -1,13 +1,13 @@
 require.config({
     baseUrl:"/"
 })
-define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
-    function ($,pm){
+define(["js/script/plugin_manager"],
+    function (pm){
     function main()
     {
-                console.log("lod ready")
-                //请求ws地址
-                console.log(`
+        console.log("lod ready")
+        //请求ws地址
+        console.log(`
             __                         ___                                __                                      __          __  __  ______                                             ___             
  __        /\\ \\__                     /\\_ \\    __                        /\\ \\                                    /\\ \\        /\\ \\/\\ \\/\\__  _\\                                           /\\_ \\            
 /\\_\\    ___\\ \\ ,_\\  __  __     __     \\//\\ \\  /\\_\\  __  __     __        \\_\\ \\    ___ ___       __  __  __     __\\ \\ \\____   \\ \\ \\ \\ \\/_/\\ \\/         ___    ___     ___     ____    ___\\//\\ \\      __   
@@ -19,18 +19,18 @@ define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
                         \\/__/                                                                                                                                                                            
                 `)
 
-                //请求websocket
-                req = new XMLHttpRequest()
+        //请求websocket
+        let req = new XMLHttpRequest()
 
-                req.open("get","/get_websocket",true)
+        req.open("get","/get_websocket",true)
 
-                req.onreadystatechange=function(){
-                    if(req.readyState === XMLHttpRequest.DONE && req.status === 200){
-                        websocket(JSON.parse(req.responseText).local)
-                    }
-
-                }
-                req.send()
+        req.onreadystatechange=function(){
+            if(req.readyState === XMLHttpRequest.DONE && req.status === 200){
+                //启动websocket
+                websocket(JSON.parse(req.responseText).local)
+            }
+        }
+        req.send()
 
     }
 
@@ -40,6 +40,7 @@ function websocket(ura){
             var socket = new WebSocket(ura)
             socket.addEventListener("message",function(event){
                 console.log('Message from server ', event.data)
+
                 if (event.data === "{\"code\": 200, \"msg\": \"connect ok\"}"){
                     console.info("connect to seriver success")
                     connect_ok = 1
@@ -47,12 +48,9 @@ function websocket(ura){
                     console.info("cok is "+event.data)
                     let msg = JSON.parse(event.data)
                     if (msg.message_class === "default"){
-                        let data = $.dm_halder(msg)
-                        if (data !== void 0) {
-                            //TODO:处理非标准消息
-                        }
+                        //消息处理
+                        pm.message_handlers(msg)
                     }
-
                 }
             })
             socket.onopen=function(){
