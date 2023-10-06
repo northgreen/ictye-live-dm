@@ -15,19 +15,6 @@ class connect_ok:
                 "msg": self.msg}
 
 
-# FIXME:此类型消息已经废弃
-class msg:
-    def __init__(self, msga: str,
-                 body: str):
-
-        self.msg = msga
-        self.body = body
-
-    def to_dict(self):
-        return {"msg": self.msg,
-                "body": self.body}
-
-
 class dm:
     def __init__(self, msg: str, who: dict):
         self.msg = msg
@@ -67,7 +54,6 @@ class msg_who:
     def __init__(self, type: int,
                  name: str,
                  face: str):
-
         self.type = type
         self.name = name
         self.face = face
@@ -99,7 +85,6 @@ class msg_box:
                  message_class: str,
                  msg_type: str,
                  message_body: dict):
-
         self.message_class = message_class
         self.msg_type = msg_type
         self.message_body = message_body

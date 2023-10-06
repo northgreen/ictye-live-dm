@@ -12,10 +12,12 @@ class Plugin_Main:
         """
         不要用这个而是用plugin_init来进行插件的初始化
         """
-        self.type = None
+        self.type = str()
         self.stop = 0
+        self.config = dict()
         if self.plugin_type() == "message":
             self.message_list = []
+
 
     def plugin_init(self):
         """

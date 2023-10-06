@@ -18,14 +18,15 @@ define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
                         /\\___/                                                                                                                                                                           
                         \\/__/                                                                                                                                                                            
                 `)
+
+                //请求websocket
                 req = new XMLHttpRequest()
 
                 req.open("get","/get_websocket",true)
 
                 req.onreadystatechange=function(){
                     if(req.readyState === XMLHttpRequest.DONE && req.status === 200){
-                        //websockt(`ws://${window.location.host}/websocket`)
-                        websockt(JSON.parse(req.responseText).local)
+                        websocket(JSON.parse(req.responseText).local)
                     }
 
                 }
@@ -34,8 +35,7 @@ define(["js/plugin/default_plugin_mather","js/script/plugin_manager"],
     }
 
     let connect_ok = void 0
-
-    function websockt(ura){
+function websocket(ura){
         if("WebSocket" in window) {
             var socket = new WebSocket(ura)
             socket.addEventListener("message",function(event){

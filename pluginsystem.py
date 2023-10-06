@@ -17,12 +17,10 @@ class Plugin:
         self.message_plugin_list = []
         self.analyzer_plugin_list = []
 
-        # FIXME(ictye): 存在插件不能项目化的缺陷
-
         # 加载默认插件目录
         for plugin_file in os.listdir(confi['plugins']['default_path']):
             try:
-                if os.path.splitext(plugin_file)[1] == ".py":
+                if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(os.path.join(confi['plugins']['default_path'],plugin_file)) and not plugin_file == "__pycache__":
                     plugin_name = os.path.splitext(plugin_file)[0]
                     pathname = os.path.basename(confi['plugins']['default_path'])
 

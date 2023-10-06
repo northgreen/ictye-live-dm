@@ -157,3 +157,13 @@
     animation-iteration-count: 1;
     overflow: hidden;
 }
+
+
+/*使用obs要用的css,不喜欢就删掉也没问题的喵~*/
+*:not(.dmlaft *){word-break: break-all;
+  overflow-wrap: break-word;-webkit-font-smoothing: none;
+   -moz-osx-font-smoothing: grayscale;}
+* ::-webkit-scrollbar {
+  overflow: hidden;
+}
+
