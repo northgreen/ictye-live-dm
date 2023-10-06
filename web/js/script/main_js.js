@@ -47,10 +47,8 @@ function websocket(ura){
                 }else if (connect_ok === 1) {
                     console.info("cok is "+event.data)
                     let msg = JSON.parse(event.data)
-                    if (msg.message_class === "default"){
-                        //消息处理
-                        pm.message_handlers(msg)
-                    }
+                    //消息处理
+                    pm.message_handlers(msg)
                 }
             })
             socket.onopen=function(){
