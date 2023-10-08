@@ -4,3 +4,4 @@ __pycache__/
 .hintrc/
 .vscode/
 /.hintrc
+python-3.12.0-embed-amd64

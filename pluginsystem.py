@@ -85,6 +85,10 @@ class Plugin:
                     mlogger.error(f"a error is happened:{str(e)}")
         return message_filtered
 
+    async def plugin_cgi_handler(self):
+        # TODO:插件cgi实现
+        ...
+
     async def plugin_main_runner(self):
         message_plugin = []
         anaylazer_tasks = []

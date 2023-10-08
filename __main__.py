@@ -18,6 +18,7 @@ if __name__ == "__main__":
     import livewebsocket
     import asyncio
     import os
+    import sys
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
