@@ -5,6 +5,7 @@ import logging
 import os
 
 config = dict()
+plugin_system: object
 
 
 async def http_handler(request):  # 主文件请求
@@ -67,8 +68,17 @@ async def http_api_plugin(request):
 
 
 async def http_cgi(request):
-    # TODO(ictye):完成cgi实现
-    pass
+    log = logging.getLogger(__name__)
+    req = None
+    try:
+        if request.match_info["name"] in plugin_system.plugin_cgi_support:
+            req = await plugin_system.plugin_cgi_support[request.match_info["name"]](request)
+        else:
+            req = web.Response(status=404, text="no such cgi")
+    except Exception as e:
+        log.error(f"cgi plugin error:{str(e)}")
+        req = web.Response(status=404, text="no such cgi")
+    return req
 
 
 async def http_server(configs):
@@ -86,7 +96,7 @@ async def http_server(configs):
                     web.get("/js/script/{name}", http_script),
                     web.get("/websocket", http_websocket),
                     web.get("/api/plugin_list", http_api_plugin),
-                    web.get("/cgi/{family}/{name}", http_cgi)
+                    web.get("/cgi/{name}", http_cgi)
                     ])
 
     runner = web.AppRunner(app)
