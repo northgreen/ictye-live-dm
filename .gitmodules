@@ -1,0 +1,3 @@
+[submodule "libs/bilibili_dm_plugin"]
+	path = libs/bilibili_dm_plugin
+	url = https://github.com/northgreen/bilibili_dm_plugin.git

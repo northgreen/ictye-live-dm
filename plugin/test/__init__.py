@@ -20,7 +20,12 @@ import random
 
 class Plugin_Main(plugin_main.Plugin_Main):
     def plugin_init(self):
+        self.sprit_cgi_support = True
+        self.sprit_cgi_path = "test"
         return "message"
+
+    async def sprit_cgi(self, request):
+        return self.web.Response(text="ok")
 
     async def plugin_main(self):
         def create_user():

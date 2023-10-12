@@ -5,6 +5,7 @@ import os
 import importlib
 import plugin_erroers
 import importlib.util
+import plugin_main
 
 confi = {}  # 配置
 
@@ -14,13 +15,18 @@ class Plugin:
 
         mlogger = logging.getLogger(__name__)
 
-        self.message_plugin_list = []
-        self.analyzer_plugin_list = []
+        self.message_plugin_list: list = []
+        self.analyzer_plugin_list: list = []
+        self.plugin_cgi_support: dict = {}
+        self.plugin_js_support: dict = {}
 
+        plugin_name = ""
         # 加载默认插件目录
         for plugin_file in os.listdir(confi['plugins']['default_path']):
             try:
-                if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(os.path.join(confi['plugins']['default_path'],plugin_file)) and not plugin_file == "__pycache__":
+                if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(
+                        os.path.join(confi['plugins']['default_path'],
+                                     plugin_file)) and not plugin_file == "__pycache__":
                     plugin_name = os.path.splitext(plugin_file)[0]
                     pathname = os.path.basename(confi['plugins']['default_path'])
 
@@ -28,18 +34,29 @@ class Plugin:
 
                     plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
                     plugin_class = getattr(plugin_module, "Plugin_Main")
-                    plugin_interface = plugin_class()
+                    plugin_interface: plugin_main.Plugin_Main = plugin_class()
+
+                    # 获取插件类型
                     if plugin_interface.plugin_type() == "message":
                         self.message_plugin_list.append(plugin_interface)
                     elif plugin_interface.plugin_type() == "analyzer":
                         self.analyzer_plugin_list.append(plugin_interface)
                     else:
                         raise plugin_erroers.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
+
+                    # 注册脚本cgi接口
+                    if plugin_interface.sprit_cgi_support:
+                        self.plugin_cgi_support[plugin_interface.sprit_cgi_path] = plugin_interface.sprit_cgi
+                    # 注册插件js
+                    if plugin_interface.plugin_js_sprit_support:
+                        self.plugin_js_support.append(plugin_interface.plugin_js_sprit)
+
             except IndexError as e:
-                mlogger.error(f"failed to import plugin :\n{plugin_name:{str(e)}}")
+                mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
         # 导入额外插件
         for plugin_file in confi["plugins"]["others_plugin"]:
+            plugin_name = plugin_file
             try:
                 if plugin_file is not None:
                     mlogger.info(f"loading plugin{plugin_file}")
@@ -47,13 +64,26 @@ class Plugin:
                     spec = importlib.util.spec_from_file_location(os.path.basename(path), os.path.dirname(path))
                     module = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(module)
-                    plugin_main_class = module.Plugin_Main
+                    plugin_main_class:plugin_main.Plugin_Main = module.Plugin_Main
+
+                    # 获取插件类型
                     if plugin_main_class.plugin_type() == "message":
                         self.message_plugin_list.append(plugin_main_class)
                     elif plugin_main_class.plugin_type() == "analyzer":
                         self.analyzer_plugin_list.append(plugin_main_class)
                     else:
                         raise plugin_erroers.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
+
+                    # 注册插件cgi
+                    if plugin_main_class.sprit_cgi_support:
+                        if plugin_main_class.sprit_cgi_path:
+                            self.plugin_cgi_support[plugin_main_class.sprit_cgi_path] = plugin_main_class.sprit_cgi
+                        else:
+                            raise
+
+                    # 注册js脚本
+                    if plugin_main_class.plugin_js_sprit_support:
+                        self.plugin_js_support[plugin_main_class.plugin_name] = plugin_main_class.plugin_js_sprit
             except ImportError as e:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
 

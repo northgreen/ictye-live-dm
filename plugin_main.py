@@ -2,7 +2,8 @@ import plugin_erroers
 import msgs
 import asyncio
 import typing
-import depends.configs
+import depends.configs as configs
+from aiohttp import web
 
 
 class Plugin_Main:
@@ -12,12 +13,24 @@ class Plugin_Main:
         """
         不要用这个而是用plugin_init来进行插件的初始化
         """
-        self.type = str()
-        self.stop = 0
-        self.config = dict()
+        self.plugin_js_sprit_support: bool = False  # js插件支持
+        self.plugin_js_sprit: str = ""  # js插件
+
+        self.type = str()  # 插件类型
+
+        self.stop = 0  # 停止标志
+
+        self.config: dict = dict()  # 配置
+
+        self.sprit_cgi_support = False  # 插件cgi支持
+        self.sprit_cgi_path: str = ""  # 插件cgi路径
+
+        self.plugin_name: str = ""  # 插件名称
+
+        self.web = web  # web模块
+
         if self.plugin_type() == "message":
             self.message_list = []
-
 
     def plugin_init(self):
         """
@@ -29,7 +42,7 @@ class Plugin_Main:
             return:如果是”message“则表示这是个消息提供插件，如果是”analyzer“则表示这个插件是用来获取中间消息并且进行处理的。
         """
         self.stop = 0
-        raise plugin_erroers.UnexpactedPluginMessage('插件入口方法没有实现')
+        raise plugin_erroers.UnexpectedPluginMessage('插件入口方法没有实现')
 
     async def plugin_main(self):
         """
@@ -42,7 +55,7 @@ class Plugin_Main:
         插件获取消息消息回环，将会接受消息
         """
         if self.plugin_type() == "analyzer":
-            raise plugin_erroers.UnexpactedPluginMessage("不符合插件类型的插件实现")
+            raise plugin_erroers.UnexpectedPluginMessage("不符合插件类型的插件实现")
 
     async def message_filter(self, message):
         """
@@ -50,6 +63,19 @@ class Plugin_Main:
         用于自动处理消息，比如翻译或者敏感词过滤
         """
         return message
+
+    async def sprit_cgi(self, request):
+        """
+        脚本cgi接口
+        :param request:请求对象
+        :return 响应，用aiohttp的就行（已经封装为self.web）
+        """
+        if self.sprit_cgi_support:
+            raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
+
+    @typing.final
+    def update_config(self):
+        configs.set_config(self.plugin_name, self.config)
 
     @typing.final
     def __aiter__(self):

@@ -18,6 +18,7 @@ if __name__ == "__main__":
     import livewebsocket
     import asyncio
     import os
+    import sys
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -52,6 +53,7 @@ if __name__ == "__main__":
     # 获取插件系统
     plugin_sys = pluginsystem.Plugin()
     livewebsocket.pluginsystem = plugin_sys
+    http_server.plugin_system = plugin_sys
     # 获取logger
     logger.logging_setup(config)
     loggers = logging.getLogger(__name__)

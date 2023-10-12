@@ -3,8 +3,10 @@ import msgs
 import json
 import logging
 import os
+import pluginsystem
 
 config = dict()
+plugin_system: pluginsystem.Plugin
 
 
 async def http_handler(request):  # 主文件请求
@@ -19,16 +21,21 @@ async def http_socket_get(request):
     return web.Response(text=json.dumps(msgs.socket_responce(config).to_dict()))
 
 
-async def http_websocket(request):
+async def http_websocket(request: web.Request):
     ws = "ws://{}:{}".format(config["host"], config["websocket"]["port"])
     return web.WebSocketResponse
 
 
-async def http_plugin(request):
+async def http_plugin(request: web.Request):
     log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
-    # TODO(ictye):实现软js插件
-    return web.FileResponse(path=f"web/js/plugin/{request.match_info['name']}")
+    if os.path.exists(f"web/js/plugin/{request.match_info['name']}"):
+        return web.FileResponse(path=f"web/js/plugin/{request.match_info['name']}")
+    elif request.match_info["name"] in plugin_system.plugin_js_support:
+        return web.Response(text=plugin_system.plugin_js_support[request.match_info["name"]],
+                            content_type="application/javascript")
+    else:
+        return web.Response(status=404, text="not found")
 
 
 async def http_style(request):
@@ -58,17 +65,26 @@ async def http_script(request):
 async def http_api_plugin(request):
     log = logging.getLogger(__name__)
     log.info(f"request for web plugin list")
-    # TODO(ictye): 实现软js插件
+
     plugin_list = {"code": 200,
                    "list": [os.path.splitext(file_name)[0] for file_name in os.listdir("./web/js/plugin") if
-                            file_name.endswith('.js')]}
+                            file_name.endswith('.js')] + list(plugin_system.plugin_js_support)}
 
     return web.json_response(plugin_list)
 
 
 async def http_cgi(request):
-    # TODO(ictye):完成cgi实现
-    pass
+    log = logging.getLogger(__name__)
+    req = None
+    try:
+        if request.match_info["name"] in plugin_system.plugin_cgi_support:
+            req = await plugin_system.plugin_cgi_support[request.match_info["name"]](request)
+        else:
+            req = web.Response(status=404, text="no such cgi")
+    except Exception as e:
+        log.error(f"cgi plugin error:{str(e)}")
+        req = web.Response(status=404, text="no such cgi")
+    return req
 
 
 async def http_server(configs):
@@ -86,7 +102,7 @@ async def http_server(configs):
                     web.get("/js/script/{name}", http_script),
                     web.get("/websocket", http_websocket),
                     web.get("/api/plugin_list", http_api_plugin),
-                    web.get("/cgi/{family}/{name}", http_cgi)
+                    web.get("/cgi/{name}", http_cgi)
                     ])
 
     runner = web.AppRunner(app)

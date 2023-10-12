@@ -9,13 +9,13 @@ require.config({
 });
 define(["crypto-js/md5"],
     function (md5) {
-        var ok = function (){console.log("debug:defult_ok")}; //测试用函数
+        let ok = function (){console.log("debug:defult_ok")}; //测试用函数
 
             //计算弹幕存在时间
-        var make_time = function (content = ""){return  content.length}
+        let make_time = function (content = ""){return  content.length}
 
             //添加弹幕
-        var __add_element = function (content = "",msg_time){
+        let __add_element = function (content = "",msg_time){
 
                 let id = md5(Math.round(Math.random() * 1000000000).toString() + content)
                 console.log("id:"+id)
@@ -37,7 +37,7 @@ define(["crypto-js/md5"],
         }
 
         //处理info消息
-        var create_info = function (msgbody) {
+         let create_info = function (msgbody) {
                 /*创建消息*/
                 let msg = `<div class="special-info">
                             <img src="${msgbody.who.face}" class="infousrico">
@@ -59,7 +59,7 @@ define(["crypto-js/md5"],
         }
 
         //处理弹幕消息
-        var create_dm = function (msgbody) {
+        let create_dm = function (msgbody) {
             /*创建普通弹幕*/
             /*
                   * 身份等级：

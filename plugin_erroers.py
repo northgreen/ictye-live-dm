@@ -4,6 +4,11 @@ class PluginTypeError(Exception):
         super().__init__(self.message)
 
 
-class UnexpactedPluginMessage(Exception):
+class UnexpectedPluginMessage(Exception):
     def __init__(self, message):
-        super(UnexpactedPluginMessage, self).__init__(message)
+        super(UnexpectedPluginMessage, self).__init__(message)
+
+
+class UnexpectedPluginMather(Exception):
+    def __init__(self, message):
+        super(UnexpectedPluginMather, self).__init__(message)
