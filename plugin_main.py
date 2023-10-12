@@ -2,7 +2,7 @@ import plugin_erroers
 import msgs
 import asyncio
 import typing
-import depends.configs
+import depends.configs as configs
 from aiohttp import web
 
 
@@ -13,13 +13,22 @@ class Plugin_Main:
         """
         不要用这个而是用plugin_init来进行插件的初始化
         """
-        self.type = str()
-        self.stop = 0
-        self.config = dict()
-        self.sprit_cgi_support = False
-        self.sprit_cgi_path: str = ""
-        self.plugin_name: str
-        self.web = web
+        self.plugin_js_sprit_support: bool = False  # js插件支持
+        self.plugin_js_sprit: str = ""  # js插件
+
+        self.type = str()  # 插件类型
+
+        self.stop = 0  # 停止标志
+
+        self.config: dict = dict()  # 配置
+
+        self.sprit_cgi_support = False  # 插件cgi支持
+        self.sprit_cgi_path: str = ""  # 插件cgi路径
+
+        self.plugin_name: str = ""  # 插件名称
+
+        self.web = web  # web模块
+
         if self.plugin_type() == "message":
             self.message_list = []
 
@@ -63,6 +72,10 @@ class Plugin_Main:
         """
         if self.sprit_cgi_support:
             raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
+
+    @typing.final
+    def update_config(self):
+        configs.set_config(self.plugin_name, self.config)
 
     @typing.final
     def __aiter__(self):

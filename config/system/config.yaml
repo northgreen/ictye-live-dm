@@ -5,7 +5,7 @@ host: "127.0.0.1"
 index: "./web/living room dm.html"
 #websocket配置
 websocket:
-  port: 4545
+  port: 45466
   path: "/websocket"
 
 plugins:
