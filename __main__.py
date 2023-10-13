@@ -18,23 +18,12 @@ if __name__ == "__main__":
     import livewebsocket
     import asyncio
     import os
-    import sys
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-    async def message_loop():
-        while True:
-            msgs = await plugin_sys.get_plugin_message()
-            if not msgs == []:
-                logging.getLogger(__name__).debug(f"geting message {msgs}")
-            livewebsocket.dm_dic.extend(msgs)
-            await asyncio.sleep(2)
-
-
     def run_server():
         loop = asyncio.get_event_loop()
-        loop.create_task(message_loop())
         loop.create_task(http_server.http_server(config))
         loop.create_task(livewebsocket.websocket_main(config))
         loop.create_task(plugin_sys.plugin_main_runner())

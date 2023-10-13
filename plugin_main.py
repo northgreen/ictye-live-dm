@@ -73,14 +73,23 @@ class Plugin_Main:
         if self.sprit_cgi_support:
             raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
 
+    def message_iter(self, params):
+        return self
+
     @typing.final
     def update_config(self):
         configs.set_config(self.plugin_name, self.config)
 
-    @typing.final
     def __aiter__(self):
         if self.plugin_type() == "message":
             return self
+
+    async def __anext__(self):
+        if self.plugin_type() == "message":
+            if self.message_list:
+                return self.message_list.pop(0)
+            else:
+                raise StopAsyncIteration()
 
     @typing.final
     def plugin_stop(self):
@@ -97,13 +106,6 @@ class Plugin_Main:
         return depends.configs.config()
 
     # 通过异步迭代器的方法，插件能向软件发送消息
-    @typing.final
-    async def __anext__(self):
-        if self.plugin_type() == "message":
-            if self.message_list:
-                return self.message_list.pop(0)
-            else:
-                raise StopAsyncIteration()
 
     @typing.final
     def plugin_type(self):
