@@ -20,21 +20,23 @@ async def sub_dm_send():
     logger.logging_setup(config)
     loggers = logging.getLogger()
 
-    async for dms in dm():
-        connect: server.WebSocketServerProtocol
+    connect: server.WebSocketServerProtocol
+
+    while True:
         for connect in connects:
-            if connect.open:
-                mdm = await _plugin_system.message_filter(dms)  # 过滤消息
-                await _plugin_system.message_analyzer(mdm)  # 回调消息
-                loggers.info(f"sending message {mdm}")
-                await connect.send(json.dumps(mdm))  # 发送消息
-            else:
-                asyncio.current_task().cancel()
-                try:
-                    await asyncio.sleep(5)
-                except asyncio.CancelledError:
-                    pass
-            await asyncio.sleep(0.05)
+            async for dms in dm(param_dict[connect.id] if connect.id in param_dict else {}):
+                if connect.open:
+                    mdm = await _plugin_system.message_filter(dms)  # 过滤消息
+                    await _plugin_system.message_analyzer(mdm)  # 回调消息
+                    loggers.info(f"sending message {mdm}")
+                    await connect.send(json.dumps(mdm))  # 发送消息
+                else:
+                    asyncio.current_task().cancel()
+                    try:
+                        await asyncio.sleep(5)
+                    except asyncio.CancelledError:
+                        pass
+        await asyncio.sleep(0.05)
 
 
 class dm:
@@ -45,14 +47,17 @@ class dm:
         迭代此类可以获得弹幕信息，同时已经读取过的弹幕信息将会被弹出
     """
 
-    def __init__(self):
+    def __init__(self, param):
+        self.param = param
         pass
 
     def __aiter__(self):
         return self
 
     async def __anext__(self):
-        while 1:
+        while True:
+            message = await _plugin_system.get_plugin_message(self.param)
+            dm_dic.extend(message)
             try:
                 return dm_dic.pop(0)
             except IndexError:
@@ -79,17 +84,21 @@ async def websockets(websocket: server.WebSocketServerProtocol):
                 if (ret["code"] == 200 and ret["msg"] == "ok") or conformed:  # 连接验证
 
                     loggers.info("connect with blower success")
-                    if ret["param"]:
+                    if "param" in ret:
                         param_dict[websocket.id] = ret["param"]
+                        _plugin_system.socket_param[websocket.id] = ret["param"]
 
                     await websocket.send(json.dumps(msgs.connect_ok().to_dict()))
                     connects.append(websocket)  # 添加到链接列表
+
                     while websocket.open:
                         await asyncio.sleep(2)
                     pass
+
                 else:
                     loggers.error("connect failed,unexpected client")
                     await websocket.close()
+
             except TypeError:
                 loggers.warning("json decode failed")
     except asyncio.CancelledError:
