@@ -73,7 +73,10 @@ class Plugin_Main:
         if self.sprit_cgi_support:
             raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
 
-    def message_iter(self, params):
+    def dm_iter(self,params):
+        """
+        返回弹幕迭代对象
+        """
         return self
 
     @typing.final

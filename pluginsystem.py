@@ -19,7 +19,6 @@ class Plugin:
         self.analyzer_plugin_list: list = []
         self.plugin_cgi_support: dict = {}
         self.plugin_js_support: dict = {}
-        self.socket_param: dict = {}
 
         plugin_name = ""
         # 加载默认插件目录
@@ -88,14 +87,12 @@ class Plugin:
             except ImportError as e:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
 
-    async def get_plugin_message(self, param):
+    async def get_plugin_message(self, params):
         # 消息提取回环
         message_list = []
         plugin: plugin_main.Plugin_Main
         for plugin in self.message_plugin_list:
-            message = plugin.message_iter(params=param)
-
-            async for messages in message:
+            async for messages in plugin.dm_iter(params):
                 message_list.append(messages)
         return message_list
 
