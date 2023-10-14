@@ -4,11 +4,35 @@ import msgs
 from websockets import server
 import logging
 from depends import logger
+import pluginsystem
 
 dm_dic = []  # 弹幕列表
-connect_list = set()  # 连接合集
-pluginsystem = None
+plugin_system: pluginsystem.Plugin
 config = {}
+param_list: dict = {}
+connect_list: list[server.WebSocketServerProtocol] = []
+
+
+async def sub_message_loop():
+    logger.logging_setup(config)
+    loggers = logging.getLogger(__name__)
+
+    loggers.info("socket connected,we will push dm to client")
+    while True:
+        for connects in connect_list:
+            async for dms in dm(param_list[connects.id] if connects.id in param_list else []):
+                if connects.open:
+                    mdm = await plugin_system.message_filter(dms)
+                    await plugin_system.message_analyzer(mdm)
+                    loggers.info(f"sending message {mdm}")
+                    await connects.send(json.dumps(mdm))
+                else:
+                    try:
+                        await asyncio.sleep(5)
+                    except asyncio.CancelledError:
+                        pass
+        await asyncio.sleep(0.5)
+
 
 class dm:
     """
@@ -18,46 +42,27 @@ class dm:
         迭代此类可以获得弹幕信息，同时已经读取过的弹幕信息将会被弹出
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, param):
+        self.param = param
 
     def __aiter__(self):
         return self
 
     async def __anext__(self):
-        while 1:
+        while True:
+            dms = await plugin_system.get_plugin_message(self.param)
+            dm_dic.extend(dms)
             try:
                 return dm_dic.pop(0)
             except IndexError:
-                await asyncio.sleep(1)
+                break
+                # FIXME
 
     def __contains__(self, item):
         return item in dm_dic
 
 
-async def dm_send(socket):
-    logger.logging_setup(config)
-    loggers = logging.getLogger(__name__)
-
-    loggers.info("socket connected,we will push dm to client")
-    dmlist = dm()
-
-
-    async for dms in dmlist:
-        if not socket.closed:
-            mdm = await pluginsystem.message_filter(dms)
-            await pluginsystem.message_analyzer(mdm)
-            loggers.info(f"sending message {mdm}")
-            await socket.send(json.dumps(mdm))
-        else:
-            asyncio.current_task().cancel()
-            try:
-                await asyncio.sleep(5)
-            except asyncio.CancelledError:
-                pass
-
-
-async def websockets(websocket):
+async def websockets(websocket: server.WebSocketServerProtocol):
     loggers = logging.getLogger(__name__)
     """
     websocket消息处理主函数
@@ -69,7 +74,7 @@ async def websockets(websocket):
     if websocket in connect_list:
         print("a same connect!")
         return
-    connect_list.add(websocket)
+    connect_list.append(websocket)
 
     conformed = 0  # 验证记录
     try:
@@ -83,9 +88,14 @@ async def websockets(websocket):
 
                     loggers.info("connect with blower success")
 
-                    # 开始推送发送弹幕
+                    if "param" in ret:
+                        param_list[websocket.id] = ret["param"]
+
                     await websocket.send(json.dumps(msgs.connect_ok().to_dict()))
-                    asyncio.get_running_loop().create_task(dm_send(websocket))
+                    connect_list.append(websocket)
+
+                    while websocket.open:
+                        await asyncio.sleep(0.05)
 
                 else:
                     loggers.error("connect failed,unexpected client")
@@ -108,3 +118,4 @@ async def websocket_main(configs):
     loggers = logging.getLogger(__name__)
     loggers.info("websocket server started")
     await server.serve(websockets, configs["host"], configs["websocket"]["port"])
+    asyncio.get_running_loop().create_task(sub_message_loop())

@@ -23,18 +23,10 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-    async def message_loop():
-        while True:
-            msgs = await plugin_sys.get_plugin_message()
-            if not msgs == []:
-                logging.getLogger(__name__).debug(f"geting message {msgs}")
-            livewebsocket.dm_dic.extend(msgs)
-            await asyncio.sleep(2)
 
 
     def run_server():
         loop = asyncio.get_event_loop()
-        loop.create_task(message_loop())
         loop.create_task(http_server.http_server(config))
         loop.create_task(livewebsocket.websocket_main(config))
         loop.create_task(plugin_sys.plugin_main_runner())
@@ -52,7 +44,7 @@ if __name__ == "__main__":
     livewebsocket.config = config
     # 获取插件系统
     plugin_sys = pluginsystem.Plugin()
-    livewebsocket.pluginsystem = plugin_sys
+    livewebsocket.plugin_system = plugin_sys
     http_server.plugin_system = plugin_sys
     # 获取logger
     logger.logging_setup(config)

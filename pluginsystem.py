@@ -64,7 +64,7 @@ class Plugin:
                     spec = importlib.util.spec_from_file_location(os.path.basename(path), os.path.dirname(path))
                     module = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(module)
-                    plugin_main_class:plugin_main.Plugin_Main = module.Plugin_Main
+                    plugin_main_class: plugin_main.Plugin_Main = module.Plugin_Main
 
                     # 获取插件类型
                     if plugin_main_class.plugin_type() == "message":
@@ -87,11 +87,12 @@ class Plugin:
             except ImportError as e:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
 
-    async def get_plugin_message(self):
+    async def get_plugin_message(self, params):
         # 消息提取回环
         message_list = []
+        plugin: plugin_main.Plugin_Main
         for plugin in self.message_plugin_list:
-            async for messages in plugin:
+            async for messages in plugin.dm_iter(params):
                 message_list.append(messages)
         return message_list
 
