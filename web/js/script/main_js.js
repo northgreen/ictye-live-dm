@@ -51,8 +51,18 @@ function websocket(ura){
                     pm.message_handlers(msg)
                 }
             })
+
             socket.onopen=function(){
-                socket.send('{"code":200,"msg":"ok"}')
+                // 获取浏览器get参数
+                let get_params = window.location.href
+                let params = new URLSearchParams(get_params)
+                let param = {}
+                params.forEach(function (value,key){
+                    param[key] = value
+                })
+                console.log("params:",param)
+                // 发送消息给服务器
+                socket.send(JSON.stringify({"code":200,"msg":"ok","param":param} ))
             }
         }
         else {

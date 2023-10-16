@@ -18,8 +18,6 @@ class Plugin_Main:
 
         self.type = str()  # 插件类型
 
-        self.stop = 0  # 停止标志
-
         self.config: dict = dict()  # 配置
 
         self.sprit_cgi_support = False  # 插件cgi支持
@@ -50,13 +48,6 @@ class Plugin_Main:
         """
         pass
 
-    async def message_loop(self, message):
-        """
-        插件获取消息消息回环，将会接受消息
-        """
-        if self.plugin_type() == "analyzer":
-            raise plugin_erroers.UnexpectedPluginMessage("不符合插件类型的插件实现")
-
     async def message_filter(self, message):
         """
         消息过滤器
@@ -73,7 +64,7 @@ class Plugin_Main:
         if self.sprit_cgi_support:
             raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
 
-    def dm_iter(self,params):
+    def dm_iter(self, params):
         """
         返回弹幕迭代对象
         """
@@ -106,7 +97,7 @@ class Plugin_Main:
         """
         获取配置
         """
-        return depends.configs.config()
+        return configs.config()
 
     # 通过异步迭代器的方法，插件能向软件发送消息
 

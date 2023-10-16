@@ -89,12 +89,18 @@ class Plugin:
 
     async def get_plugin_message(self, params):
         # 消息提取回环
-        message_list = []
-        plugin: plugin_main.Plugin_Main
+        # params:
+        #     message: 消息对象
+        #     plugin_name: 插件名称
+        #     plugin_type: 插件类型
+
         for plugin in self.message_plugin_list:
-            async for messages in plugin.dm_iter(params):
-                message_list.append(messages)
-        return message_list
+            dm = plugin.dm_iter(params)
+            if dm is None:
+                return
+            async for _dm in dm:
+                print("_dm:", _dm)
+                yield _dm
 
     async def message_analyzer(self, message):
         # 漫游消息映射插件
@@ -138,7 +144,11 @@ class Plugin:
             await asyncio.sleep(1)
 
     async def message_plugin_call_back(self, obj):
-        obj.plugin_callback()
+        mlogger = logging.getLogger(__name__)
+        try:
+            obj.plugin_callback()
+        except Exception as e:
+            mlogger.error(f"a error is happened:{str(e)}")
         self.message_plugin_list.remove(obj)
 
     async def analyzer_plugin_callback(self, obj):

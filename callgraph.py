@@ -9,6 +9,14 @@
 #    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
 #
 #   更多详情请参阅许可协议文档
+from pycallgraph import PyCallGraph
+from pycallgraph.output import GraphvizOutput
+from pycallgraph import Config
+from pycallgraph import GlobbingFilter
+import __main__
+
+confi = Config()
+
 import logging
 from depends import logger, configs
 import http_server
@@ -54,5 +62,15 @@ def main():
     loggers.info("project already stopped")
 
 
-if __name__ == "__main__":
+confi.trace_filter = GlobbingFilter(
+    include=[
+        "pluginsystem.*",
+        "livewebsocket.*",
+        "plugin.*",
+        "msg.*"
+    ]
+)
+# 主函数
+
+with PyCallGraph(output=GraphvizOutput(), config=confi):
     main()
