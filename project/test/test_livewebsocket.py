@@ -13,7 +13,12 @@ def test_test():
 
 # test sub_message_loop
 
-def test_sub_message_loop():
+async def test_sub_message_loop():
     print("test sub_message_loop")
-    livewebsocket.sub_message_loop()
+    await livewebsocket.sub_message_loop()
+    assert True
+
+
+def test_websocket_main():
+    print("test websocket_connect")
     assert True

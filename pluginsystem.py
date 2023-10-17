@@ -93,6 +93,7 @@ class Plugin:
         #     message: 消息对象
         #     plugin_name: 插件名称
         #     plugin_type: 插件类型
+        #     plugin_id: 插件id
 
         for plugin in self.message_plugin_list:
             dm = plugin.dm_iter(params)
@@ -103,13 +104,16 @@ class Plugin:
                 yield _dm
 
     async def message_analyzer(self, message):
-        # 漫游消息映射插件
+        # 消息分析插件
         for plugins in self.analyzer_plugin_list:
             plugins.message_loop(message)
 
     async def message_filter(self, message):
         """
         消息过滤方法
+        :param message: 消息对象
+        :return: 处理后的消息对象
+        :rtype: Message_Object
         """
         mlogger = logging.getLogger(__name__)
         # 消息过滤
@@ -152,7 +156,11 @@ class Plugin:
         self.message_plugin_list.remove(obj)
 
     async def analyzer_plugin_callback(self, obj):
-        obj.plugin_callback()
+        mlogger = logging.getLogger(__name__)
+        try:
+            obj.plugin_callback()
+        except Exception as e:
+            mlogger.error(f"a error is happened:{str(e)}")
         self.analyzer_plugin_list.remove(obj)
 
 
