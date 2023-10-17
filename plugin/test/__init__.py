@@ -39,7 +39,7 @@ class Plugin_Main(plugin_main.Plugin_Main):
     def plugin_callback(self):
         print(f"plugin {__name__} is done")
 
-    def dm_iter(self, params):
+    def dm_iter(self, params,connect_id):
         # 生成一个dm对象
         if self.clock:
             return None

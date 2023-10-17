@@ -1,9 +1,0 @@
-aiohttp==3.8.4
-aiowebsocket==1.0.0.dev2
-Brotli==1.0.9
-pycryptodome==3.18.0
-PyYAML==6.0
-Requests==2.31.0
-websockets==11.0.3
-
-pycallgraph~=1.0.1

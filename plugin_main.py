@@ -13,10 +13,11 @@ class Plugin_Main:
         """
         不要用这个而是用plugin_init来进行插件的初始化
         """
+        self.stop: bool = False
         self.plugin_js_sprit_support: bool = False  # js插件支持
         self.plugin_js_sprit: str = ""  # js插件
 
-        self.type = str()  # 插件类型
+        self.type: str = str()  # 插件类型
 
         self.config: dict = dict()  # 配置
 
@@ -25,7 +26,7 @@ class Plugin_Main:
 
         self.plugin_name: str = ""  # 插件名称
 
-        self.web = web  # web模块
+        self.web: web = web  # web模块
 
         if self.plugin_type() == "message":
             self.message_list = []
@@ -64,7 +65,7 @@ class Plugin_Main:
         if self.sprit_cgi_support:
             raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
 
-    def dm_iter(self, params):
+    def dm_iter(self, params,connect_id):
         """
         返回弹幕迭代对象
         """
@@ -72,6 +73,9 @@ class Plugin_Main:
 
     @typing.final
     def update_config(self):
+        """
+        更新配置
+        """
         configs.set_config(self.plugin_name, self.config)
 
     def __aiter__(self):
@@ -87,6 +91,10 @@ class Plugin_Main:
 
     @typing.final
     def plugin_stop(self):
+        """
+        插件停止
+        """
+        self.stop = 1
         asyncio.current_task().cancel()
 
     def plugin_callback(self):
@@ -99,10 +107,14 @@ class Plugin_Main:
         """
         return configs.config()
 
-    # 通过异步迭代器的方法，插件能向软件发送消息
-
     @typing.final
     def plugin_type(self):
+        """
+        获取插件类型
+        """
+        # 不存在则初始化插件类型，并返回插件类型给软件以判断插件类型
+        # 不存在插件类型则表示插件没有被加载，返回插件没有被加载的错误信息给软件以判断插件是否被加载
+        # 这个插件没有被加载的话，软件会将插件从插件列表中移除，并且插件将不会被调用
         if not self.type:
             self.type = self.plugin_init()
         return self.type
