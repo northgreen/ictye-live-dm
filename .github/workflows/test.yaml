@@ -16,7 +16,7 @@ jobs:
       - name: check out my code
         uses: actions/checkout@v4
         with:
-          ref: "main"
+          ref: "dev"
       - name: install python
         uses: actions/setup-python@v4.7.1
         with:
