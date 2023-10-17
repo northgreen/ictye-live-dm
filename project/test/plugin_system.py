@@ -26,6 +26,7 @@ import os
 sys.path.append(os.path.split(os.path.abspath(__name__))[0].rsplit(os.sep, 0)[0])
 import pluginsystem
 import msgs
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 test_confi = {'port': 12345, 'host': '127.0.0.1', 'index': './web/living room dm.html',
               'websocket': {'port': 45466, 'path': '/websocket'},
