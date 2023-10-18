@@ -25,12 +25,12 @@ jobs:
           python -c "import os;import zipfile; zipfile.ZipFile(os.environ.get('GITHUB_ACTION_PATH', '') + '/python.zip', 'r').extractall(os.environ.get('GITHUB_ACTION_PATH', '') + '/ictye-live-dm/bin')"
           python -c "import os;import urllib.request; urllib.request.urlretrieve('https://bootstrap.pypa.io/get-pip.py', os.environ.get('GITHUB_ACTION_PATH', '') + '/ictye-live-dm/bin/get-pip.py')"
           python -c "import os;file_path = os.environ.get('GITHUB_ACTION_PATH', '') + '/ictye-live-dm/bin/python38._pth'; lines = []; with open(file_path, "r") as file: lines = file.readlines(); with open(file_path, "w") as file: [file.write(line.lstrip("#")) if line.strip().startswith("#") and "import site" in line else file.write(line) for line in lines]"
-          $GITHUB_ACTION_PATH\\ictye-live-dm\\bin\\python.exe $GITHUB_ACTION_PATH\\ictye-live-dm\\bin\\get-pip.py
-          echo @Set PATH=%%~dp0:%%~dp0Scripts:%%PATH%% > $GITHUB_ACTION_PATH\ictye-live-dm\run.bat 
-          echo @Set root=%%~dp0 >> $GITHUB_ACTION_PATH\ictye-live-dm\\run.bat
-          echo @Set root=%%root:\=\\%% >> $GITHUB_ACTION_PATH\\ictye-live-dm\\run.bat
-          echo @(Set /p=%%root%%) <NUL> %%~dp0\lib\site-package\WindPy.pth >> $GITHUB_ACTION_PATH\\ictye-live-dm\\run.bat
-          echo .\bin\python.exe -m ./ >> $GITHUB_ACTION_PATH\\ictye-live-dm\\run.bat
+          "$GITHUB_ACTION_PATH/ictye-live-dm/bin/python.exe" "$GITHUB_ACTION_PATH/ictye-live-dm/bin/get-pip.py"
+          echo @Set PATH=%%~dp0:%%~dp0Scripts:%%PATH%% > $GITHUB_ACTION_PATH/ictye-live-dm/run.bat 
+          echo @Set root=%%~dp0 >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
+          echo @Set root=%%root:\=\\%% >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
+          echo @(Set /p=%%root%%) <NUL> %%~dp0\lib\site-package\WindPy.pth >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
+          echo ./bin/python.exe -m ./ >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
 
       - name: upload_results
         uses: actions/upload-artifact@v3
