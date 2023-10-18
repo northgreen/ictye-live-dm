@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - "main"
+      - "dev"
   workflow_dispatch:
     
 jobs:
@@ -19,4 +20,12 @@ jobs:
         with:
           python-version: '3.10'
       - name: pack
-        run: echo "test"
+        run: |
+          DownloadFile -h
+          rm -r $GITHUB_ACTION_PATH/ictye-live-dm/test
+
+      - name: upload_results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ictye-live-dm
+          path: $GITHUB_ACTION_PATH/ictye-live-dm

@@ -1,8 +1,20 @@
-import plugin_erroers
-import msgs
+#  Copyright (c) 2023 楚天寻箫（ictye）
+#
+#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
+#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
+#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
+#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
+#
+#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
+#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
+#
+#   更多详情请参阅许可协议文档
+
+from . import plugin_erroers
 import asyncio
 import typing
-import depends.configs as configs
+from . import configs as configs
+from . import connects
 from aiohttp import web
 
 
@@ -65,7 +77,7 @@ class Plugin_Main:
         if self.sprit_cgi_support:
             raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
 
-    def dm_iter(self, params,connect_id):
+    def dm_iter(self, params, connect_waper: connects.connect_wrapper):
         """
         返回弹幕迭代对象
         """

@@ -1,9 +1,14 @@
 import os
 import sys
-import json
+import pytest
+
+import time
 
 sys.path.append(os.path.split(os.path.abspath(__name__))[0].rsplit(os.sep, 0)[0])
+sys.path.append(os.path.abspath(".."))
 import livewebsocket
+
+os.chdir("..")
 
 
 def test_test():
@@ -13,9 +18,10 @@ def test_test():
 
 # test sub_message_loop
 
+@pytest.mark.asyncio
 async def test_sub_message_loop():
     print("test sub_message_loop")
-    await livewebsocket.sub_message_loop()
+    await livewebsocket.sub_message_loop(test=True)
     assert True
 
 

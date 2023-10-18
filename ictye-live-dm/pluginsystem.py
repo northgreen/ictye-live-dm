@@ -1,11 +1,23 @@
+#  Copyright (c) 2023 楚天寻箫（ictye）
+#
+#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
+#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
+#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
+#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
+#
+#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
+#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
+#
+#   更多详情请参阅许可协议文档
+
 import asyncio
-from depends import logger
+from depends import logger, plugin_main, plugin_erroers
 import logging
 import os
 import importlib
-import plugin_erroers
 import importlib.util
-import plugin_main
+from websockets.server import WebSocketServerProtocol
+from depends import connects
 
 confi = {}  # 配置
 
@@ -49,7 +61,7 @@ class Plugin:
                         self.plugin_cgi_support[plugin_interface.sprit_cgi_path] = plugin_interface.sprit_cgi
                     # 注册插件js
                     if plugin_interface.plugin_js_sprit_support:
-                        self.plugin_js_support.append(plugin_interface.plugin_js_sprit)
+                        self.plugin_js_support[plugin_interface.plugin_name] = plugin_interface.plugin_js_sprit
 
             except IndexError as e:
                 mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
@@ -87,7 +99,7 @@ class Plugin:
             except ImportError as e:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
 
-    async def get_plugin_message(self, params):
+    async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
         # 消息提取回环
         # params:
         #     message: 消息对象
@@ -96,7 +108,7 @@ class Plugin:
         #     plugin_id: 插件id
 
         for plugin in self.message_plugin_list:
-            dm = plugin.dm_iter(params)
+            dm = plugin.dm_iter(params, connects.connect_wrapper(connect))
             if dm is None:
                 return
             async for _dm in dm:

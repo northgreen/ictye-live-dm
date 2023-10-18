@@ -9,25 +9,3 @@
 #    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
 #
 #   更多详情请参阅许可协议文档
-import plugin_main
-
-
-class Plugin_Main(plugin_main.Plugin_Main):
-    def plugin_init(self):
-        self.plugin_name = "测试插件"
-        self.plugin_version = "1.0"
-        self.plugin_author = "XXXXX"
-        self.plugin_description = "测试插件"
-        self.plugin_command = "test"
-        self.plugin_command_description = "测试插件"
-        self.plugin_command_help = "测试插件"
-        self.plugin_command_example = "测试插件"
-        self.plugin_command_example_description = "测试插件"
-        return "analyzer"
-
-    def plugin_main(self):
-        print("测试插件")
-        return "测试插件"
-
-    def message_filter(self, message):
-        return

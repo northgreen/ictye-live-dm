@@ -6,21 +6,27 @@ import logging
 from depends import logger
 import pluginsystem
 
+
 plugin_system: pluginsystem.Plugin
 config = {}
 param_list: dict = {}
 connect_list: list[server.WebSocketServerProtocol] = []
 
 
-async def sub_message_loop():
+async def sub_message_loop(test = False):
     logger.logging_setup(config)
     loggers = logging.getLogger(__name__)
 
-    loggers.info("socket connected,we will push dm to client")
+    count = 10
     while True:
+        if test:
+            if count == 0:
+                break
+            count -= 1
+        loggers.info("sub_message_loop")
         for connects in connect_list:
             dms: dict
-            __dm = plugin_system.get_plugin_message(param_list[connects.id] if connects.id in param_list else [])
+            __dm = plugin_system.get_plugin_message(param_list[connects.id] if connects.id in param_list else [],connects)
             async for dms in __dm:
                 if connects.open:
                     mdm = await plugin_system.message_filter(dms)

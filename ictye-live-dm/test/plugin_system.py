@@ -23,9 +23,13 @@
 import unittest
 import sys
 import os
+
+import pytest
+
 sys.path.append(os.path.split(os.path.abspath(__name__))[0].rsplit(os.sep, 0)[0])
+sys.path.append("..")
 import pluginsystem
-import msgs
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 test_confi = {'port': 12345, 'host': '127.0.0.1', 'index': './web/living room dm.html',
@@ -41,6 +45,7 @@ plugin = pluginsystem.Plugin()
 
 
 class MyTestCase(unittest.TestCase):
+    @pytest.mark.asyncio
     async def test_message_system(self):
         async for i in plugin.get_plugin_message(params={"message": "message"}):
             print(i)

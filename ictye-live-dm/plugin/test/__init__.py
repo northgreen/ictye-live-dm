@@ -10,9 +10,7 @@
 #
 #   更多详情请参阅许可协议文档
 
-import json
-
-import plugin_main
+from depends import plugin_main
 import msgs
 import asyncio
 import random
