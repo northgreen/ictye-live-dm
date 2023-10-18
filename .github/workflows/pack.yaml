@@ -24,11 +24,11 @@ jobs:
 
       - name: pack
         run: |
-          DownloadFile -h
-          rm -r $GITHUB_ACTION_PATH/ictye-live-dm/test
+          DownloadFile -u https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip -o $GITHUB_ACTION_PATH/ictye-live-dm/
+
 
       - name: upload_results
         uses: actions/upload-artifact@v3
         with:
-          name: ictye-live-dm
+          name: ictye-live-dm-debug.zip
           path: $GITHUB_ACTION_PATH/ictye-live-dm
