@@ -31,7 +31,7 @@ jobs:
           echo @Set root=%%root:\=\\%% >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
           echo @(Set /p=%%root%%) `<NUL`> %%~dp0\lib\site-package\WindPy.pth >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
           echo ./bin/python.exe -m ./ >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
-          Compress-Archive -Path $GITHUB_ACTION_PATH/ictye-live-dm -DestinationPath $GITHUB_ACTION_PATH/ictye-live-dm.zip
+          Compress-Archive -Path $GITHUB_ACTION_PATH/ictye-live-dm/* -DestinationPath $GITHUB_ACTION_PATH/ictye-live-dm.zip
           tree /f $GITHUB_ACTION_PATH
 
       - name: upload_results
