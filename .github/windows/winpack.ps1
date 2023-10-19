@@ -7,9 +7,9 @@ Expand-Archive -LiteralPath "$work_path/python.zip" -DestinationPath "$work_path
 Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_path/ictye-live-dm/bin/get-pip.py"
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
-<##
+
 try {
-    $file_path = Join-Path $work_path "ictye-live-dm/bin/python38._pth"
+    $file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
 $lines = Get-Content -Path $file_path
 $updatedLines = @()
 
@@ -26,15 +26,6 @@ $updatedLines | Set-Content -Path $file_path
 finally {
     Write-Warning "no py38.pth"
 }
-#>
-
-
-
-Write-Output @Set PATH=%%~dp0:%%~dp0Scripts:%%PATH%% > $work_path/ictye-live-dm/run.bat 
-Write-Output @Set root=%%~dp0 >> $work_path/ictye-live-dm/run.bat
-Write-Output @Set root=%%root:\=\\%% >> $work_path/ictye-live-dm/run.bat
-Write-Output @(Set /p=%%root%%) `<NUL`> %%~dp0\lib\site-package\WindPy.pth >> $work_path/ictye-live-dm/run.bat
-Write-Output ./bin/python.exe -m ./ >> $work_path/ictye-live-dm/run.bat
 
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip
 
