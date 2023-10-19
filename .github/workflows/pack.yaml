@@ -20,11 +20,17 @@ jobs:
           python-version: '3.10'
       - name: pack
         run: |
+          echo $GITHUB_ACTION_PATH
           Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip" -OutFile "$GITHUB_WORKSPACE/python.zip"
+          echo $GITHUB_ACTION_PATH/
           mkdir $GITHUB_WORKSPACE/ictye-live-dm/bin
+          echo $GITHUB_ACTION_PATH/
           Expand-Archive -LiteralPath "$GITHUB_WORKSPACE/python.zip" -DestinationPath "$GITHUB_WORKSPACE/ictye-live-dm/bin"
+          echo $GITHUB_ACTION_PATH/
           ls $GITHUB_WORKSPACE
+          echo $GITHUB_ACTION_PATH/
           ls $GITHUB_WORKSPACE/ictye-live-dm/
+          echo $GITHUB_ACTION_PATH/
           tree /f $GITHUB_WORKSPACE
 
 
