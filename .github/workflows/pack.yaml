@@ -27,4 +27,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ictye-live-dm
-          path: $GITHUB_WORKSPACE/ictye-live-dm.zip
+          path: ictye-live-dm.zip
