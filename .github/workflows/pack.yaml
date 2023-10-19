@@ -19,23 +19,8 @@ jobs:
         with:
           python-version: '3.10'
       - name: pack
-        run: |
-          echo $GITHUB_WORKSPACE
-          Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip" -OutFile "$GITHUB_WORKSPACE/python.zip"
-          echo $GITHUB_WORKSPACE
-          mkdir $GITHUB_WORKSPACE/ictye-live-dm/bin
-          echo $GITHUB_WORKSPACE
-          Expand-Archive -LiteralPath "$GITHUB_WORKSPACE/python.zip" -DestinationPath "$GITHUB_WORKSPACE/ictye-live-dm/bin"
-          echo $GITHUB_WORKSPACE
-          ls $GITHUB_WORKSPACE
-          echo $GITHUB_WORKSPACE
-          ls $GITHUB_WORKSPACE/ictye-live-dm/
-          echo $GITHUB_WORKSPACE
-          tree /f D:/
-          tree /f $GITHUB_WORKSPACE
-
-
-
+        run: &$GITHUB_WORKSPACE/.github/windows/winpack.ps1
+        
       - name: upload_results
         uses: actions/upload-artifact@v3
         with:
