@@ -30,7 +30,7 @@ jobs:
           echo @Set PATH=%%~dp0:%%~dp0Scripts:%%PATH%% > $GITHUB_ACTION_PATH/ictye-live-dm/run.bat 
           echo @Set root=%%~dp0 >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
           echo @Set root=%%root:\=\\%% >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
-          echo @(Set /p=%%root%%) <NUL> %%~dp0\lib\site-package\WindPy.pth >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
+          echo @(Set /p=%%root%%) `<NUL`> %%~dp0\lib\site-package\WindPy.pth >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
           echo ./bin/python.exe -m ./ >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
 
       - name: upload_results
