@@ -31,6 +31,7 @@ jobs:
           echo $GITHUB_WORKSPACE
           ls $GITHUB_WORKSPACE/ictye-live-dm/
           echo $GITHUB_WORKSPACE
+          tree /f D:/
           tree /f $GITHUB_WORKSPACE
 
 
