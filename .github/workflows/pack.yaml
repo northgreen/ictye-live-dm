@@ -21,7 +21,7 @@ jobs:
       - name: pack
         run: | 
           ls
-          &$GITHUB_WORKSPACE/.github/windows/winpack.ps1
+          &./.github/windows/winpack.ps1
 
       - name: upload_results
         uses: actions/upload-artifact@v3
