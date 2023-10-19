@@ -20,12 +20,12 @@ jobs:
           python-version: '3.10'
       - name: pack
         run: |
-          Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip" -OutFile "$GITHUB_ACTION_PATH/python.zip"
-          mkdir $GITHUB_ACTION_PATH/ictye-live-dm/bin
-          Expand-Archive -LiteralPath "$GITHUB_ACTION_PATH/python.zip" -DestinationPath "$GITHUB_ACTION_PATH/ictye-live-dm/bin"
-          ls $GITHUB_ACTION_PATH
-          ls $GITHUB_ACTION_PATH/ictye-live-dm/
-          tree /f $GITHUB_ACTION_PATH
+          Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip" -OutFile "$GITHUB_WORKSPACE/python.zip"
+          mkdir $GITHUB_WORKSPACE/ictye-live-dm/bin
+          Expand-Archive -LiteralPath "$GITHUB_WORKSPACE/python.zip" -DestinationPath "$GITHUB_WORKSPACE/ictye-live-dm/bin"
+          ls $GITHUB_WORKSPACE
+          ls $GITHUB_WORKSPACE/ictye-live-dm/
+          tree /f $GITHUB_WORKSPACE
 
 
 
@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ictye-live-dm
-          path: $GITHUB_ACTION_PATH/ictye-live-dm.zip
+          path: $GITHUB_WORKSPACE/ictye-live-dm.zip
