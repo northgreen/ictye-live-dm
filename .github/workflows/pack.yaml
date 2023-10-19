@@ -23,7 +23,10 @@ jobs:
           Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip" -OutFile "$GITHUB_ACTION_PATH/python.zip"
           mkdir $GITHUB_ACTION_PATH/ictye-live-dm/bin
           Expand-Archive -LiteralPath "$GITHUB_ACTION_PATH/python.zip" -DestinationPath "$GITHUB_ACTION_PATH/ictye-live-dm/bin"
+          ls -a $GITHUB_ACTION_PATH
+          ls -a $GITHUB_ACTION_PATH/ictye-live-dm/
           tree /f $GITHUB_ACTION_PATH
+
 
 
       - name: upload_results
