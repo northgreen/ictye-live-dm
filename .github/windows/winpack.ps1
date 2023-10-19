@@ -7,7 +7,8 @@ Expand-Archive -LiteralPath "$work_path/python.zip" -DestinationPath "$work_path
 Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_path/ictye-live-dm/bin/get-pip.py"
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
-$file_path = Join-Path $work_path "ictye-live-dm/bin/python38._pth"
+try {
+    $file_path = Join-Path $work_path "ictye-live-dm/bin/python38._pth"
 $lines = Get-Content -Path $file_path
 $updatedLines = @()
 
@@ -20,6 +21,11 @@ foreach ($line in $lines) {
 }
 
 $updatedLines | Set-Content -Path $file_path
+}
+finally {
+    Write-Warning "no py38.pth"
+}
+
 
 
 
