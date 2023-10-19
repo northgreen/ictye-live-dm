@@ -36,7 +36,7 @@ Write-Output @Set root=%%root:\=\\%% >> $work_path/ictye-live-dm/run.bat
 Write-Output @(Set /p=%%root%%) `<NUL`> %%~dp0\lib\site-package\WindPy.pth >> $work_path/ictye-live-dm/run.bat
 Write-Output ./bin/python.exe -m ./ >> $work_path/ictye-live-dm/run.bat
 
-Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $GITHUB_WORKSPACE/ictye-live-dm.zip
+Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip
 
 Get-ChildItem $work_path
 Get-ChildItem $work_path/ictye-live-dm/
