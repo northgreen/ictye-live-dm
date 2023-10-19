@@ -1,8 +1,7 @@
-name: pack package
+name: pack test package
 on: 
   push:
     branches:
-      - "main"
       - "dev"
   workflow_dispatch:
     
