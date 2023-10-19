@@ -21,7 +21,6 @@ jobs:
           python-version: '3.10'
       - name: pack
         run: |
-          Get-Verb
           python -c "import os;import urllib.request; urllib.request.urlretrieve('https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip', os.environ.get('GITHUB_ACTION_PATH', '') + '/python.zip')"
           python -c "import os;import zipfile; zipfile.ZipFile(os.environ.get('GITHUB_ACTION_PATH', '') + '/python.zip', 'r').extractall(os.environ.get('GITHUB_ACTION_PATH', '') + '/ictye-live-dm/bin')"
           python -c "import os;import urllib.request; urllib.request.urlretrieve('https://bootstrap.pypa.io/get-pip.py', os.environ.get('GITHUB_ACTION_PATH', '') + '/ictye-live-dm/bin/get-pip.py')"
@@ -33,6 +32,7 @@ jobs:
           echo @(Set /p=%%root%%) `<NUL`> %%~dp0\lib\site-package\WindPy.pth >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
           echo ./bin/python.exe -m ./ >> $GITHUB_ACTION_PATH/ictye-live-dm/run.bat
           Compress-Archive -Path $GITHUB_ACTION_PATH/ictye-live-dm -DestinationPath $GITHUB_ACTION_PATH/ictye-live-dm.zip
+          tree /f $GITHUB_ACTION_PATH
 
       - name: upload_results
         uses: actions/upload-artifact@v3
