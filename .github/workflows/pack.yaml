@@ -37,5 +37,5 @@ jobs:
       - name: upload_results
         uses: actions/upload-artifact@v3
         with:
-          name: ictye-live-dm-debug.zip
+          name: ictye-live-dm
           path: $GITHUB_ACTION_PATH/ictye-live-dm.zip
