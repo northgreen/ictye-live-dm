@@ -9,23 +9,27 @@ Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_pa
 
 
 try {
+    Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
     $file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
-$lines = Get-Content -Path $file_path
-$updatedLines = @()
+    $lines = Get-Content -Path $file_path
+    $updatedLines = @()
 
-foreach ($line in $lines) {
-    if ($line.Trim().StartsWith("#") -and $line.Contains("import site")) {
-        $updatedLines += $line.TrimStart("#")
-    } else {
-        $updatedLines += $line
-    }
+    foreach ($line in $lines) {
+        if ($line.Trim().StartsWith("#") -and $line.Contains("import site")) {
+            $updatedLines += $line.TrimStart("#")
+        } else {
+            $updatedLines += $line
+        }
 }
 
 $updatedLines | Set-Content -Path $file_path
 }
-finally {
+catch {
     Write-Warning "no py38.pth"
 }
+
+
+Copy-Item .\.github\resource\run.bat .\ictye-live-dm\
 
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip
 
