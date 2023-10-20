@@ -7,9 +7,9 @@ Expand-Archive -LiteralPath "$work_path/python.zip" -DestinationPath "$work_path
 Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_path/ictye-live-dm/bin/get-pip.py"
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
-
 try {
     Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
+    <#移除py311.pthimport site前的井号#>
     $file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
     $lines = Get-Content -Path $file_path
     $updatedLines = @()
@@ -33,6 +33,4 @@ Copy-Item .\.github\resource\run.bat .\ictye-live-dm\
 
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip
 
-Get-ChildItem $work_path
-Get-ChildItem $work_path/ictye-live-dm/
-tree /f $work_path
+Wait-Process "打包完成"
