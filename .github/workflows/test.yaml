@@ -29,13 +29,15 @@ jobs:
         
       - name: test
         run: |
-          pip install pytest pytest-cov
-          pytest $GITHUB_ACTION_PATH --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+          pip install pytest pytest-cov pytest-asyncio
+          pytest $GITHUB_ACTION_PATH --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
 
       - name: upload_results
         uses: actions/upload-artifact@v3
         with:
           name: pytest-results-${{ matrix.python-version }}
-          path: junit/test-results-${{ matrix.python-version }}.xml
+          path: |
+            junit/test-results-${{ matrix.python-version }}.xml
+            htmlcov/*
           # Use always() to always run this step to publish test results when there are test failures
         if:  ${{ always() }}
