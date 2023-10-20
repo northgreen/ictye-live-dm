@@ -42,6 +42,6 @@ jobs:
           # Use always() to always run this step to publish test results when there are test failures
         if:  ${{ always() }}
       - name: To pack job
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v1
         with: 
           event-type: build
