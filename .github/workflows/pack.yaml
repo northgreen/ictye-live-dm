@@ -4,10 +4,9 @@ on:
     branches:
       - "main"
   workflow_run:
-    workflows: ["test"]
+    workflows: [test]
     types:
       - completed
-  workflow_call: 
     
 jobs:
   pack_win:
