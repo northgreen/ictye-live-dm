@@ -4,6 +4,8 @@ on:
     branches:
       - "main"
   repository_dispatch:
+    types: 
+      - build
   workflow_dispatch:
     
 jobs:

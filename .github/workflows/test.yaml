@@ -44,4 +44,4 @@ jobs:
       - name: To pack job
         uses: peter-evans/repository-dispatch@v2
         with: 
-          event-type: pack test package
+          event-type: build
