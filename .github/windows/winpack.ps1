@@ -33,4 +33,4 @@ Copy-Item .\.github\resource\run.bat .\ictye-live-dm\
 
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip
 
-Wait-Process "打包完成"
+Write-Debug "打包完成"
