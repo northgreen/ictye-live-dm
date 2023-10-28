@@ -30,6 +30,7 @@ jobs:
       - name: test
         run: |
           pip install pytest pytest-cov pytest-asyncio
+          cd ./ictye-live-dm
           pytest $GITHUB_ACTION_PATH --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
 
       - name: upload_results
