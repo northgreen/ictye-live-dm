@@ -1,14 +1,13 @@
 import os
 import sys
 import pytest
-
+os.chdir("..")
 import time
 
 sys.path.append(os.path.split(os.path.abspath(__name__))[0].rsplit(os.sep, 0)[0])
-sys.path.append(os.path.abspath(".."))
 import livewebsocket
 
-os.chdir("..")
+
 
 
 def test_test():
