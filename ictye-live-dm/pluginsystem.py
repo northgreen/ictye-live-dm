@@ -45,6 +45,8 @@ class Plugin:
                     mlogger.info(f"found a plugin '{plugin_name}' in {pathname}")
 
                     plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
+                    if not hasattr(plugin_module, "Plugin_Main"):
+                        raise plugin_erroers.NoMainMather("函数未实现主方法或者主方法名称错误")
                     plugin_class = getattr(plugin_module, "Plugin_Main")
                     plugin_interface: plugin_main.Plugin_Main = plugin_class()
 
@@ -66,16 +68,26 @@ class Plugin:
             except IndexError as e:
                 mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
-        # 导入额外插件
-        for plugin_file in confi["plugins"]["others_plugin"]:
+        # TODO:修不起这个bug了，谁爱修谁修。。。。。。。。。。。。。。。
+        """
+        for plugin_file in confi["plugins"]["others_plugin"]:    
             plugin_name = plugin_file
             try:
                 if plugin_file is not None:
                     mlogger.info(f"loading plugin{plugin_file}")
                     path = os.path.normpath(plugin_file)
-                    spec = importlib.util.spec_from_file_location(os.path.basename(path), os.path.dirname(path))
+                    if os.path.isdir(plugin_name):
+                        spec = importlib.util.spec_from_file_location(os.path.dirname(path), "__init__.py")
+                    else:
+                        spec = importlib.util.spec_from_file_location(os.path.dirname(path), os.path.basename(path))
+                    if spec is None:
+                        mlogger.error(f"no modle on {path}")
+                        continue
                     module = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(module)
+                    # 检查是否实现了主方法
+                    if not hasattr(module, "Plugin_Main"):
+                        raise plugin_erroers.NoMainMather("函数未实现主方法或者主方法名称错误")
                     plugin_main_class: plugin_main.Plugin_Main = module.Plugin_Main
 
                     # 获取插件类型
@@ -97,7 +109,11 @@ class Plugin:
                     if plugin_main_class.plugin_js_sprit_support:
                         self.plugin_js_support[plugin_main_class.plugin_name] = plugin_main_class.plugin_js_sprit
             except ImportError as e:
-                mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")
+                mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")            
+        """
+        # 导入额外插件
+
+
 
     async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
         # 消息提取回环

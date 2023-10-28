@@ -9,7 +9,9 @@ websocket:
   path: "/websocket"
 
 plugins:
+  # 不要放在太离谱的位置，测试发现只能支持二级目录
   default_path: "./plugin"
+  # TODO:下面的不要了
   others_plugin:
     -
 
