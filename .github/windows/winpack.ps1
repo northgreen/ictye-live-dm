@@ -7,7 +7,13 @@ Expand-Archive -LiteralPath "$work_path/python.zip" -DestinationPath "$work_path
 Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_path/ictye-live-dm/bin/get-pip.py"
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
-Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
+try{
+    Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
+}
+catch{
+   Write-Debug "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA，妈的sb，根本删不掉"
+}
+
 <#移除py311.pthimport site前的井号#>
 $file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
 $lines = Get-Content -Path $file_path
