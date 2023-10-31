@@ -1,5 +1,8 @@
 """
 这个文件内定义全部的标准消息模板
+
+所有的函数都应该又to_dict方法来将其转为字典，相反的这个函数能输出打包好的字典
+别问我为啥，问就是不知道
 """
 
 
@@ -17,6 +20,14 @@ class connect_ok:
 
 class dm:
     def __init__(self, msg: str, who: dict):
+        """
+        params:
+        msg:str 消息主体
+        who:dict 消息发出者对象（其实是一个字典）
+
+        成员方法：
+        to_dict: 输出为字典
+        """
         self.msg = msg
         self.who = who
 

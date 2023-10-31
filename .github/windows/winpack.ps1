@@ -7,7 +7,6 @@ Expand-Archive -LiteralPath "$work_path/python.zip" -DestinationPath "$work_path
 Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_path/ictye-live-dm/bin/get-pip.py"
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
-try {
     Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
     <#移除py311.pthimport site前的井号#>
     $file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
@@ -23,10 +22,7 @@ try {
 }
 
 $updatedLines | Set-Content -Path $file_path
-}
-catch {
-    Write-Warning "no py38.pth"
-}
+
 
 
 Copy-Item .\.github\resource\run.bat .\ictye-live-dm\

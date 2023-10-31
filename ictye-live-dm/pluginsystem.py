@@ -67,7 +67,7 @@ class Plugin:
 
             except IndexError as e:
                 mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
-
+        # 导入额外插件
         # TODO:修不起这个bug了，谁爱修谁修。。。。。。。。。。。。。。。
         """
         for plugin_file in confi["plugins"]["others_plugin"]:    
@@ -111,7 +111,7 @@ class Plugin:
             except ImportError as e:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")            
         """
-        # 导入额外插件
+
 
 
 
@@ -134,7 +134,8 @@ class Plugin:
     async def message_analyzer(self, message):
         # 消息分析插件
         for plugins in self.analyzer_plugin_list:
-            plugins.message_loop(message)
+            plugins.message_anaylazer(message)
+
 
     async def message_filter(self, message):
         """

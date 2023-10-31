@@ -68,6 +68,9 @@ class Plugin_Main:
         """
         return message
 
+    async def message_anaylazer(self,message):
+        pass
+
     async def sprit_cgi(self, request):
         """
         脚本cgi接口
@@ -82,6 +85,7 @@ class Plugin_Main:
         返回弹幕迭代对象
         """
         return self
+
 
     @typing.final
     def update_config(self):
@@ -126,7 +130,6 @@ class Plugin_Main:
         """
         # 不存在则初始化插件类型，并返回插件类型给软件以判断插件类型
         # 不存在插件类型则表示插件没有被加载，返回插件没有被加载的错误信息给软件以判断插件是否被加载
-        # 这个插件没有被加载的话，软件会将插件从插件列表中移除，并且插件将不会被调用
         if not self.type:
             self.type = self.plugin_init()
         return self.type
