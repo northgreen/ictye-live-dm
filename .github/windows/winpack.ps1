@@ -7,18 +7,17 @@ Expand-Archive -LiteralPath "$work_path/python.zip" -DestinationPath "$work_path
 Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_path/ictye-live-dm/bin/get-pip.py"
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
-    Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
-    <#移除py311.pthimport site前的井号#>
-    $file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
-    $lines = Get-Content -Path $file_path
-    $updatedLines = @()
-
-    foreach ($line in $lines) {
-        if ($line.Trim().StartsWith("#") -and $line.Contains("import site")) {
-            $updatedLines += $line.TrimStart("#")
-        } else {
-            $updatedLines += $line
-        }
+Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
+<#移除py311.pthimport site前的井号#>
+$file_path = Join-Path $work_path "ictye-live-dm/bin/python311._pth"
+$lines = Get-Content -Path $file_path
+$updatedLines = @()
+foreach ($line in $lines) {
+    if ($line.Trim().StartsWith("#") -and $line.Contains("import site")) {
+        $updatedLines += $line.TrimStart("#")
+    } else {
+        $updatedLines += $line
+    }
 }
 
 $updatedLines | Set-Content -Path $file_path
