@@ -8,7 +8,7 @@ Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "$work_pa
 &"$work_path/ictye-live-dm/bin/python.exe" "$work_path/ictye-live-dm/bin/get-pip.py"
 
 try{
-    Get-ChildItem -Recurse $work_path/ictye-live-dm/test | Remove-Item
+    Get-ChildItem -Recurse “$work_path/ictye-live-dm/test” | Remove-Item
 }
 catch{
    Write-Debug "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA，妈的sb，根本删不掉"
