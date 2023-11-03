@@ -6,6 +6,11 @@
 """
 
 
+class datas:
+    def to_dict(self, cls: object):
+        return dict(cls)
+
+
 class connect_ok:
     """
     连接认证消息

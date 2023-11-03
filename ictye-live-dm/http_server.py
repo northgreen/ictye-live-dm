@@ -11,7 +11,7 @@
 #   更多详情请参阅许可协议文档
 
 from aiohttp import web
-import msgs
+from depends import msgs
 import json
 import logging
 import os

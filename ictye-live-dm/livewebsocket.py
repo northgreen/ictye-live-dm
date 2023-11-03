@@ -1,9 +1,8 @@
 import asyncio
 import json
-import msgs
 from websockets import server
 import logging
-from depends import logger
+from depends import logger, msgs
 import pluginsystem
 
 plugin_system: pluginsystem.Plugin

@@ -10,7 +10,7 @@
 #
 #   更多详情请参阅许可协议文档
 
-from . import plugin_errors
+from . import plugin_errors, msgs
 import asyncio
 import typing
 from . import configs as configs
@@ -43,7 +43,7 @@ class Plugin_Main:
         if self.plugin_type() == "message":
             self.message_list = []
 
-    def plugin_init(self):
+    def plugin_init(self) -> str:
         """
             插件开始被加载时调用
             父函数本身不实现任何功能
@@ -53,7 +53,7 @@ class Plugin_Main:
             return:如果是”message“则表示这是个消息提供插件，如果是”analyzer“则表示这个插件是用来获取中间消息并且进行处理的。
         """
         self.stop = 0
-        raise plugin_erroers.UnexpectedPluginMessage('插件入口方法没有实现')
+        raise plugin_errors.UnexpectedPluginMessage('插件入口方法没有实现')
 
     async def plugin_main(self):
         """
@@ -61,14 +61,14 @@ class Plugin_Main:
         """
         pass
 
-    async def message_filter(self, message):
+    async def message_filter(self, message) -> msgs.msg_box:
         """
         消息过滤器
         用于自动处理消息，比如翻译或者敏感词过滤
         """
         return message
 
-    async def message_anaylazer(self,message):
+    async def message_anaylazer(self, message):
         pass
 
     async def sprit_cgi(self, request):
@@ -78,14 +78,13 @@ class Plugin_Main:
         :return 响应，用aiohttp的就行（已经封装为self.web）
         """
         if self.sprit_cgi_support:
-            raise plugin_erroers.UnexpectedPluginMather("未实现的插件方法")
+            raise plugin_errors.UnexpectedPluginMather("未实现的插件方法")
 
-    def dm_iter(self, params, connect_waper: connects.connect_wrapper):
+    def dm_iter(self, params: dict, connect_waper: connects.connect_wrapper) -> object:
         """
         返回弹幕迭代对象
         """
         return self
-
 
     @typing.final
     def update_config(self):
@@ -117,14 +116,14 @@ class Plugin_Main:
         print(f"plugin is done")
 
     @typing.final
-    def plugin_getconfig(self):
+    def plugin_getconfig(self) -> dict:
         """
         获取配置
         """
         return configs.config()
 
     @typing.final
-    def plugin_type(self):
+    def plugin_type(self) -> str:
         """
         获取插件类型
         """

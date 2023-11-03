@@ -10,8 +10,7 @@
 #
 #   更多详情请参阅许可协议文档
 
-from depends import plugin_main
-import msgs
+from depends import plugin_main,msgs
 import asyncio
 import random
 
