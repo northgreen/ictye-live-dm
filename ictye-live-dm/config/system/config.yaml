@@ -8,10 +8,13 @@ websocket:
   port: 45466
   path: "/websocket"
 
+# TODO: 未来会考虑GUI功能，现在这里放着
+GUI: 0
+
 plugins:
-  # 不要放在太离谱的位置，测试发现只能支持二级目录
+  # 不要放在太离谱的位置，测试发现只能支持二级目录,没有改动的必要就不要瞎改
   default_path: "./plugin"
-  # TODO:下面的不要了
+  # TODO:下面的不要了，仅仅供测试使用
   others_plugin:
     -
 

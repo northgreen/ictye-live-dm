@@ -11,7 +11,7 @@
 #   更多详情请参阅许可协议文档
 
 import asyncio
-from depends import logger, plugin_main, plugin_erroers
+from depends import logger, plugin_main, plugin_errors
 import logging
 import os
 import importlib
@@ -47,7 +47,7 @@ class Plugin:
 
                     plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
                     if not hasattr(plugin_module, "Plugin_Main"):
-                        raise plugin_erroers.NoMainMather("函数未实现主方法或者主方法名称错误")
+                        raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
                     plugin_class = getattr(plugin_module, "Plugin_Main")
                     plugin_interface: plugin_main.Plugin_Main = plugin_class()
 
@@ -57,7 +57,7 @@ class Plugin:
                     elif plugin_interface.plugin_type() == "analyzer":
                         self.analyzer_plugin_list.append(plugin_interface)
                     else:
-                        raise plugin_erroers.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
+                        raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
 
                     # 注册脚本cgi接口
                     if plugin_interface.sprit_cgi_support:

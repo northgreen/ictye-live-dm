@@ -11,7 +11,7 @@ try{
     Get-ChildItem -Recurse “$work_path/ictye-live-dm/test” | Remove-Item
 }
 catch{
-   Write-Debug "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA，妈的sb，根本删不掉"
+   Write-Information "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA，妈的sb，根本删不掉"
 }
 
 <#移除py311.pthimport site前的井号#>

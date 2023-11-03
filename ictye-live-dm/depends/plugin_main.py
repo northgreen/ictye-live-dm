@@ -10,7 +10,7 @@
 #
 #   更多详情请参阅许可协议文档
 
-from . import plugin_erroers
+from . import plugin_errors
 import asyncio
 import typing
 from . import configs as configs
