@@ -18,10 +18,12 @@ async def sub_message_loop(test=False):
 
     count = 10
     while True:
+        # 测试用
         if test:
             if count == 0:
                 break
             count -= 1
+
         loggers.info("sub_message_loop")
         for connects in connect_list:
             dms: dict

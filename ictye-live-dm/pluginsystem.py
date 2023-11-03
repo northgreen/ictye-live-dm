@@ -27,10 +27,11 @@ class Plugin:
 
         mlogger = logging.getLogger(__name__)
 
-        self.message_plugin_list: list = []
-        self.analyzer_plugin_list: list = []
-        self.plugin_cgi_support: dict = {}
-        self.plugin_js_support: dict = {}
+        self.message_plugin_list: list = []  # 消息插件列表
+        self.analyzer_plugin_list: list = []  # 分析插件列表
+        self.connect_id_dict: dict[any, list] = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象
+        self.plugin_cgi_support: dict = {}  # 消息插件cgi
+        self.plugin_js_support: dict = {}  # js支持字典
 
         plugin_name = ""
         # 加载默认插件目录
@@ -87,7 +88,7 @@ class Plugin:
                     spec.loader.exec_module(module)
                     # 检查是否实现了主方法
                     if not hasattr(module, "Plugin_Main"):
-                        raise plugin_erroers.NoMainMather("函数未实现主方法或者主方法名称错误")
+                        raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
                     plugin_main_class: plugin_main.Plugin_Main = module.Plugin_Main
 
                     # 获取插件类型
@@ -96,7 +97,7 @@ class Plugin:
                     elif plugin_main_class.plugin_type() == "analyzer":
                         self.analyzer_plugin_list.append(plugin_main_class)
                     else:
-                        raise plugin_erroers.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
+                        raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
 
                     # 注册插件cgi
                     if plugin_main_class.sprit_cgi_support:
@@ -112,30 +113,31 @@ class Plugin:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")            
         """
 
-
-
-
     async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
-        # 消息提取回环
-        # params:
-        #     message: 消息对象
-        #     plugin_name: 插件名称
-        #     plugin_type: 插件类型
-        #     plugin_id: 插件id
 
-        for plugin in self.message_plugin_list:
-            dm = plugin.dm_iter(params, connects.connect_wrapper(connect))
-            if dm is None:
-                return
-            async for _dm in dm:
-                print("_dm:", _dm)
-                yield _dm
+        # FIXME:TM死bug，不知道为什么有时候总是会在消息插件加载完毕之前把它存进字典，按道理来说不能啊。。。。。。。。。
+
+        if connect.id in self.connect_id_dict.keys():
+            for dm_iter in self.connect_id_dict[connect.id]:
+
+                async for _dm in dm_iter:
+                    print("_dm:", _dm)
+                    yield _dm
+        else:
+            self.connect_id_dict[connect.id] = []
+            for plugin in self.message_plugin_list:
+                dm = plugin.dm_iter(params, connects.connect_wrapper(connect))
+                self.connect_id_dict[connect.id].append(dm)
+                if dm is None:
+                    return
+                async for _dm in dm:
+                    print("_dm:", _dm)
+                    yield _dm
 
     async def message_analyzer(self, message):
         # 消息分析插件
         for plugins in self.analyzer_plugin_list:
             plugins.message_anaylazer(message)
-
 
     async def message_filter(self, message):
         """
