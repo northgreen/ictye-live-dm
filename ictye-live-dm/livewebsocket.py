@@ -6,10 +6,12 @@ from depends import logger, msgs
 import pluginsystem
 
 plugin_system: pluginsystem.Plugin
-config = {}
+config: dict = {}
 param_list: dict = {}
 connect_list: list[server.WebSocketServerProtocol] = []
 
+# TODO(ictye):这段逻辑在更改了消息插件的运行方式后显得好多余，并且消息推送存在强烈的顺序和阻塞，这不是我想要的。
+#  或许未来（也许就是明天）我能把sub_message_loop改造或者移除掉。
 
 async def sub_message_loop(test=False):
     logger.logging_setup(config)
@@ -17,13 +19,13 @@ async def sub_message_loop(test=False):
 
     count = 10
     while True:
+
         # 测试用
         if test:
             if count == 0:
                 break
             count -= 1
 
-        loggers.info("sub_message_loop")
         for connects in connect_list:
             dms: dict
             __dm = plugin_system.get_plugin_message(param_list[connects.id] if connects.id in param_list else [],
@@ -36,20 +38,16 @@ async def sub_message_loop(test=False):
                     await connects.send(json.dumps(mdm))
                 else:
                     connect_list.remove(connects)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.1)
 
 
 async def websockets(websocket: server.WebSocketServerProtocol):
-    loggers = logging.getLogger(__name__)
     """
     websocket消息处理主函数
     """
+    loggers = logging.getLogger(__name__)
+    # 连接检测
 
-    """
-    连接检测
-    """
-
-    conformed = 0  # 验证记录
     try:
         async for message in websocket:
 
@@ -57,30 +55,29 @@ async def websockets(websocket: server.WebSocketServerProtocol):
             # 解码信息，注意信息必须是json格式
             try:
                 ret = json.loads(message)
-                if (ret["code"] == 200 and ret["msg"] == "ok") or conformed:  # 连接验证
+                if (ret["code"] == 200 and ret["msg"] == "ok") or websocket in connect_list:  # 连接验证
 
                     loggers.info("connect with blower success")
 
                     if "param" in ret:
                         param_list[websocket.id] = ret["param"]
-                        print("param_list", param_list)
+                        loggers.debug("param_list", param_list)
 
                     await websocket.send(json.dumps(msgs.connect_ok().to_dict()))
                     connect_list.append(websocket)
 
-                    while websocket.open:
-                        await asyncio.sleep(0.05)
+                    await websocket.wait_closed()
 
                 else:
                     loggers.error("connect failed,unexpected client")
                     await websocket.close()
             except TypeError:
                 loggers.warning("json decode failed")
-    except asyncio.CancelledError:
-        loggers.info("?i am canceled?")
     finally:
         await websocket.close()
         connect_list.remove(websocket)
+        plugin_system.remove_connect_in_id_dict(websocket.id)
+        param_list.pop(websocket.id)
 
 
 async def websocket_main(configs):

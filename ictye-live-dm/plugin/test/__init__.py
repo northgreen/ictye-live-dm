@@ -74,10 +74,7 @@ class dms:
 
         async def iter():
             for i in range(random.randint(1, 3)):
-                print("产生一个消息")
                 if random.choices([True, False], weights=[0.8, 0.2], k=1)[0]:
-                    print("user")
-                    msg = msgs.msg_box("default", "user", create_user()).to_dict()
                     print("msg")
                     msg = msgs.msg_box("default", "dm", create_dm()).to_dict()
                 else:

@@ -10,4 +10,14 @@
 #
 #   更多详情请参阅许可协议文档
 
-from . import *
+import unittest
+import http_server
+
+
+class MyTestCase(unittest.TestCase):
+    def test_something(self):
+        self.assertEqual(True, True)  # add assertion here
+
+
+if __name__ == '__main__':
+    unittest.main()

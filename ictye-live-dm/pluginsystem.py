@@ -113,6 +113,9 @@ class Plugin:
                 mlogger.error(f"failed to import plugin {plugin_name:{str(e)}}")            
         """
 
+    def remove_connect_in_id_dict(self, id):
+        return self.connect_id_dict.pop(id, False)
+
     async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
 
         # FIXME:TM死bug，不知道为什么有时候总是会在消息插件加载完毕之前把它存进字典，按道理来说不能啊。。。。。。。。。
@@ -139,7 +142,7 @@ class Plugin:
         for plugins in self.analyzer_plugin_list:
             plugins.message_anaylazer(message)
 
-    async def message_filter(self, message):
+    async def message_filter(self, message) -> dict:
         """
         消息过滤方法
         :param message: 消息对象

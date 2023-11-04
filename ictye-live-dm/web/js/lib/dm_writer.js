@@ -9,12 +9,11 @@ require.config({
 });
 define(["crypto-js/md5"],
     function (md5) {
-        let ok = function (){console.log("debug:defult_ok")}; //测试用函数
 
-            //计算弹幕存在时间
-        let make_time = function (content = ""){return  content.length}
+        //计算弹幕存在时间
+        let make_time = function (content = ""){return  content.length*0.5}
 
-            //添加弹幕
+        //添加弹幕
         let __add_element = function (content = "",msg_time){
 
                 let id = md5(Math.round(Math.random() * 1000000000).toString() + content)

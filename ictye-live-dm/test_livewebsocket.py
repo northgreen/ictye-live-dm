@@ -10,4 +10,29 @@
 #
 #   更多详情请参阅许可协议文档
 
-from . import *
+import os
+import sys
+import pytest
+
+import time
+
+import livewebsocket
+
+
+def test_test():
+    print("test test")
+    assert True
+
+
+# test sub_message_loop
+
+@pytest.mark.asyncio
+async def test_sub_message_loop():
+    print("test sub_message_loop")
+    await livewebsocket.sub_message_loop(test=True)
+    assert True
+
+
+def test_websocket_main():
+    print("test websocket_connect")
+    assert True

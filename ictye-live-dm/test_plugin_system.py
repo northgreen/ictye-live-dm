@@ -10,15 +10,21 @@
 #
 #   更多详情请参阅许可协议文档
 #
+#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
+#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
+#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
+#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
+#
+#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
+#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
+#
+#   更多详情请参阅许可协议文档
+#
 
 import unittest
 import sys
 import os
 import pytest
-
-sys.path.append(os.path.split(os.path.abspath(__name__))[0].rsplit(os.sep, 0)[0])
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-os.chdir("..")
 
 import pluginsystem
 import depends
@@ -36,7 +42,7 @@ def currect_plugin_dir():
     test_confi = {'port': 12345, 'host': '127.0.0.1', 'index': './web/living room dm.html',
                   'websocket': {'port': 45466, 'path': '/websocket'},
                   'plugins': {'default_path': os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                           "test_plugin")},
+                                                           "test/test_plugin")},
                   'debug': 1,
                   'loglevel': 'DEBUG',
                   'logfile': {'open': 1,
@@ -56,7 +62,7 @@ def no_main_plugin():
                   'websocket': {'port': 45466,
                                 'path': '/websocket'},
                   'plugins': {'default_path': os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                           "test_no_main_error"),
+                                                           "test/test_no_main_error"),
                               },
                   'debug': 1,
                   'loglevel': 'DEBUG',
@@ -83,7 +89,7 @@ def test_anaylazer(currect_plugin_dir):
 
 # 测试无主方法错误
 def test_no_main_error(no_main_plugin):
-    with pytest.raises(depends.plugin_erroers.NoMainMather):
+    with pytest.raises(depends.plugin_errors.NoMainMather):
         plugin = pluginsystem.Plugin()
     assert True
 
