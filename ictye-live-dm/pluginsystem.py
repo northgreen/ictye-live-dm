@@ -24,6 +24,7 @@ confi = {}  # 配置
 
 class Plugin:
     def __init__(self):
+        logger.logging_setup(confi)
 
         mlogger = logging.getLogger(__name__)
 
@@ -117,8 +118,11 @@ class Plugin:
         return self.connect_id_dict.pop(id, False)
 
     async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
+        """
+        弹幕对象迭代器，迭代对应参数的弹幕
+        """
 
-        # FIXME:TM死bug，不知道为什么有时候总是会在消息插件加载完毕之前把它存进字典，按道理来说不能啊。。。。。。。。。
+        #  FIXME:TM死bug，不知道为什么有时候总是会在消息插件加载完毕之前把它存进字典，按道理来说不能啊。。。。。。。。。
 
         if connect.id in self.connect_id_dict.keys():
             for dm_iter in self.connect_id_dict[connect.id]:
@@ -198,4 +202,4 @@ class Plugin:
         self.analyzer_plugin_list.remove(obj)
 
 
-logger.logging_setup(confi)
+

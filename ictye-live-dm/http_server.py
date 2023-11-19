@@ -21,13 +21,21 @@ config = dict()
 plugin_system: pluginsystem.Plugin
 
 
+def return_file(file: str):
+    async def healder(request):
+        nonlocal file
+        log = logging.getLogger(__name__)
+        log.info("return for main_page")
+        return web.FileResponse(path=file, status=200)
+
+    return healder
+
+
 async def http_handler(request):
     """
-    主文件请求
+        主文件请求
     """
-    log = logging.getLogger(__name__)
-    log.info("return for main_page")
-    return web.FileResponse(path="web/living room dm.html", status=200)  # FIXME（审查）: 这里写死了，应该在配置文件里定义
+    return web.HTTPFound("/index")
 
 
 async def http_socket_get(request):
@@ -89,6 +97,9 @@ async def http_api_plugin(request):
 
 
 async def http_cgi(request):
+    """
+    HTTP ic py cgi前端调用
+    """
     log = logging.getLogger(__name__)
     req = None
     try:
@@ -108,20 +119,26 @@ async def http_server(configs):
     log.info("http server started")
 
     app = web.Application()
-    route_list: list = [web.get("/", http_handler),
-                        web.get("/get_websocket", http_socket_get),
-                        web.get("/style/{name}", http_style),
-                        web.get("/js/plugin/{name}", http_plugin),
-                        web.get("/js/{name}", http_js),
-                        web.get("/js/lib/{name}", http_lib),
-                        web.get("/js/script/{name}", http_script),
-                        web.get("/websocket", http_websocket),
-                        web.get("/api/plugin_list", http_api_plugin),
-                        web.get("/cgi/{name}", http_cgi)
-                        ]
+
+    route_list: [web.RouteDef] = [web.get("/", http_handler),
+                                  web.get("/get_websocket", http_socket_get),
+                                  web.get("/style/{name}", http_style),
+                                  web.get("/js/plugin/{name}", http_plugin),
+                                  web.get("/js/{name}", http_js),
+                                  web.get("/js/lib/{name}", http_lib),
+                                  web.get("/js/script/{name}", http_script),
+                                  web.get("/websocket", http_websocket),
+                                  web.get("/api/plugin_list", http_api_plugin),
+                                  web.get("/cgi/{name}", http_cgi)
+                                  ]
+    for i in configs["web"]:
+        file, path = list(i.items())[0]
+        route_list.append(web.get(f"/{file}", return_file(path)))
+
     app.add_routes(route_list)
 
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, configs["host"], configs["port"])
     await site.start()
+    log.info(f"seriver is starting at http://{configs['host']}:{configs['port']}")

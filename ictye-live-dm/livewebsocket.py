@@ -10,6 +10,7 @@ config: dict = {}
 param_list: dict = {}
 connect_list: list[server.WebSocketServerProtocol] = []
 
+
 # TODO(ictye):这段逻辑在更改了消息插件的运行方式后显得好多余，并且消息推送存在强烈的顺序和阻塞，这不是我想要的。
 #  或许未来（也许就是明天）我能把sub_message_loop改造或者移除掉。
 
