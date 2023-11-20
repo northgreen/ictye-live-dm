@@ -1,0 +1,43 @@
+name: test
+on:
+  push:
+    branches:
+      - "dev"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11"]
+
+    steps:
+      - name: check out my code
+        uses: actions/checkout@v4
+        with:
+          ref: "dev"
+      - name: install python
+        uses: actions/setup-python@v4.7.1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: install depends
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        
+      - name: test
+        run: |
+          pip install pytest pytest-cov pytest-asyncio
+          pytest $GITHUB_ACTION_PATH --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
+
+      - name: upload_results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: |
+            junit/test-results-${{ matrix.python-version }}.xml
+            htmlcov/*
+          # Use always() to always run this step to publish test results when there are test failures
+        if:  ${{ always() }}
