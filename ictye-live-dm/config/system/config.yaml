@@ -16,9 +16,6 @@ GUI: 0
 plugins:
   # 不要放在太离谱的位置，测试发现只能支持二级目录,没有改动的必要就不要瞎改
   default_path: "./plugin"
-  # TODO:下面的不要了，仅仅供测试使用
-  others_plugin:
-    -
 
 #调试开关，非开发人员勿动(动吧，随便动（bushi)
 debug: 1

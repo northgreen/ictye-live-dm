@@ -57,7 +57,7 @@ def main():
     livewebsocket.plugin_system = plugin_sys
     http_server.plugin_system = plugin_sys
     # 获取logger
-    logger.logging_setup(config)
+    logger.setup_logging(config)
     loggers = logging.getLogger(__name__)
 
     # 启动服务器

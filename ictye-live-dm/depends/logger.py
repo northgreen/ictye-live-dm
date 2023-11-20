@@ -1,7 +1,7 @@
 import logging
 
 
-def logging_setup(config: dict):
+def setup_logging(config: dict):
     level_dic: dict = {"DEBUG": logging.DEBUG,
                        "INFO": logging.INFO,
                        "WARNING": logging.WARNING,
