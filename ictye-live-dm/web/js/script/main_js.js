@@ -30,19 +30,18 @@ define(["js/script/plugin_manager"],
                 websocket(JSON.parse(req.responseText).local)
             }
         }
+
         req.send()
-
-    }
-
-    let connect_ok = void 0
-function websocket(ura){
+   }
+   let connect_ok = void 0;
+    function websocket(ura){
         if("WebSocket" in window) {
             let socket = new WebSocket(ura)
+
             socket.addEventListener("message",function(event){
                 console.log('Message from server ', event.data)
 
                 if (event.data === "{\"code\": 200, \"msg\": \"connect ok\"}"){
-                    console.info("connect to server success")
                     connect_ok = 1
                 }else if (connect_ok === 1) {
                     console.info("cok is "+event.data)
@@ -61,6 +60,7 @@ function websocket(ura){
                     param[key] = value
                 })
                 console.log("params:",param)
+
                 // 发送消息给服务器
                 socket.send(JSON.stringify({"code":200,"msg":"ok","param":param} ))
             }
@@ -69,7 +69,5 @@ function websocket(ura){
             alert("err! your browser is not supported!!!")
         }
     }
-
     main()
-    }
-)
+})

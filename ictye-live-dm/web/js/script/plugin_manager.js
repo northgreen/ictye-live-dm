@@ -35,12 +35,7 @@ define(
         let message_handler = function (message) {
            if (Object.keys(plugin_message_handler).length !== 0){
                plugin_message_handler[message.message_class](message)
-           }else {
-               // FIXME: 似乎有个难以解决的bug，不过貌似不是很重要，在插件加载之前的消息总是不能被正确处理
-               console.debug("a bug?")
-               console.debug(plugin_message_handler)
            }
-
         }
 
         return {

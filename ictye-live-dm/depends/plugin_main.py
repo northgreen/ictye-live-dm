@@ -23,7 +23,7 @@ class Plugin_Main:
     @typing.final
     def __init__(self):
         """
-        不要用这个而是用plugin_init来进行插件的初始化
+        不要用这个而是用plugin_init来进行插件的初始化，这个仅供内部使用
         """
         self.stop: bool = False
         self.plugin_js_sprit_support: bool = False  # js插件支持
@@ -63,12 +63,16 @@ class Plugin_Main:
 
     async def message_filter(self, message) -> msgs.msg_box:
         """
-        消息过滤器
-        用于自动处理消息，比如翻译或者敏感词过滤
+        消息过滤器,用于自动处理消息，比如翻译或者敏感词过滤
+        :param message:待处理的消息
+        :return 消息
         """
         return message
 
     async def message_anaylazer(self, message):
+        """
+        消息分析
+        """
         pass
 
     async def sprit_cgi(self, request):
@@ -83,15 +87,27 @@ class Plugin_Main:
     def dm_iter(self, params: dict, connect_waper: connects.connect_wrapper) -> object:
         """
         返回弹幕迭代对象
+        :param params: 前端的get参数
+        :param connect_waper: 连接信息
+        :return 消息迭代对象
         """
         return self
 
     @typing.final
     def update_config(self):
         """
-        更新配置
+        更新配置，将自身的配置写入文件并且保存在计算机上
         """
+        assert self.plugin_name != ""
         configs.set_config(self.plugin_name, self.config)
+
+    @typing.final
+    def read_config(self):
+        """
+        读取配置
+        """
+        assert self.plugin_name != ""
+        self.config = configs.read_config(self.plugin_name)
 
     def __aiter__(self):
         if self.plugin_type() == "message":
@@ -113,6 +129,9 @@ class Plugin_Main:
         asyncio.current_task().cancel()
 
     def plugin_callback(self):
+        """
+        插件回调
+        """
         print(f"plugin is done")
 
     @typing.final

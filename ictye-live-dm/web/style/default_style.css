@@ -1,140 +1,140 @@
-/*bkline*/
-        html {
-            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSI+CiAgPGxpbmUgeDE9IjM1JSIgeDI9IjM1JSIgeTE9IjAlIiB5Mj0iMTAwJSIgc3Ryb2tlPSJyZ2IoMjE3LDIxNywyMTcpIiBzdHJva2Utd2lkdGg9IjVweCIgLz4KCjwvc3ZnPg==);
-            background-repeat: no-repeat;
-            width: 100%;
-            height: 100%;
-        }
-        body {
-            /*overflow: hidden;*/
-        }
-        .danmuji {
-            overflow-y: scroll;
-            height: auto;
-        }
+html {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSI+CiAgPGxpbmUgeDE9IjM1JSIgeDI9IjM1JSIgeTE9IjAlIiB5Mj0iMTAwJSIgc3Ryb2tlPSJyZ2IoMjE3LDIxNywyMTcpIiBzdHJva2Utd2lkdGg9IjVweCIgLz4KCjwvc3ZnPg==);
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+}
+body {
+    /*overflow: hidden;*/
+}
+.danmuji {
+    overflow-y: scroll;
+    height: auto;
+}
 
 
-        /*普通用户左侧框*/
-        .ptrect{
-            fill: rgba(204, 204, 204, 1);
-        }
-        /*主播用户左侧框*/
-        .zbrect{
-            fill: rgb(187, 186, 227);
-        }
-        /*管理员用户左侧框*/
-        .glyrect{
-            fill: rgb(227, 224, 186);
+/*普通用户左侧框*/
+.ptrect{
+    fill: rgba(204, 204, 204, 1);
+}
+/*主播用户左侧框*/
+.zbrect{
+    fill: rgb(187, 186, 227);
+}
+/*管理员用户左侧框*/
+.glyrect{
+    fill: rgb(227, 224, 186);
 
-        }
-        /*舰长用户左侧框*/
-        .jzrect{
-            fill: rgb(183, 229, 235);
-        }
-        /*提督用户左侧框*/
-        .tdrect{
-            fill: rgb(224, 186, 227);
-        }
-        /*总督用户左侧框*/
-        .zdrect{
-            fill: rgb(247, 178, 178);
+}
+/*舰长用户左侧框*/
+.jzrect{
+    fill: rgb(183, 229, 235);
+}
+/*提督用户左侧框*/
+.tdrect{
+    fill: rgb(224, 186, 227);
+}
+/*总督用户左侧框*/
+.zdrect{
+    fill: rgb(247, 178, 178);
 
-        }
-        /*粉丝团用户左侧框*/
-        .fstrect{
-            fill: rgb(178, 247, 206);
-        }
+}
+/*粉丝团用户左侧框*/
+.fstrect{
+    fill: rgb(178, 247, 206);
+}
 
 
 
-        .lbox {
-            margin-left: 26px;
-        }
+.lbox {
+    margin-left: 26px;
+}
 
-        .dmlaft {
-            /*margin-top: 13px;*/
-            display: flex;
-            width: 32%;
-            flex-wrap: wrap;
-        }
-        .pname{
-            margin-left: 12px;
-            width: 50%;
-            font-size: 24px;
-            flex-grow:1;
-            display: flex;
-            word-wrap:break-word;
-            word-break: break-all;
+.dmlaft {
+    /*margin-top: 13px;*/
+    display: flex;
+    width: 32%;
+    flex-wrap: wrap;
+}
+.pname{
+    margin-left: 12px;
+    width: 50%;
+    font-size: 24px;
+    flex-grow:1;
+    display: flex;
+    word-wrap:break-word;
+    word-break: break-all;
 
-        }
+}
 
-        .danmu {
-            display: flex;
-            margin-top: 10px;
-        }
+.danmu {
+    display: flex;
+    margin-top: 10px;
+}
 
-        .dmright{
-            margin-left: 5%;
-            font-size: 24px;
-            width: 58%;
-            flex-grow: 1;
-            word-break: break-all;
-        }
+.dmright{
+    margin-left: 5%;
+    font-size: 24px;
+    width: 58%;
+    flex-grow: 1;
+    word-break: break-all;
+}
 
-        .danmuji{
-            margin-top: 13px;
-        }
+.danmuji{
+    margin-top: 13px;
+}
 
-        .infousrico {
-            width: 64px;
-            height: 64px;
-        }
-        .special-info {
+.infousrico {
+    width: 64px;
+    height: 64px;
+}
+.special-info {
 
-            width: 79%;
-            margin: 15px auto;
-            border: 5px solid black ;
-            background-color: rgba(255, 255, 255, 1);
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            position: relative;
+    width: 79%;
+    margin: 15px auto;
+    border: 5px solid black ;
+    background-color: rgba(255, 255, 255, 1);
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    position: relative;
 
-            box-shadow: 7px 5px 4px  rgba(0, 0, 0, 0.25);
-;
-        }
+    box-shadow: 7px 5px 4px  rgba(0, 0, 0, 0.25);
 
-        .info-text{
-            font-size: 20px;
-            margin-left: 5px;
-            word-break: break-all;
-            width: 75%;
-        }
+}
 
-        /*特殊消息右侧*/
-        .rightimg-nobother{
+.info-text{
+    font-size: 20px;
+    margin-left: 5px;
+    word-break: break-all;
+    width: 75%;
+}
 
-            position:absolute;
-            bottom: -20px;
-            right: -20px;
-            width: 80px;
-            height: 80px;
-        }
+/*特殊消息右侧*/
+.rightimg-nobother{
 
-        .rightimg-bother{
+    position:absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+}
 
-            position:absolute;
-            bottom: -20px;
-            right: -20px;
-            width: 80px;
-            height: 80px;
+.rightimg-bother{
 
-            border: 3px solid rgb(0, 0, 0);
-        }
+    position:absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
 
-        .rightimg{
-            max-width: 80px;
-        }
+    border: 3px solid rgb(0, 0, 0);
+}
+
+.rightimg{
+    max-width: 80px;
+}
+
 /*动画*/
 @keyframes moveLeft {
     0% {
@@ -158,11 +158,13 @@
     overflow: hidden;
 }
 
-
 /*使用obs要用的css,不喜欢就删掉也没问题的喵~*/
-*:not(.dmlaft *){word-break: break-all;
-  overflow-wrap: break-word;-webkit-font-smoothing: none;
-   -moz-osx-font-smoothing: grayscale;}
+*:not(.dmlaft *){
+    word-break: break-all;
+  overflow-wrap: break-word;
+    -webkit-font-smoothing: none;
+   -moz-osx-font-smoothing: grayscale;
+}
 * ::-webkit-scrollbar {
   overflow: hidden;
 }

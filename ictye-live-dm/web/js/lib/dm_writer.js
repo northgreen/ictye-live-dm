@@ -8,6 +8,10 @@ require.config({
     ]
 });
 define(["crypto-js/md5"],
+    /*
+    * 弹幕写入器
+    * 存在的意义就是方便写入弹幕而已
+    * */
     function (md5) {
 
         //计算弹幕存在时间
