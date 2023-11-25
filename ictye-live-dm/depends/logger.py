@@ -5,6 +5,7 @@ def setup_logging(config: dict):
     """
     Setup logging configuration
     """
+
     level_dic: dict = {"DEBUG": logging.DEBUG,
                        "INFO": logging.INFO,
                        "WARNING": logging.WARNING,

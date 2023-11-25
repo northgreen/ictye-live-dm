@@ -70,6 +70,7 @@ class Plugin:
             except IndexError as e:
                 mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
+
     def remove_connect_in_id_dict(self, id):
         """
         当连接关闭时，移除连接
@@ -86,6 +87,7 @@ class Plugin:
 
         if connect.id in self.connect_id_dict.keys():
             for dm_iter in self.connect_id_dict[connect.id]:
+
                 async for _dm in dm_iter:
                     print("_dm:", _dm)
                     yield _dm
@@ -93,9 +95,11 @@ class Plugin:
             self.connect_id_dict[connect.id] = []
             for plugin in self.message_plugin_list:
                 dm = plugin.dm_iter(params, connects.connect_wrapper(connect))
+
                 if dm is None:
                     continue
                 self.connect_id_dict[connect.id].append(dm)
+
                 async for _dm in dm:
                     print("_dm:", _dm)
                     yield _dm

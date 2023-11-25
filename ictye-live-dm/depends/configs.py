@@ -22,7 +22,6 @@ def set_config(config_family: str, config: dict) -> bool:
     finally:
         return True
 
-
 def read_config(config_family: str) -> dict:
     """
     读取插件的配置
@@ -30,3 +29,4 @@ def read_config(config_family: str) -> dict:
     with open(f"./config/plugin/{config_family}/config.yaml", "r", encoding="utf_8") as f:
         configs = yaml.load(f.read(), Loader=yaml.FullLoader)
     return configs
+

@@ -13,9 +13,11 @@ from websockets.server import WebSocketServerProtocol
 
 
 class connect_wrapper:
+
     """
     连接包装类
     """
+
     def __init__(self, connect: WebSocketServerProtocol):
         self.__connect__ = connect
         self.id = connect.id  # 连接id
@@ -27,3 +29,4 @@ class connect_wrapper:
         """
         self.id = self.__connect__.id
         self.open = self.__connect__.open
+

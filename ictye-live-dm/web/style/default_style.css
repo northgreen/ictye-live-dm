@@ -1,3 +1,4 @@
+
 html {
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSI+CiAgPGxpbmUgeDE9IjM1JSIgeDI9IjM1JSIgeTE9IjAlIiB5Mj0iMTAwJSIgc3Ryb2tlPSJyZ2IoMjE3LDIxNywyMTcpIiBzdHJva2Utd2lkdGg9IjVweCIgLz4KCjwvc3ZnPg==);
     background-repeat: no-repeat;
@@ -135,6 +136,7 @@ body {
     max-width: 80px;
 }
 
+
 /*动画*/
 @keyframes moveLeft {
     0% {
@@ -158,6 +160,7 @@ body {
     overflow: hidden;
 }
 
+
 /*使用obs要用的css,不喜欢就删掉也没问题的喵~*/
 *:not(.dmlaft *){
     word-break: break-all;
@@ -165,6 +168,7 @@ body {
     -webkit-font-smoothing: none;
    -moz-osx-font-smoothing: grayscale;
 }
+
 * ::-webkit-scrollbar {
   overflow: hidden;
 }

@@ -35,7 +35,9 @@ define(
         let message_handler = function (message) {
            if (Object.keys(plugin_message_handler).length !== 0){
                plugin_message_handler[message.message_class](message)
+
            }
+
         }
 
         return {

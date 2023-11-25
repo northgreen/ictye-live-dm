@@ -47,6 +47,7 @@ async def websockets(websocket: server.WebSocketServerProtocol):
             else:
                 loggers.error("connect failed,unexpected client")
                 await websocket.close()
+
     finally:
         await websocket.close()
         plugin_system.remove_connect_in_id_dict(websocket.id)
@@ -56,6 +57,7 @@ async def websocket_main(configs):
     """
     websocket主函数，通过configs传递参数字典
     """
+
     logger.setup_logging(configs)
     loggers = logging.getLogger(__name__)
     loggers.info("websocket server started")

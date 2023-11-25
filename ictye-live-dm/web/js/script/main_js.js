@@ -31,6 +31,7 @@ define(["js/script/plugin_manager"],
             }
         }
 
+
         req.send()
    }
    let connect_ok = void 0;
@@ -38,10 +39,13 @@ define(["js/script/plugin_manager"],
         if("WebSocket" in window) {
             let socket = new WebSocket(ura)
 
+
             socket.addEventListener("message",function(event){
                 console.log('Message from server ', event.data)
 
                 if (event.data === "{\"code\": 200, \"msg\": \"connect ok\"}"){
+
+
                     connect_ok = 1
                 }else if (connect_ok === 1) {
                     console.info("cok is "+event.data)
@@ -69,5 +73,7 @@ define(["js/script/plugin_manager"],
             alert("err! your browser is not supported!!!")
         }
     }
+
     main()
 })
+

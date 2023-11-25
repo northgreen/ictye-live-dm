@@ -63,16 +63,20 @@ class Plugin_Main:
 
     async def message_filter(self, message) -> msgs.msg_box:
         """
+
         消息过滤器,用于自动处理消息，比如翻译或者敏感词过滤
         :param message:待处理的消息
         :return 消息
+
         """
         return message
 
     async def message_anaylazer(self, message):
+
         """
         消息分析
         """
+
         pass
 
     async def sprit_cgi(self, request):
@@ -90,6 +94,7 @@ class Plugin_Main:
         :param params: 前端的get参数
         :param connect_waper: 连接信息
         :return 消息迭代对象
+
         """
         return self
 
@@ -108,6 +113,7 @@ class Plugin_Main:
         """
         assert self.plugin_name != ""
         self.config = configs.read_config(self.plugin_name)
+
 
     def __aiter__(self):
         if self.plugin_type() == "message":
@@ -129,9 +135,11 @@ class Plugin_Main:
         asyncio.current_task().cancel()
 
     def plugin_callback(self):
+
         """
         插件回调
         """
+
         print(f"plugin is done")
 
     @typing.final
