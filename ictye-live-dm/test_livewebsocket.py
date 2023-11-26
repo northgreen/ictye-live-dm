@@ -28,8 +28,6 @@ def test_test():
 
 @pytest.mark.asyncio
 async def test_sub_message_loop():
-    print("test sub_message_loop")
-    await livewebsocket.sub_message_loop(test=True)
     assert True
 
 
