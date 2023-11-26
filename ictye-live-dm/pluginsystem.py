@@ -70,7 +70,6 @@ class Plugin:
             except IndexError as e:
                 mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
-
     def remove_connect_in_id_dict(self, id):
         """
         当连接关闭时，移除连接
@@ -128,6 +127,9 @@ class Plugin:
         return message_filtered
 
     async def plugin_main_runner(self):
+        """
+        运行插件主方法
+        """
         message_plugin = []
         anaylazer_tasks = []
         for plugin in self.analyzer_plugin_list:
