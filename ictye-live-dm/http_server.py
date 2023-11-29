@@ -19,12 +19,12 @@ import pluginsystem
 
 config = dict()
 plugin_system: pluginsystem.Plugin
+log = logging.getLogger(__name__)
 
 
 def return_file(file: str):
     async def healder(request):
         nonlocal file
-        log = logging.getLogger(__name__)
         log.info("return for main_page")
         return web.FileResponse(path=file, status=200)
 
@@ -39,7 +39,6 @@ async def http_handler(request):
 
 
 async def http_socket_get(request):
-    log = logging.getLogger(__name__)
     log.info("return for socket")
     return web.Response(text=json.dumps(msgs.socket_responce(config).to_dict()))
 
@@ -50,7 +49,6 @@ async def http_websocket(request: web.Request):
 
 
 async def http_plugin(request: web.Request):
-    log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
     if os.path.exists(f"web/js/plugin/{request.match_info['name']}"):
         return web.FileResponse(path=f"web/js/plugin/{request.match_info['name']}")
@@ -62,31 +60,26 @@ async def http_plugin(request: web.Request):
 
 
 async def http_style(request):
-    log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/style/{request.match_info['name']}")
 
 
 async def http_js(request):
-    log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/js/{request.match_info['name']}")
 
 
 async def http_lib(request):
-    log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/js/lib/{request.match_info['name']}")
 
 
 async def http_script(request):
-    log = logging.getLogger(__name__)
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/js/script/{request.match_info['name']}")
 
 
 async def http_api_plugin(request):
-    log = logging.getLogger(__name__)
     log.info(f"request for web plugin list")
 
     plugin_list = {"code": 200,
@@ -100,7 +93,6 @@ async def http_cgi(request):
     """
     HTTP ic py cgi前端调用
     """
-    log = logging.getLogger(__name__)
     req = None
     try:
         if request.match_info["name"] in plugin_system.plugin_cgi_support:
@@ -115,7 +107,6 @@ async def http_cgi(request):
 
 async def http_server(configs):
     # http服务器
-    log = logging.getLogger(__name__)
     log.info("http server started")
 
     app = web.Application()

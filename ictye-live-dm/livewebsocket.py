@@ -2,20 +2,20 @@ import asyncio
 import json
 from websockets import server
 import logging
-from depends import logger, msgs
+from depends import msgs
 import pluginsystem
 
 plugin_system: pluginsystem.Plugin
 config: dict = {}
 param_list: dict = {}
 connect_list: list[server.WebSocketServerProtocol] = []
+loggers = logging.getLogger(__name__)
 
 
 async def websockets(websocket: server.WebSocketServerProtocol):
     """
     websocket消息处理主函数
     """
-    loggers = logging.getLogger(__name__)
     # 连接检测
 
     try:
@@ -42,7 +42,7 @@ async def websockets(websocket: server.WebSocketServerProtocol):
                         mdm = await plugin_system.message_filter(dms)
                         await plugin_system.message_analyzer(mdm)
 
-                        loggers.info(f"sending message {mdm}")
+                        loggers.debug(f"sending message {mdm}")
                         await websocket.send(json.dumps(mdm))
             else:
                 loggers.error("connect failed,unexpected client")
@@ -57,8 +57,8 @@ async def websocket_main(configs):
     """
     websocket主函数，通过configs传递参数字典
     """
-
-    logger.setup_logging(configs)
-    loggers = logging.getLogger(__name__)
     loggers.info("websocket server started")
-    await server.serve(websockets, configs["host"], configs["websocket"]["port"])
+    try:
+        await server.serve(websockets, configs["host"], configs["websocket"]["port"])
+    except Exception as e:
+        loggers.error(f"websockets haven't started currently,because of {str(e)}")

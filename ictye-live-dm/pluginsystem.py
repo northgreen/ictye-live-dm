@@ -11,7 +11,7 @@
 #   更多详情请参阅许可协议文档
 
 import asyncio
-from depends import logger, plugin_main, plugin_errors
+from depends import plugin_main, plugin_errors
 import logging
 import os
 import importlib
@@ -24,9 +24,9 @@ confi = {}  # 配置
 
 class Plugin:
     def __init__(self):
-        logger.setup_logging(confi)
-
         mlogger = logging.getLogger(__name__)
+
+        self.logger = mlogger
 
         self.message_plugin_list: list = []  # 消息插件列表
         self.analyzer_plugin_list: list = []  # 分析插件列表
@@ -88,7 +88,7 @@ class Plugin:
             for dm_iter in self.connect_id_dict[connect.id]:
 
                 async for _dm in dm_iter:
-                    print("_dm:", _dm)
+                    self.logger.debug("get a dm:", _dm)
                     yield _dm
         else:
             self.connect_id_dict[connect.id] = []
@@ -100,7 +100,7 @@ class Plugin:
                 self.connect_id_dict[connect.id].append(dm)
 
                 async for _dm in dm:
-                    print("_dm:", _dm)
+                    self.logger.debug("get a dm:", _dm)
                     yield _dm
 
     async def message_analyzer(self, message):
@@ -115,7 +115,6 @@ class Plugin:
         :return: 处理后的消息对象
         :rtype: Message_Object
         """
-        mlogger = logging.getLogger(__name__)
         # 消息过滤
         message_filtered = message
         for plugins in self.analyzer_plugin_list:
@@ -123,7 +122,7 @@ class Plugin:
                 try:
                     plugins.message_filter(message_filtered)
                 except Exception as e:
-                    mlogger.error(f"a error is happened:{str(e)}")
+                    self.logger.error(f"a error is happened:{str(e)}")
         return message_filtered
 
     async def plugin_main_runner(self):
@@ -151,17 +150,15 @@ class Plugin:
             await asyncio.sleep(1)
 
     async def message_plugin_call_back(self, obj):
-        mlogger = logging.getLogger(__name__)
         try:
             obj.plugin_callback()
         except Exception as e:
-            mlogger.error(f"a error is happened:{str(e)}")
+            self.logger.error(f"a error is happened:{str(e)}")
         self.message_plugin_list.remove(obj)
 
     async def analyzer_plugin_callback(self, obj):
-        mlogger = logging.getLogger(__name__)
         try:
             obj.plugin_callback()
         except Exception as e:
-            mlogger.error(f"a error is happened:{str(e)}")
+            self.logger.error(f"a error is happened:{str(e)}")
         self.analyzer_plugin_list.remove(obj)

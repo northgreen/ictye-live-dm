@@ -1,5 +1,5 @@
 #端口
-port: 12345
+port: 8082
 host: "127.0.0.1"
 #弹幕姬前端配置
 web:
@@ -27,7 +27,7 @@ debug: 1
 # ERROR:错误
 # CRITICAL:严重错误
 # FATAL:致命错误
-loglevel: DEBUG
+loglevel: INFO
 
 #日志文件
 logfile:
