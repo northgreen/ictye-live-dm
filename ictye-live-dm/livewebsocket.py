@@ -43,6 +43,7 @@ async def websockets(websocket: server.WebSocketServerProtocol):
                         await plugin_system.message_analyzer(mdm)
 
                         loggers.debug(f"sending message {mdm}")
+
                         await websocket.send(json.dumps(mdm))
             else:
                 loggers.error("connect failed,unexpected client")
