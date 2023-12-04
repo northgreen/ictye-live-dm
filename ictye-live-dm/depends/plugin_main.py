@@ -34,7 +34,8 @@ class Plugin_Main:
         self.config: dict = dict()  # 配置
 
         self.sprit_cgi_support = False  # 插件cgi支持
-        self.sprit_cgi_path: str = ""  # 插件cgi路径
+
+        self.sprit_cgi_lists: {} = {}  # cgi列表
 
         self.plugin_name: str = ""  # 插件名称
 
@@ -113,7 +114,6 @@ class Plugin_Main:
         """
         assert self.plugin_name != ""
         self.config = configs.read_config(self.plugin_name)
-
 
     def __aiter__(self):
         if self.plugin_type() == "message":

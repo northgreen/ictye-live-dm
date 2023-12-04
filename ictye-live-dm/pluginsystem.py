@@ -38,6 +38,7 @@ class Plugin:
         # 加载默认插件目录
         for plugin_file in os.listdir(confi['plugins']['default_path']):
             try:
+                # 排除一些非法的文件和缓存目录，还要同时保障能够加载软件包
                 if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(
                         os.path.join(confi['plugins']['default_path'],
                                      plugin_file)) and not plugin_file == "__pycache__":
@@ -47,6 +48,7 @@ class Plugin:
                     mlogger.info(f"found a plugin '{plugin_name}' in {pathname}")
 
                     plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
+
                     if not hasattr(plugin_module, "Plugin_Main"):
                         raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
                     plugin_class = getattr(plugin_module, "Plugin_Main")
@@ -62,7 +64,7 @@ class Plugin:
 
                     # 注册脚本cgi接口
                     if plugin_interface.sprit_cgi_support:
-                        self.plugin_cgi_support[plugin_interface.sprit_cgi_path] = plugin_interface.sprit_cgi
+                        self.plugin_cgi_support[plugin_interface.plugin_name] = plugin_interface.sprit_cgi_lists
                     # 注册插件js
                     if plugin_interface.plugin_js_sprit_support:
                         self.plugin_js_support[plugin_interface.plugin_name] = plugin_interface.plugin_js_sprit

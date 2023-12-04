@@ -20,7 +20,7 @@ async def websockets(websocket: server.WebSocketServerProtocol):
 
     try:
         async for message in websocket:
-            loggers.info("receive " + message)
+            loggers.info("receive a message" + message)
 
             # 解码信息，注意信息必须是json格式
             ret = json.loads(message)
@@ -44,12 +44,15 @@ async def websockets(websocket: server.WebSocketServerProtocol):
 
                         loggers.debug(f"sending message {mdm}")
 
+                        # 发送消息
                         await websocket.send(json.dumps(mdm))
             else:
+                # 认证失败就关闭连接
                 loggers.error("connect failed,unexpected client")
                 await websocket.close()
 
     finally:
+        # 后续的处理
         await websocket.close()
         plugin_system.remove_connect_in_id_dict(websocket.id)
 

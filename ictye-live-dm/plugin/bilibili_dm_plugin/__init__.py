@@ -16,6 +16,9 @@ import sys
 
 sys.path.append("./")
 
+import os
+from urllib.parse import urlparse
+import urllib.request
 from . import blivedm
 from depends import plugin_main, msgs, connects
 import aiohttp
@@ -29,6 +32,18 @@ import logging
 session: Optional[aiohttp.ClientSession] = None
 SESSDATA = ''
 logger = logging.getLogger(__name__)
+local_path = __path__[0]
+
+
+def return_for_face(path: str):
+    if path:
+        files = os.listdir(os.path.join(local_path, "tmp"))
+        file = os.path.basename(urlparse(path).path)
+        if file in files:
+            return web.FileResponse(os.path.join(local_path, "tmp", file))
+        else:
+            urllib.request.urlretrieve(path, os.path.join(local_path, "tmp", file))
+            return web.FileResponse(os.path.join(local_path, "tmp", file))
 
 
 class Handler(blivedm.BaseHandler):
@@ -47,7 +62,7 @@ class Handler(blivedm.BaseHandler):
                 who=msgs.msg_who(
                     type=peop_type[message.privilege_type] if message.admin == 0 else 5,
                     name=message.uname,
-                    face=message.face
+                    face="/cgi/b_dm_plugin/face?url=" + message.face
                 ).to_dict()
             ).to_dict(),
             msg_type="dm"
@@ -65,7 +80,7 @@ class Handler(blivedm.BaseHandler):
                 who=msgs.msg_who(
                     type=peop_type[message.guard_level],
                     name=message.uname,
-                    face=message.face
+                    face="/cgi/b_dm_plugin/face?url=" + message.face
                 ).to_dict(),
                 pic=self.user_face[message.uname] if message.uname in self.user_face else "null"
             ).to_dict(),
@@ -79,13 +94,17 @@ class Plugin_Main(plugin_main.Plugin_Main):
 
     def plugin_init(self):
         self.runners = []
+        self.plugin_name = "b_dm_plugin"
 
         self.sprit_cgi_support = True
-        self.sprit_cgi_path = "b-face"
+        self.sprit_cgi_lists["face"] = self.sprit_cgi
+
         return "message"
 
     async def sprit_cgi(self, request: web.Request):
-        return self.web.Response(text="ok")
+        ret = web.Response(status=404, text="no such file")
+        ret = return_for_face(request.rel_url.query.get("url"))
+        return ret
 
     async def plugin_main(self):
         while True:

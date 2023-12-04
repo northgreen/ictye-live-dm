@@ -93,15 +93,18 @@ async def http_cgi(request):
     """
     HTTP ic py cgi前端调用
     """
-    req = None
+    req = web.Response(status=404, text="not such path")
     try:
         if request.match_info["name"] in plugin_system.plugin_cgi_support:
-            req = await plugin_system.plugin_cgi_support[request.match_info["name"]](request)
+            if request.match_info["page"] in plugin_system.plugin_cgi_support[request.match_info["name"]]:
+                req = await plugin_system.plugin_cgi_support[request.match_info["name"]][request.match_info["page"]](request)
+            else:
+                req = web.Response(status=404, text="no such path")
         else:
-            req = web.Response(status=404, text="no such cgi file")
+            req = web.Response(status=404, text="no such plugin")
     except Exception as e:
         log.error(f"cgi plugin error:{str(e)}")
-        req = web.Response(status=504, text=f"cgi error {str(e)}")
+        req = web.Response(status=504, text=f"cgi error :{str(e)}")
     return req
 
 
@@ -120,7 +123,7 @@ async def http_server(configs):
                                   web.get("/js/script/{name}", http_script),
                                   web.get("/websocket", http_websocket),
                                   web.get("/api/plugin_list", http_api_plugin),
-                                  web.get("/cgi/{name}", http_cgi)
+                                  web.get("/cgi/{name}/{page}", http_cgi)
                                   ]
     for i in configs["web"]:
         file, path = list(i.items())[0]
