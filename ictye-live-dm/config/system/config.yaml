@@ -27,7 +27,7 @@ debug: 1
 # ERROR:错误
 # CRITICAL:严重错误
 # FATAL:致命错误
-loglevel: DEBUG
+loglevel: INFO
 
 #日志文件
 logfile:
