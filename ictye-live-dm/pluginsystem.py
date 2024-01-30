@@ -72,11 +72,14 @@ class Plugin:
             except IndexError as e:
                 mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
-    def remove_connect_in_id_dict(self, id):
+    async def remove_connect_in_id_dict(self, id):
         """
         当连接关闭时，移除连接
         :param id 连接id
         """
+        for i in self.connect_id_dict[id]:
+            if hasattr(i, "callback"):
+                await i.callback()
         return self.connect_id_dict.pop(id, False)
 
     async def get_plugin_message(self, params, connect: WebSocketServerProtocol):

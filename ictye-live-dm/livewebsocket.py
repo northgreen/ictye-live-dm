@@ -54,7 +54,7 @@ async def websockets(websocket: server.WebSocketServerProtocol):
     finally:
         # 后续的处理
         await websocket.close()
-        plugin_system.remove_connect_in_id_dict(websocket.id)
+        await plugin_system.remove_connect_in_id_dict(websocket.id)
 
 
 async def websocket_main(configs):

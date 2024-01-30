@@ -32,4 +32,4 @@ loglevel: INFO
 #日志文件
 logfile:
   open: 1
-  name: "latest-log"
+  name: "latestlog"
