@@ -28,7 +28,6 @@ def read_config(config_family: str) -> dict:
     """
     读取插件的配置
     """
-    print(os.path.abspath(f"./config/plugin/{config_family}/config.yaml"))
     configs = {}
     if os.path.exists(f"./config/plugin/{config_family}/config.yaml"):
         with open(f"./config/plugin/{config_family}/config.yaml", "r", encoding="utf_8") as f:

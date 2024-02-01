@@ -18,7 +18,7 @@ plugins:
   default_path: "./plugin"
 
 #调试开关，非开发人员勿动(动吧，随便动（bushi)
-debug: 1
+debug: 0
 
 #日志级别
 # DEBUG:调试级别

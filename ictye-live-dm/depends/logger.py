@@ -1,5 +1,5 @@
 import logging
-import datetime
+import time
 import os
 
 
@@ -23,7 +23,7 @@ def setup_logging(config: dict):
         os.makedirs('logs')
 
     fh = logging.FileHandler(
-        os.path.join('logs', config["logfile"]["name"] + datetime.time().strftime("%Y%m%d_%H%M%S") + ".log"),
+        os.path.join('logs', config["logfile"]["name"] + time.strftime("%Y%m%d_%H%M%S",time.localtime()) + ".log"),
         encoding="utf-8")
     fh.setLevel(level_dic[config["loglevel"]])
 

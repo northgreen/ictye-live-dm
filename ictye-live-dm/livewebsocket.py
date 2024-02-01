@@ -17,7 +17,6 @@ async def websockets(websocket: server.WebSocketServerProtocol):
     websocket消息处理主函数
     """
     # 连接检测
-
     try:
         async for message in websocket:
             loggers.info("receive a message" + message)

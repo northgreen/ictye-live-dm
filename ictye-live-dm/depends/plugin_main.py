@@ -26,20 +26,31 @@ class Plugin_Main:
         不要用这个而是用plugin_init来进行插件的初始化，这个仅供内部使用
         """
         self.stop: bool = False
-        self.plugin_js_sprit_support: bool = False  # js插件支持
-        self.plugin_js_sprit: str = ""  # js插件
+        """停止标志"""
 
-        self.type: str = str()  # 插件类型
+        self.plugin_js_sprit_support: bool = False
+        """js插件支持"""
 
-        self.config: dict = dict()  # 配置
+        self.plugin_js_sprit: str = ""
+        """js插件"""
 
-        self.sprit_cgi_support = False  # 插件cgi支持
+        self.type: str = str()
+        """插件类型"""
 
-        self.sprit_cgi_lists: {} = {}  # cgi列表
+        self.config: dict = dict()
+        """配置字典"""
 
-        self.plugin_name: str = ""  # 插件名称
+        self.sprit_cgi_support = False
+        """插件cgi支持"""
 
-        self.web: web = web  # web模块
+        self.sprit_cgi_lists: dict = dict()
+        """cgi列表"""
+
+        self.plugin_name: str = ""
+        """插件名称"""
+
+        self.web: web = web
+        """web前端模块"""
 
         if self.plugin_type() == "message":
             self.message_list = []
@@ -64,7 +75,6 @@ class Plugin_Main:
 
     async def message_filter(self, message) -> msgs.msg_box:
         """
-
         消息过滤器,用于自动处理消息，比如翻译或者敏感词过滤
         :param message:待处理的消息
         :return 消息
@@ -73,11 +83,9 @@ class Plugin_Main:
         return message
 
     async def message_anaylazer(self, message):
-
         """
         消息分析
         """
-
         pass
 
     async def sprit_cgi(self, request):
@@ -100,12 +108,12 @@ class Plugin_Main:
         return self
 
     @typing.final
-    def update_config(self):
+    def update_config(self, config: dict):
         """
         更新配置，将自身的配置写入文件并且保存在计算机上
         """
         assert self.plugin_name != ""
-        configs.set_config(self.plugin_name, self.config)
+        configs.set_config(self.plugin_name, config)
 
     @typing.final
     def read_config(self):
