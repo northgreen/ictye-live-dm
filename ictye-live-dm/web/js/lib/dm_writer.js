@@ -108,6 +108,7 @@ define(["crypto-js/md5"],
                  msg = `<div class="danmu">
                            <div class="dmlaft">
                                <div class="lbox" >
+                                   <img class="face" src="${msgbody.who.face}">
                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="33" height="31">
                                        <rect width="100%" height="100%" class=${usr} />
                                    </svg>

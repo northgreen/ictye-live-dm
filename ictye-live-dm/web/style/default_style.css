@@ -136,6 +136,9 @@ body {
     max-width: 80px;
 }
 
+div.danmu .face{
+    display: none;
+}
 
 /*动画*/
 @keyframes moveLeft {

@@ -49,8 +49,10 @@ class Plugin:
 
                     plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
 
+                    # 合法性检查
                     if not hasattr(plugin_module, "Plugin_Main"):
                         raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
+
                     plugin_class = getattr(plugin_module, "Plugin_Main")
                     plugin_interface: plugin_main.Plugin_Main = plugin_class()
 
@@ -86,20 +88,17 @@ class Plugin:
         """
         弹幕对象迭代器，迭代对应参数的弹幕
         """
-
-        #  FIXME:TM死bug，不知道为什么有时候总是会在消息插件加载完毕之前把它存进字典，按道理来说不能啊。。。。。。。。。
-
         if connect.id in self.connect_id_dict.keys():
+            # 已经缓存消息迭代器
             for dm_iter in self.connect_id_dict[connect.id]:
-
                 async for _dm in dm_iter:
                     self.logger.debug("get a dm:", _dm)
                     yield _dm
         else:
+            # 获取未缓存的消息迭代器
             self.connect_id_dict[connect.id] = []
             for plugin in self.message_plugin_list:
                 dm = plugin.dm_iter(params, connects.connect_wrapper(connect))
-
                 if dm is None:
                     continue
                 self.connect_id_dict[connect.id].append(dm)
@@ -120,7 +119,6 @@ class Plugin:
         :return: 处理后的消息对象
         :rtype: Message_Object
         """
-        # 消息过滤
         message_filtered = message
         for plugins in self.analyzer_plugin_list:
             if not plugins:
