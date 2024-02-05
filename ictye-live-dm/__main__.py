@@ -26,6 +26,7 @@ import pluginsystem
 import livewebsocket
 import asyncio
 import os
+import argparse
 
 
 # NOTICE by ictye(2023-11-24):项目要尽可能简洁，轻量，因为主播的电脑在开了直播软件后剩余的资源很少，别问我是怎么知道的。
@@ -46,6 +47,14 @@ def main():
         except KeyboardInterrupt:
             pass
 
+    parse = argparse.ArgumentParser(description="一个基于python实现的模块化弹幕姬框架")
+    parse.add_argument('-u', '--unportable', action='store_true', help='非便携性启动')
+    args = parse.parse_args()
+
+    unportable: bool=args.unportable
+    """便携启动开关"""
+
+
     # 获取配置
     config = configs.config()
     # 传递配置
@@ -57,7 +66,7 @@ def main():
     livewebsocket.plugin_system = plugin_sys
     http_server.plugin_system = plugin_sys
     # 获取logger
-    logger.setup_logging(config)
+    logger.setup_logging(config,unportable)
     loggers = logging.getLogger(__name__)
 
     # 启动服务器

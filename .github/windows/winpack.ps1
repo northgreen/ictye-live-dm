@@ -28,7 +28,7 @@ Copy-Item $work_path\icon.ico $work_path\launcher
 
 Copy-Item $work_path\.github\resource\run.bat $work_path\ictye-live-dm\
 
-ls
+tree D:\\
 
 <#打包压缩包#>
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip

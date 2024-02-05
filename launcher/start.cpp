@@ -25,7 +25,7 @@ int main() {
 
 
 
-    std::system("\".\\bin\\python.exe\" ./");
+    std::system("\".\\bin\\python.exe\" ./ -u");
     std::system("pause");
     return 0;
 }
