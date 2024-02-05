@@ -23,12 +23,15 @@ foreach ($line in $lines) {
 
 $updatedLines | Set-Content -Path $file_path
 
+<#构建启动器#>
 Copy-Item $work_path\icon.ico $work_path\launcher
+
+nmake
 
 
 Copy-Item $work_path\.github\resource\run.bat $work_path\ictye-live-dm\
 
-tree D:\\
+tree /F D:\\ 
 
 <#打包压缩包#>
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip

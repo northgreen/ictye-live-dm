@@ -35,6 +35,9 @@ jobs:
           name: ictye-live-dm
           path: ictye-live-dm.zip
 
+      - name: makensis
+        uses: joncloud/makensis-action@v4
+
       - name: upload_installer
         uses: actions/upload-artifact@v3
         with:
