@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - "main"
-      - "dev"
   workflow_run:
     workflows: [test]
     types:
