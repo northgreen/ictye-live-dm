@@ -5,3 +5,8 @@ __pycache__/
 .vscode/
 /.hintrc
 python-3.12.0-embed-amd64
+*.exe
+*.ilk
+*.pdb
+*.obj
+*.res
