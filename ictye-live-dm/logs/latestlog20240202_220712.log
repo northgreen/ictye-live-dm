@@ -1,0 +1,239 @@
+[2024-02-02 22:07:12,657,__main__] INFO : project starting
+[2024-02-02 22:07:12,657,__main__] INFO : 金克拉，你有了吗？
+[2024-02-02 22:07:12,658,http_server] INFO : http server started
+[2024-02-02 22:07:12,660,livewebsocket] INFO : websocket server started
+[2024-02-02 22:07:12,661,http_server] INFO : seriver is starting at http://127.0.0.1:8082
+[2024-02-02 22:07:12,661,websockets.server] INFO : server listening on 127.0.0.1:45466
+[2024-02-02 22:09:39,510,http_server] INFO : request for default_style.css
+[2024-02-02 22:09:39,570,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:14:09:39 +0000] "GET /style/default_style.css HTTP/1.1" 304 177 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-02 22:09:39,586,http_server] INFO : request for web plugin list
+[2024-02-02 22:09:39,589,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:14:09:39 +0000] "GET /api/plugin_list HTTP/1.1" 200 206 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-02 22:09:39,599,http_server] INFO : return for socket
+[2024-02-02 22:09:39,600,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:14:09:39 +0000] "GET /get_websocket HTTP/1.1" 200 198 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-02 22:09:39,613,websockets.server] INFO : connection open
+[2024-02-02 22:09:39,618,livewebsocket] INFO : receive a message{"code":200,"msg":"ok","param":{"http://127.0.0.1:8082/index?":"","broom":"31817089"}}
+[2024-02-02 22:09:39,619,livewebsocket] INFO : connect with blower success
+[2024-02-02 22:09:39,620,http_server] INFO : request for dm_writer.js
+[2024-02-02 22:09:39,624,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:14:09:39 +0000] "GET /js/lib/dm_writer.js HTTP/1.1" 304 178 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-02 22:09:40,738,http_server] INFO : request for web plugin list
+[2024-02-02 22:09:40,740,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:14:09:40 +0000] "GET /api/plugin_list HTTP/1.1" 200 206 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-02 22:09:40,750,http_server] INFO : return for socket
+[2024-02-02 22:09:40,752,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:14:09:40 +0000] "GET /get_websocket HTTP/1.1" 200 198 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-02 22:09:40,779,websockets.server] INFO : connection open
+[2024-02-02 22:09:40,781,livewebsocket] INFO : receive a message{"code":200,"msg":"ok","param":{"http://127.0.0.1:8082/index?":"","broom":"31817089"}}
+[2024-02-02 22:09:40,782,livewebsocket] INFO : connect with blower success
+[2024-02-02 23:17:05,974,blivedm] WARNING : room=31817089 unknown cmd=ROOM_CHANGE, command={'cmd': 'ROOM_CHANGE', 'data': {'title': '这么可爱不看一看在玩冰與火之舞', 'area_id': 745, 'parent_area_id': 9, 'area_name': '虚拟Gamer', 'parent_area_name': '虚拟主播', 'live_key': '462075216213147009', 'sub_session_key': '462075216213147009sub_time:1706887007'}}
+[2024-02-02 23:19:46,089,blivedm] WARNING : room=31817089 unknown cmd=ANCHOR_HELPER_DANMU, command={'cmd': 'ANCHOR_HELPER_DANMU', 'data': {'button_bgrcolor': '#FB7299', 'button_label': 1, 'button_name': '去开启集赞', 'button_platform': 1, 'button_target': 'bililive://blink/open_collection_praise', 'msg': '快去号召大家给你点赞吧~提升直播间氛围哦~', 'platform': 1, 'report': '', 'report_type': '', 'sender': '直播小助手'}}
+[2024-02-02 23:24:55,572,blivedm] WARNING : room=31817089 unknown cmd=WATCHED_CHANGE, command={'cmd': 'WATCHED_CHANGE', 'data': {'num': 1, 'text_small': '1', 'text_large': '1人看过'}}
+[2024-02-02 23:25:10,265,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这是什眸
+[2024-02-02 23:25:10,267,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这是什眸
+[2024-02-02 23:25:32,378,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：麦克风声音好小[妙]
+[2024-02-02 23:25:32,380,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：麦克风声音好小[妙]
+[2024-02-02 23:25:37,558,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：跟没开一样[妙]
+[2024-02-02 23:25:37,560,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：跟没开一样[妙]
+[2024-02-02 23:25:53,157,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：游戏声音好大[妙]
+[2024-02-02 23:25:53,158,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：游戏声音好大[妙]
+[2024-02-02 23:26:00,965,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：还是太小麦克风声音[妙]
+[2024-02-02 23:26:00,965,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：还是太小麦克风声音[妙]
+[2024-02-02 23:26:24,359,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：没事我把手机音量调大就行了[妙]
+[2024-02-02 23:26:24,360,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：没事我把手机音量调大就行了[妙]
+[2024-02-02 23:26:39,969,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：126！这么快
+[2024-02-02 23:26:39,970,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：126！这么快
+[2024-02-02 23:26:43,859,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：好好好
+[2024-02-02 23:26:43,862,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：好好好
+[2024-02-02 23:26:49,064,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：[妙]
+[2024-02-02 23:26:49,066,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：[妙]
+[2024-02-02 23:27:00,755,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：恭喜但是我嫉妒了
+[2024-02-02 23:27:00,755,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：恭喜但是我嫉妒了
+[2024-02-02 23:27:04,672,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：啊啊啊
+[2024-02-02 23:27:04,673,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：啊啊啊
+[2024-02-02 23:27:09,866,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：awa
+[2024-02-02 23:27:09,867,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：awa
+[2024-02-02 23:27:13,756,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：姐啊。。
+[2024-02-02 23:27:13,758,plugin.bilibili_dm_plugin] INFO : [31817089] Science小陆：姐啊。。
+[2024-02-02 23:27:24,162,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这是悬疑解密吗
+[2024-02-02 23:27:24,162,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这是悬疑解密吗
+[2024-02-02 23:27:38,457,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：我好像知道了[妙]
+[2024-02-02 23:27:38,458,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：我好像知道了[妙]
+[2024-02-02 23:28:00,574,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这个游戏是不是能弹那个warma审判曲[妙]
+[2024-02-02 23:28:00,575,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这个游戏是不是能弹那个warma审判曲[妙]
+[2024-02-02 23:28:36,959,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：刚才看那个小心脏有点眼熟[妙]
+[2024-02-02 23:28:36,960,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：刚才看那个小心脏有点眼熟[妙]
+[2024-02-02 23:29:10,764,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：对就一模一样[妙]
+[2024-02-02 23:29:10,771,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：对就一模一样[妙]
+[2024-02-02 23:29:21,165,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：但是我不知道是不是那个游戏[妙]
+[2024-02-02 23:29:21,166,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：但是我不知道是不是那个游戏[妙]
+[2024-02-02 23:30:44,364,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：为什么胜利了零金币零经验[妙]
+[2024-02-02 23:30:44,366,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：为什么胜利了零金币零经验[妙]
+[2024-02-02 23:30:52,167,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：那你在战斗什眸[妙]
+[2024-02-02 23:30:52,168,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：那你在战斗什眸[妙]
+[2024-02-02 23:31:32,468,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这个我感觉绝对能弹那个warma审判曲[妙]
+[2024-02-02 23:31:32,469,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这个我感觉绝对能弹那个warma审判曲[妙]
+[2024-02-02 23:31:44,162,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：好眼熟好眼熟太眼熟了[妙]
+[2024-02-02 23:31:44,163,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：好眼熟好眼熟太眼熟了[妙]
+[2024-02-02 23:34:13,672,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：为什么不能踩着他过去[妙]
+[2024-02-02 23:34:13,672,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：为什么不能踩着他过去[妙]
+[2024-02-02 23:34:21,465,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：是不是你腿短蹦不过去[妙]
+[2024-02-02 23:34:21,466,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：是不是你腿短蹦不过去[妙]
+[2024-02-02 23:37:07,856,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：你真是太天才了[妙]
+[2024-02-02 23:37:07,858,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：你真是太天才了[妙]
+[2024-02-02 23:37:18,445,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：一个不行俩个一块撞到你了
+[2024-02-02 23:37:18,521,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：一个不行俩个一块撞到你了
+[2024-02-02 23:37:49,456,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：等会我想起来个非常重要的事情
+[2024-02-02 23:37:49,458,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：等会我想起来个非常重要的事情
+[2024-02-02 23:38:15,472,plugin.bilibili_dm_plugin] INFO : [31817089] Fayellarium：Undertale!
+[2024-02-02 23:38:15,473,plugin.bilibili_dm_plugin] INFO : [31817089] Fayellarium：Undertale!
+[2024-02-02 23:39:19,160,plugin.bilibili_dm_plugin] INFO : [31817089] Fayellarium：明天要考雅思了先睡了
+[2024-02-02 23:39:19,161,plugin.bilibili_dm_plugin] INFO : [31817089] Fayellarium：明天要考雅思了先睡了
+[2024-02-02 23:39:33,456,plugin.bilibili_dm_plugin] INFO : [31817089] Fayellarium：我再写css就是郭楠😭
+[2024-02-02 23:39:33,457,plugin.bilibili_dm_plugin] INFO : [31817089] Fayellarium：我再写css就是郭楠😭
+[2024-02-02 23:44:42,532,blivedm] WARNING : room=31817089 unknown cmd=SPREAD_ORDER_START, command={'cmd': 'SPREAD_ORDER_START', 'data': {'order_id': 5979605, 'order_status': 1, 'roomid': 31817089, 'timestamp': 1706888683, 'uid': 3493292842945296}}
+[2024-02-02 23:44:43,532,blivedm] WARNING : room=31817089 unknown cmd=TRADING_SCORE, command={'cmd': 'TRADING_SCORE', 'data': {'bubble_show_time': 3, 'num': 5, 'score_id': 3, 'uid': 3493292842945296, 'update_time': 1706888683, 'update_type': 2}}
+[2024-02-02 23:45:40,510,blivedm] WARNING : room=31817089 unknown cmd=SPREAD_SHOW_FEET_V2, command={'cmd': 'SPREAD_SHOW_FEET_V2', 'data': {'click': 0, 'coin_cost': 0, 'coin_num': 5, 'cover_btn': '', 'cover_url': '', 'live_key': '462075216213147009', 'order_id': 5979605, 'order_type': 3, 'plan_percent': 0, 'show': 1, 'status': 1, 'timestamp': 1706888741, 'title': '流量包推广', 'total_online': 0, 'uid': 3493292842945296}}
+[2024-02-02 23:45:40,515,blivedm] WARNING : room=31817089 unknown cmd=SPREAD_SHOW_FEET, command={'cmd': 'SPREAD_SHOW_FEET', 'data': {'click': 0, 'coin_cost': 0, 'coin_num': 5, 'order_id': 5979605, 'plan_percent': 0, 'show': 1, 'timestamp': 1706888741, 'title': '流量包推广', 'total_online': 0, 'uid': 3493292842945296}}
+[2024-02-02 23:47:29,253,plugin.bilibili_dm_plugin] INFO : [31817089] 柴可罗Chaiklart：小年快乐[喝彩]
+[2024-02-02 23:47:29,254,plugin.bilibili_dm_plugin] INFO : [31817089] 柴可罗Chaiklart：小年快乐[喝彩]
+[2024-02-02 23:50:15,659,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这种像素风的游戏[妙]
+[2024-02-02 23:50:15,660,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这种像素风的游戏[妙]
+[2024-02-02 23:50:23,457,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这算不算像素风[妙]
+[2024-02-02 23:50:23,457,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这算不算像素风[妙]
+[2024-02-02 23:50:40,356,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：我就玩过个独自在家[妙]
+[2024-02-02 23:50:40,357,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：我就玩过个独自在家[妙]
+[2024-02-02 23:51:46,652,plugin.bilibili_dm_plugin] INFO : [31817089] 随风1447：这么晚了还在播吗？
+[2024-02-02 23:51:46,657,plugin.bilibili_dm_plugin] INFO : [31817089] 随风1447：这么晚了还在播吗？
+[2024-02-02 23:52:23,046,plugin.bilibili_dm_plugin] INFO : [31817089] 随风1447：晚上人很少的
+[2024-02-02 23:52:23,510,plugin.bilibili_dm_plugin] INFO : [31817089] 随风1447：晚上人很少的
+[2024-02-02 23:52:25,448,blivedm] WARNING : room=31817089 unknown cmd=LIKE_INFO_V3_CLICK, command={'cmd': 'LIKE_INFO_V3_CLICK', 'data': {'show_area': 1, 'msg_type': 6, 'like_icon': 'https://i0.hdslb.com/bfs/live/23678e3d90402bea6a65251b3e728044c21b1f0f.png', 'uid': 524537434, 'like_text': '为主播点赞了', 'uname': '随风1447', 'uname_color': '', 'identities': [3, 1], 'fans_medal': {'target_id': 1154951091, 'medal_level': 7, 'medal_name': '白菜种', 'medal_color': 6126494, 'medal_color_start': 6126494, 'medal_color_end': 6126494, 'medal_color_border': 6126494, 'is_lighted': 1, 'guard_level': 0, 'special': '', 'icon_id': 0, 'anchor_roomid': 0, 'score': 4650}, 'contribution_info': {'grade': 0}, 'dmscore': 20, 'group_medal': None, 'is_mystery': False, 'uinfo': {'uid': 524537434, 'base': {'name': '随风1447', 'face': 'https://i1.hdslb.com/bfs/face/6e7ee177b5cc681b9609c07f8d5eb574b52d409c.jpg', 'name_color': 0, 'is_mystery': False, 'risk_ctrl_info': None, 'origin_info': {'name': '随风1447', 'face': 'https://i1.hdslb.com/bfs/face/6e7ee177b5cc681b9609c07f8d5eb574b52d409c.jpg'}, 'official_info': {'role': 0, 'title': '', 'desc': '', 'type': -1}}, 'medal': {'name': '白菜种', 'level': 7, 'color_start': 6126494, 'color_end': 6126494, 'color_border': 6126494, 'color': 6126494, 'id': 0, 'typ': 0, 'is_light': 1, 'ruid': 1154951091, 'guard_level': 0, 'score': 4650, 'guard_icon': '', 'honor_icon': ''}, 'wealth': None, 'title': None, 'guard': {'level': 0, 'expired_str': ''}}}}
+[2024-02-02 23:52:29,344,blivedm] WARNING : room=31817089 unknown cmd=LIKE_INFO_V3_UPDATE, command={'cmd': 'LIKE_INFO_V3_UPDATE', 'data': {'click_count': 15}}
+[2024-02-02 23:53:26,751,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：对就是这个b[妙]
+[2024-02-02 23:53:26,753,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：对就是这个b[妙]
+[2024-02-02 23:53:47,548,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：你后边打他可能就会弹那个warma审判曲
+[2024-02-02 23:53:47,549,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：你后边打他可能就会弹那个warma审判曲
+[2024-02-02 23:54:07,052,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这个哥们的曲对于我来说老有节奏了[妙]
+[2024-02-02 23:54:07,053,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：这个哥们的曲对于我来说老有节奏了[妙]
+[2024-02-02 23:54:16,162,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：真是天才[妙]
+[2024-02-02 23:54:16,163,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：真是天才[妙]
+[2024-02-02 23:55:45,848,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：已经是骷髅了还要长骨气[妙]
+[2024-02-02 23:55:45,849,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：已经是骷髅了还要长骨气[妙]
+[2024-02-02 23:55:52,354,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：地狱笑话[妙]
+[2024-02-02 23:55:52,354,plugin.bilibili_dm_plugin] INFO : [31817089] 天秤不是憨憨：地狱笑话[妙]
+[2024-02-02 23:57:02,556,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：又刷到了
+[2024-02-02 23:57:02,558,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：又刷到了
+[2024-02-02 23:57:19,456,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：走了 拜拜[吃瓜]
+[2024-02-02 23:57:19,459,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：走了 拜拜[吃瓜]
+[2024-02-02 23:57:31,151,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：网太差我直播画面根本刷不出来
+[2024-02-02 23:57:31,152,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：网太差我直播画面根本刷不出来
+[2024-02-02 23:57:51,951,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：[原神_躺平]
+[2024-02-02 23:57:51,952,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：[原神_躺平]
+[2024-02-02 23:58:34,871,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：啊……还是刷不出来
+[2024-02-02 23:58:34,872,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：啊……还是刷不出来
+[2024-02-02 23:58:38,750,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：走了走了
+[2024-02-02 23:58:38,752,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：走了走了
+[2024-02-02 23:58:42,661,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：😭
+[2024-02-02 23:58:42,663,plugin.bilibili_dm_plugin] INFO : [31817089] 楚天尋簫可愛喵：AZ
+[2024-02-02 23:58:42,664,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：😭
+[2024-02-02 23:58:42,665,plugin.bilibili_dm_plugin] INFO : [31817089] 楚天尋簫可愛喵：AZ
+[2024-02-03 00:00:52,519,blivedm] WARNING : room=31817089 unknown cmd=GUARD_HONOR_THOUSAND, command={'cmd': 'GUARD_HONOR_THOUSAND', 'data': {'add': [], 'del': [1459104794, 672328094, 480680646, 412504829, 399815233, 304578055, 194484313, 56748733, 15641218, 10893225, 8739477, 391445, 114866, 13046]}}
+[2024-02-03 00:09:35,273,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：新游戏！
+[2024-02-03 00:09:35,274,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：新游戏！
+[2024-02-03 00:10:10,342,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：！
+[2024-02-03 00:10:10,343,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：！
+[2024-02-03 00:10:25,949,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：我家小孩成天和我说这个！
+[2024-02-03 00:10:25,950,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：我家小孩成天和我说这个！
+[2024-02-03 00:12:45,047,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：这个游戏大概是一个什么样的游戏啊？
+[2024-02-03 00:12:45,048,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：这个游戏大概是一个什么样的游戏啊？
+[2024-02-03 00:15:15,847,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：那个，零成本徒手自己搓一个RPG有可能吗
+[2024-02-03 00:15:15,848,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：那个，零成本徒手自己搓一个RPG有可能吗
+[2024-02-03 00:16:23,445,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：躲到最底下
+[2024-02-03 00:16:23,447,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：躲到最底下
+[2024-02-03 00:16:42,952,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：然后赶紧往两边跑
+[2024-02-03 00:16:42,954,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：然后赶紧往两边跑
+[2024-02-03 00:22:19,639,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：跑到两边之后别往上跑，在中间那个凹槽待着
+[2024-02-03 00:22:19,641,plugin.bilibili_dm_plugin] INFO : [31817089] A_I_Kuznetsov：跑到两边之后别往上跑，在中间那个凹槽待着
+[2024-02-03 02:01:31,006,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：还在打？
+[2024-02-03 02:01:31,008,plugin.bilibili_dm_plugin] INFO : [31817089] 我好想吃肯德基啊：还在打？
+[2024-02-03 02:04:55,106,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：暗中观察
+[2024-02-03 02:04:55,108,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：暗中观察
+[2024-02-03 02:23:13,944,blivedm] WARNING : room=31817089 unknown cmd=PK_USER_REC, command={'cmd': 'PK_USER_REC', 'data': {'area_name': '', 'current_time': 1706898195, 'face': 'https://i2.hdslb.com/bfs/face/5250a578913f6e8ee4bbba39fef7201e4f88f353.jpg', 'fans': 0, 'invited_id': 2970136, 'online': 0, 'popup': {'timeout': 4, 'title': '为你推荐合适的随机PK对手'}, 'room_id': 30118851, 'sub_title': '虚拟声优 | 2.0 万人看过 | 2.0 万粉丝 | 钢之勇者', 'toast': '', 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVaWQiOjM0OTQzNjUxNTY2MDgxODUsIlJvb21JRCI6MzAxMTg4NTEsIkludml0ZWRVaWQiOnsiMzQ5MzI5Mjg0Mjk0NTI5NiI6Mjk3MDEzNiwiMzUzNzEyMTMzMTY0NDY5MCI6Mjk3MDEzNX0sIk1hdGNoSUQiOjE4MzE1MTMsImV4cCI6MTcwNjkwMTc5NSwiaWF0IjoxNzA2ODk4MTk1fQ.hen8XWhct7jSFp6nqmNxPfO4xZOfdZuJEzQ9sPUF570', 'uid': 3494365156608185, 'uname': '温以泠'}, 'msg_id': '9617704233225728:1000:1000', 'p_is_ack': True, 'p_msg_type': 1, 'send_time': 1706898195020, 'type': 'rec'}
+[2024-02-03 02:23:18,800,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_PRE_NEW, command={'cmd': 'PK_BATTLE_PRE_NEW', 'pk_status': 101, 'pk_id': 341717723, 'timestamp': 1706898198, 'data': {'battle_type': 2, 'match_type': 1, 'battle_sub_type': 0, 'uname': '温以泠', 'face': 'https://i2.hdslb.com/bfs/face/5250a578913f6e8ee4bbba39fef7201e4f88f353.jpg', 'uid': 3494365156608185, 'room_id': 30118851, 'season_id': 70, 'pre_timer': 10, 'pk_votes_name': 'PK值', 'end_win_task': None}, 'roomid': 31817089}
+[2024-02-03 02:23:18,802,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_PRE, command={'cmd': 'PK_BATTLE_PRE', 'data': {'battle_sub_type': 0, 'battle_type': 2, 'end_win_task': None, 'face': 'https://i2.hdslb.com/bfs/face/5250a578913f6e8ee4bbba39fef7201e4f88f353.jpg', 'match_type': 1, 'pk_votes_name': 'PK值', 'pre_timer': 10, 'room_id': 30118851, 'season_id': 70, 'uid': 3494365156608185, 'uname': '温以泠'}, 'msg_id': '9617706241229312:1000:1000', 'p_is_ack': True, 'p_msg_type': 1, 'pk_id': 341717723, 'pk_status': 101, 'roomid': 31817089, 'send_time': 1706898198850, 'timestamp': 1706898198}
+[2024-02-03 02:23:28,247,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_START_NEW, command={'cmd': 'PK_BATTLE_START_NEW', 'data': {'battle_sub_type': 0, 'battle_type': 2, 'final_conf': {'end_time': 1706898388, 'start_time': 1706898328, 'switch': 1}, 'final_hit_votes': 0, 'init_info': {'date_streak': 0, 'room_id': 30118851}, 'match_info': {'date_streak': 0, 'room_id': 31817089}, 'pk_countdown': 1706898498, 'pk_end_time': 1706898518, 'pk_frozen_time': 1706898508, 'pk_start_time': 1706898208, 'pk_votes_add': 0, 'pk_votes_name': 'PK值', 'pk_votes_type': 0, 'star_light_msg': ''}, 'msg_id': '9617711159580161:1000:1000', 'p_is_ack': True, 'p_msg_type': 1, 'pk_id': 341717723, 'pk_status': 201, 'roomid': '31817089', 'send_time': 1706898208231, 'timestamp': 1706898208}
+[2024-02-03 02:23:28,249,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_START, command={'cmd': 'PK_BATTLE_START', 'data': {'battle_sub_type': 0, 'battle_type': 2, 'final_conf': {'end_time': 1706898388, 'start_time': 1706898328, 'switch': 1}, 'final_hit_votes': 0, 'init_info': {'date_streak': 0, 'room_id': 30118851}, 'match_info': {'date_streak': 0, 'room_id': 31817089}, 'pk_countdown': 1706898498, 'pk_end_time': 1706898518, 'pk_frozen_time': 1706898508, 'pk_start_time': 1706898208, 'pk_votes_add': 0, 'pk_votes_name': 'PK值', 'pk_votes_type': 0, 'star_light_msg': ''}, 'msg_id': '9617711169041920:1000:1000', 'p_is_ack': True, 'p_msg_type': 1, 'pk_id': 341717723, 'pk_status': 201, 'roomid': '31817089', 'send_time': 1706898208249, 'timestamp': 1706898208}
+[2024-02-03 02:23:29,679,blivedm] WARNING : room=31817089 unknown cmd=COMMON_NOTICE_DANMAKU, command={'cmd': 'COMMON_NOTICE_DANMAKU', 'data': {'content_segments': [{'font_color': '#FB7299', 'highlight_font_color': '#FCA622', 'text': 'PK玩法小贴士，双方主播可以表演《青藏高原》，一比高下～', 'type': 1}], 'dmscore': 144, 'terminals': [2, 3, 5]}}
+[2024-02-03 02:23:54,875,http_server] INFO : return for main_page
+[2024-02-03 02:23:55,807,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:23:54 +0000] "GET /index?&broom=31817089 HTTP/1.1" 200 235 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:23:55,850,http_server] INFO : request for requirejs.js
+[2024-02-03 02:23:55,856,http_server] INFO : request for default_style.css
+[2024-02-03 02:23:55,887,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:23:55 +0000] "GET /style/default_style.css HTTP/1.1" 200 235 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:23:55,898,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:23:55 +0000] "GET /js/lib/requirejs.js HTTP/1.1" 200 239 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:23:55,950,http_server] INFO : request for web plugin list
+[2024-02-03 02:23:55,954,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:23:55 +0000] "GET /api/plugin_list HTTP/1.1" 200 206 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:23:55,970,http_server] INFO : return for socket
+[2024-02-03 02:23:55,973,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:23:55 +0000] "GET /get_websocket HTTP/1.1" 200 198 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:23:55,989,websockets.server] INFO : connection open
+[2024-02-03 02:23:55,992,livewebsocket] INFO : receive a message{"code":200,"msg":"ok","param":{"http://127.0.0.1:8082/index?":"","broom":"31817089"}}
+[2024-02-03 02:23:56,000,livewebsocket] INFO : connect with blower success
+[2024-02-03 02:23:56,316,plugin.bilibili_dm_plugin] INFO : blivedm closing
+[2024-02-03 02:23:56,318,websockets.server] INFO : connection closed
+[2024-02-03 02:23:57,939,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_MULTIPLE_BEGIN, command={'cmd': 'PK_BATTLE_MULTIPLE_BEGIN', 'data': {'pkid': 341717723, 'pk_status': 201, 'target_votes': 300, 'rule_url': 'https://www.bilibili.com/blackboard/era/8VutJdqqVvt6vOnf.html', 'start_time': 0, 'end_time': 1706898298, 'duration': 60, 'award_name': 'PK加倍卡'}}
+[2024-02-03 02:24:32,902,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：乐
+[2024-02-03 02:24:32,905,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：乐
+[2024-02-03 02:24:58,982,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_MULTIPLE_RES, command={'cmd': 'PK_BATTLE_MULTIPLE_RES', 'data': {'pkid': 341717723, 'pk_status': 201, 'target_votes': 300, 'cur_votes': 0, 'award_num': 3, 'lottery_wait_time': 15, 'start_time': 0, 'end_time': 0, 'room_id': 31817089, 'vote_time': 8}}
+[2024-02-03 02:26:24,699,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：我挺好奇，你俩是匹配上的
+[2024-02-03 02:26:24,701,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：我挺好奇，你俩是匹配上的
+[2024-02-03 02:26:58,498,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：推荐的挺狠啊
+[2024-02-03 02:26:58,500,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：推荐的挺狠啊
+[2024-02-03 02:28:20,401,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：我去瞅瞅[dog]
+[2024-02-03 02:28:20,402,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：我去瞅瞅[dog]
+[2024-02-03 02:28:31,247,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_VIDEO_PUNISH_BEGIN, command={'cmd': 'PK_BATTLE_VIDEO_PUNISH_BEGIN', 'data': {'battle_sub_type': 0, 'battle_type': 2, 'init_info': {'best_uname': '屁桃大王子', 'is_mystery': False, 'room_id': 30118851, 'votes': 51, 'winner_type': 2}, 'match_info': {'best_uname': '', 'is_mystery': False, 'room_id': 31817089, 'votes': 0, 'winner_type': -1}, 'video_punish': {'duration': 180, 'punish_name': '惩罚'}}, 'msg_id': '9617870577229824:1000:1000', 'p_is_ack': True, 'p_msg_type': 1, 'pk_id': '341717723', 'pk_status': 701, 'send_time': 1706898512296, 'timestamp': 1706898512}
+[2024-02-03 02:29:09,800,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：乐
+[2024-02-03 02:29:09,801,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：乐
+[2024-02-03 02:30:53,803,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：nnd，回老家连个喝水的碗都没有
+[2024-02-03 02:30:53,806,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：nnd，回老家连个喝水的碗都没有
+[2024-02-03 02:31:14,602,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：找到一箱啤酒[手机]
+[2024-02-03 02:31:14,604,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：找到一箱啤酒[手机]
+[2024-02-03 02:31:31,331,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_VIDEO_PUNISH_END, command={'battle_sub_type': 0, 'cmd': 'PK_BATTLE_VIDEO_PUNISH_END', 'msg_id': '9617964998882816:1000:1000', 'p_is_ack': True, 'p_msg_type': 1, 'pk_id': '341717723', 'pk_status': 1001, 'send_time': 1706898692391, 'timestamp': 1706898692}
+[2024-02-03 02:31:36,838,http_server] INFO : return for main_page
+[2024-02-03 02:31:36,845,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:31:36 +0000] "GET /index?&broom=31817089 HTTP/1.1" 200 235 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:31:36,880,http_server] INFO : request for requirejs.js
+[2024-02-03 02:31:36,885,plugin.bilibili_dm_plugin] INFO : blivedm closing
+[2024-02-03 02:31:36,887,http_server] INFO : request for default_style.css
+[2024-02-03 02:31:36,891,websockets.server] INFO : connection closed
+[2024-02-03 02:31:36,895,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:31:36 +0000] "GET /js/lib/requirejs.js HTTP/1.1" 200 239 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:31:36,898,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:31:36 +0000] "GET /style/default_style.css HTTP/1.1" 200 235 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:31:36,925,http_server] INFO : request for web plugin list
+[2024-02-03 02:31:36,929,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:31:36 +0000] "GET /api/plugin_list HTTP/1.1" 200 206 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:31:36,934,http_server] INFO : return for socket
+[2024-02-03 02:31:36,935,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:31:36 +0000] "GET /get_websocket HTTP/1.1" 200 198 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:31:36,942,websockets.server] INFO : connection open
+[2024-02-03 02:31:36,948,livewebsocket] INFO : receive a message{"code":200,"msg":"ok","param":{"http://127.0.0.1:8082/index?":"","broom":"31817089"}}
+[2024-02-03 02:31:36,948,livewebsocket] INFO : connect with blower success
+[2024-02-03 02:31:53,596,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：不能让我喝酒吧
+[2024-02-03 02:31:53,598,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：不能让我喝酒吧
+[2024-02-03 02:32:28,700,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：小丑原来是我自己[捂脸]
+[2024-02-03 02:32:28,704,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：小丑原来是我自己[捂脸]
+[2024-02-03 02:33:42,649,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：没有
+[2024-02-03 02:33:42,651,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：没有
+[2024-02-03 02:43:19,594,http_server] INFO : return for main_page
+[2024-02-03 02:43:19,602,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:43:19 +0000] "GET /index?&broom=31817089 HTTP/1.1" 200 235 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:43:19,629,http_server] INFO : request for requirejs.js
+[2024-02-03 02:43:19,634,http_server] INFO : request for default_style.css
+[2024-02-03 02:43:19,642,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:43:19 +0000] "GET /style/default_style.css HTTP/1.1" 200 235 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:43:19,651,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:43:19 +0000] "GET /js/lib/requirejs.js HTTP/1.1" 200 239 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:43:19,683,http_server] INFO : request for web plugin list
+[2024-02-03 02:43:19,685,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:43:19 +0000] "GET /api/plugin_list HTTP/1.1" 200 206 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:43:19,690,http_server] INFO : return for socket
+[2024-02-03 02:43:19,691,aiohttp.access] INFO : 127.0.0.1 [02/Feb/2024:18:43:19 +0000] "GET /get_websocket HTTP/1.1" 200 198 "http://127.0.0.1:8082/index?&broom=31817089" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+[2024-02-03 02:43:19,698,websockets.server] INFO : connection open
+[2024-02-03 02:43:19,702,livewebsocket] INFO : receive a message{"code":200,"msg":"ok","param":{"http://127.0.0.1:8082/index?":"","broom":"31817089"}}
+[2024-02-03 02:43:19,702,livewebsocket] INFO : connect with blower success
+[2024-02-03 02:43:19,767,plugin.bilibili_dm_plugin] INFO : blivedm closing
+[2024-02-03 02:43:19,769,websockets.server] INFO : connection closed
+[2024-02-03 02:43:28,943,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：好梦
+[2024-02-03 02:43:28,947,plugin.bilibili_dm_plugin] INFO : [31817089] 餮鸦：好梦
+[2024-02-03 02:44:59,055,blivedm] WARNING : room=31817089 unknown cmd=PK_BATTLE_MULTIPLE_AWARD, command={'cmd': 'PK_BATTLE_MULTIPLE_AWARD', 'data': {'pkid': 341718090, 'pk_status': 201, 'award_room': 30767168, 'award_no': 2, 'award_name': '1.5', 'award_value': 150, 'multiple_time': 60, 'start_time': 1706899499, 'end_time': 1706899559, 'status': 5}}
+[2024-02-03 02:50:34,232,blivedm] WARNING : room=31817089 unknown cmd=SPREAD_ORDER_OVER, command={'cmd': 'SPREAD_ORDER_OVER', 'data': {'order_id': 5979605, 'order_status': 0, 'timestamp': 1706899834, 'uid': 3493292842945296}}
+[2024-02-03 02:50:45,726,plugin.bilibili_dm_plugin] INFO : blivedm closing
+[2024-02-03 02:50:45,727,websockets.server] INFO : connection closed
+[2024-02-03 02:50:46,229,plugin.bilibili_dm_plugin] INFO : blivedm closing
+[2024-02-03 02:50:46,230,websockets.server] INFO : connection closed

@@ -1,5 +1,5 @@
 #端口
-port: 8082
+port: 8083
 host: "127.0.0.1"
 #弹幕姬前端配置
 web:
@@ -7,7 +7,7 @@ web:
  - tku: "./web/tku.html"
 #websocket配置
 websocket:
-  port: 45466
+  port: 45467
   path: "/websocket"
 
 # TODO: 未来会考虑GUI功能，现在这里放着
