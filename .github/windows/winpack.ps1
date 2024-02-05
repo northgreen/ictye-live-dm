@@ -25,8 +25,8 @@ $updatedLines | Set-Content -Path $file_path
 
 <#构建启动器#>
 Copy-Item $work_path\icon.ico $work_path\launcher
-
 nmake
+mkdir $work_path\ictye-live-dm\plugin
 
 
 Copy-Item $work_path\.github\resource\run.bat $work_path\ictye-live-dm\
