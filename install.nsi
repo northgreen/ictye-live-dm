@@ -5,7 +5,7 @@
 Name "ictye-live-dm"
 OutFile "ictye-live-dm-installer-x86_64.exe"
 InstallDir "$PROGRAMFILES\ictye-live-dm"
-Icon "ictye-live-dm\icon.ico"
+Icon "icon.ico"
 
 Var StartMenuFolder
 
