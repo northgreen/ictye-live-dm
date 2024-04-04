@@ -31,8 +31,6 @@ mkdir $work_path\ictye-live-dm\plugin
 
 Copy-Item $work_path\.github\resource\run.bat $work_path\ictye-live-dm\
 
-tree /F D:\\ 
-
 <#打包压缩包#>
 Compress-Archive -Path $work_path/ictye-live-dm/* -DestinationPath $work_path/ictye-live-dm.zip
 
