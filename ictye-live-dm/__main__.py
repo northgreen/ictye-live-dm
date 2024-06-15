@@ -49,25 +49,28 @@ def main():
 
     parse = argparse.ArgumentParser(description="一个基于python实现的模块化弹幕姬框架")
     parse.add_argument('-u', '--unportable', action='store_true', help='非便携性启动')
+    parse.add_argument("-cfg", "--config", default="", help='指定配置目錄')
     args = parse.parse_args()
 
-    unportable: bool=args.unportable
+    unportable: bool = args.unportable
     """便携启动开关"""
-
+    configdir: str = args.config
+    """配置目錄"""
 
     # 获取配置
-    config = configs.config()
+    config = configs.config(configdir)
+
     # 传递配置
     http_server.config = config
-    pluginsystem.confi = config
+    pluginsystem.global_config = config
     livewebsocket.config = config
+    # 获取logger
+    logger.setup_logging(config, unportable)
+    loggers = logging.getLogger(__name__)
     # 获取插件系统
     plugin_sys = pluginsystem.Plugin()
     livewebsocket.plugin_system = plugin_sys
     http_server.plugin_system = plugin_sys
-    # 获取logger
-    logger.setup_logging(config,unportable)
-    loggers = logging.getLogger(__name__)
 
     # 启动服务器
     loggers.info("project starting")

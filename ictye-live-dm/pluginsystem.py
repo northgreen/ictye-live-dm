@@ -11,15 +11,16 @@
 #   更多详情请参阅许可协议文档
 
 import asyncio
-from depends import plugin_main, plugin_errors
+from depends import pluginmain, plugin_errors
 import logging
 import os
 import importlib
 import importlib.util
 from websockets.server import WebSocketServerProtocol
+import aiohttp.web as web
 from depends import connects
 
-confi = {}  # 配置
+global_config = {}  # 配置
 
 
 class Plugin:
@@ -33,28 +34,33 @@ class Plugin:
         self.connect_id_dict: dict[any, list] = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象
         self.plugin_cgi_support: dict = {}  # 消息插件cgi
         self.plugin_js_support: dict = {}  # js支持字典
+        self.connect_id_dict_aiohttp = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象(aiohttp)
 
-        plugin_name = ""
         # 加载默认插件目录
-        for plugin_file in os.listdir(confi['plugins']['default_path']):
+        self.__lod_init_plugin__()
+
+    def __lod_init_plugin__(self):
+        plugin_name = ""
+        for plugin_file in os.listdir(global_config['plugins']['default_path']):
             try:
                 # 排除一些非法的文件和缓存目录，还要同时保障能够加载软件包
                 if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(
-                        os.path.join(confi['plugins']['default_path'],
+                        os.path.join(global_config['plugins']['default_path'],
                                      plugin_file)) and not plugin_file == "__pycache__":
+
                     plugin_name = os.path.splitext(plugin_file)[0]
-                    pathname = os.path.basename(confi['plugins']['default_path'])
+                    path_name = os.path.basename(global_config['plugins']['default_path'])
 
-                    mlogger.info(f"found a plugin '{plugin_name}' in {pathname}")
+                    self.logger.info(f"found a plugin '{plugin_name}' in dir {path_name}")
 
-                    plugin_module = importlib.import_module(f'{pathname}.{plugin_name}')
+                    plugin_module = importlib.import_module(f'{path_name}.{plugin_name}')
 
                     # 合法性检查
-                    if not hasattr(plugin_module, "Plugin_Main"):
+                    if not hasattr(plugin_module, "PluginMain"):
                         raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
 
-                    plugin_class = getattr(plugin_module, "Plugin_Main")
-                    plugin_interface: plugin_main.Plugin_Main = plugin_class()
+                    plugin_class = getattr(plugin_module, "PluginMain")
+                    plugin_interface: pluginmain.PluginMain = plugin_class()
 
                     # 获取插件类型
                     if plugin_interface.plugin_type() == "message":
@@ -72,7 +78,7 @@ class Plugin:
                         self.plugin_js_support[plugin_interface.plugin_name] = plugin_interface.plugin_js_sprit
 
             except IndexError as e:
-                mlogger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
+                self.logger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
     async def remove_connect_in_id_dict(self, id):
         """
@@ -83,6 +89,16 @@ class Plugin:
             if hasattr(i, "callback"):
                 await i.callback()
         return self.connect_id_dict.pop(id, False)
+
+    async def remove_connect_in_id_dict_aiohttp(self, id):
+        """
+        当连接关闭时，移除连接
+        :param id 连接id
+        """
+        for i in self.connect_id_dict_aiohttp[id]:
+            if hasattr(i, "callback"):
+                await i.callback()
+        return self.connect_id_dict_aiohttp.pop(id, False)
 
     async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
         """
@@ -98,10 +114,33 @@ class Plugin:
             # 获取未缓存的消息迭代器
             self.connect_id_dict[connect.id] = []
             for plugin in self.message_plugin_list:
-                dm = plugin.dm_iter(params, connects.connect_wrapper(connect))
+                dm = plugin.dm_iter(params)
                 if dm is None:
                     continue
                 self.connect_id_dict[connect.id].append(dm)
+
+                async for _dm in dm:
+                    self.logger.debug("get a dm:", _dm)
+                    yield _dm
+
+    async def get_plugin_message_aiohttp(self, params, connect: web.WebSocketResponse):
+        """
+        弹幕对象迭代器，迭代对应参数的弹幕
+        """
+        if connect in self.connect_id_dict_aiohttp.keys():
+            # 已经缓存消息迭代器
+            for dm_iter in self.connect_id_dict_aiohttp[connect]:
+                async for _dm in dm_iter:
+                    self.logger.debug("get a dm:", _dm)
+                    yield _dm
+        else:
+            # 获取未缓存的消息迭代器
+            self.connect_id_dict_aiohttp[connect] = []
+            for plugin in self.message_plugin_list:
+                dm = plugin.dm_iter(params)
+                if dm is None:
+                    continue
+                self.connect_id_dict_aiohttp[connect].append(dm)
 
                 async for _dm in dm:
                     self.logger.debug("get a dm:", _dm)

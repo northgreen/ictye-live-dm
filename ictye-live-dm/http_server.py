@@ -16,6 +16,7 @@ import json
 import logging
 import os
 import pluginsystem
+import livewebsocket
 
 config = dict()
 plugin_system: pluginsystem.Plugin
@@ -40,7 +41,8 @@ async def http_handler(request):
 
 async def http_socket_get(request):
     log.info("return for socket")
-    return web.Response(text=json.dumps(msgs.socket_responce(config).to_dict()))
+    return web.Response(text=json.dumps({"code": 200, "local": "/ws"}) if config["dev"] else json.dumps(
+        msgs.socket_responce(config).to_dict()))
 
 
 async def http_websocket(request: web.Request):
@@ -97,7 +99,8 @@ async def http_cgi(request):
     try:
         if request.match_info["name"] in plugin_system.plugin_cgi_support:
             if request.match_info["page"] in plugin_system.plugin_cgi_support[request.match_info["name"]]:
-                req = await plugin_system.plugin_cgi_support[request.match_info["name"]][request.match_info["page"]](request)
+                req = await plugin_system.plugin_cgi_support[request.match_info["name"]][request.match_info["page"]](
+                    request)
             else:
                 req = web.Response(status=404, text="no such path")
         else:
@@ -121,7 +124,7 @@ async def http_server(configs):
                                   web.get("/js/{name}", http_js),
                                   web.get("/js/lib/{name}", http_lib),
                                   web.get("/js/script/{name}", http_script),
-                                  web.get("/websocket", http_websocket),
+                                  web.get("/ws", livewebsocket.aiohttp_ws),
                                   web.get("/api/plugin_list", http_api_plugin),
                                   web.get("/cgi/{name}/{page}", http_cgi)
                                   ]

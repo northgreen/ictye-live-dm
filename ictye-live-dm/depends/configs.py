@@ -1,9 +1,16 @@
 import yaml
 import os
 
+cfgdir: str = ""
 
-def config() -> dict:
-    with open("./config/system/config.yaml", "r", encoding="utf-8") as f:
+
+def config(cfg: str) -> dict:
+    cfgdir = cfg
+    if cfg:
+        cfgfile = cfg
+    else:
+        cfgfile = "./config/system/config.yaml"
+    with open(cfgfile, "r", encoding="utf-8") as f:
         configs = yaml.load(f.read(), Loader=yaml.FullLoader)
     if configs["debug"] == 1:
         print(f"log:already reading config file: {configs}\n")
@@ -34,7 +41,7 @@ def read_config(config_family: str) -> dict:
             configs = yaml.load(f.read(), Loader=yaml.FullLoader)
             return configs
     else:
-        os.makedirs(os.path.dirname(f"./config/plugin/{config_family}/config.yaml"),exist_ok=True)
+        os.makedirs(os.path.dirname(f"./config/plugin/{config_family}/config.yaml"), exist_ok=True)
         with open(f"./config/plugin/{config_family}/config.yaml", 'w+') as f:
             f.write(f"# config for {config_family}")
         return configs

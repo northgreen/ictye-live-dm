@@ -18,7 +18,7 @@ from . import connects
 from aiohttp import web
 
 
-class Plugin_Main:
+class PluginMain:
 
     @typing.final
     def __init__(self):
@@ -97,11 +97,10 @@ class Plugin_Main:
         if self.sprit_cgi_support:
             raise plugin_errors.UnexpectedPluginMather("未实现的插件方法")
 
-    def dm_iter(self, params: dict, connect_waper: connects.connect_wrapper) -> object:
+    def dm_iter(self, params: dict) -> object:
         """
         返回弹幕迭代对象
         :param params: 前端的get参数
-        :param connect_waper: 连接信息
         :return 消息迭代对象
 
         """
@@ -155,7 +154,7 @@ class Plugin_Main:
         """
         获取配置
         """
-        return configs.config()
+        return configs.config(configs.cfgdir)
 
     @typing.final
     def plugin_type(self) -> str:

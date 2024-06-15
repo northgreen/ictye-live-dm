@@ -10,10 +10,10 @@
 #
 #   更多详情请参阅许可协议文档
 from websockets.server import WebSocketServerProtocol
+import aiohttp.web as web
 
 
 class connect_wrapper:
-
     """
     连接包装类
     """
@@ -29,4 +29,3 @@ class connect_wrapper:
         """
         self.id = self.__connect__.id
         self.open = self.__connect__.open
-
