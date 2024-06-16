@@ -20,9 +20,9 @@ for plugin_file in confi["plugins"]["others_plugin"]:
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             # 检查是否实现了主方法
-            if not hasattr(module, "Plugin_Main"):
+            if not hasattr(module, "PluginMain"):
                 raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
-            plugin_main_class: plugin_main.Plugin_Main = module.Plugin_Main
+            plugin_main_class: plugin_main.PluginMain = module.PluginMain
 
             # 获取插件类型
             if plugin_main_class.plugin_type() == "message":
