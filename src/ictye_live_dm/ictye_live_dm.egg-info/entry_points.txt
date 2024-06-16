@@ -1,0 +1,2 @@
+[console_scripts]
+ictye-live-dm = __main__:main

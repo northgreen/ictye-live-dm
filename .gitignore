@@ -3,6 +3,10 @@ rubbis/
 __pycache__/
 .hintrc/
 .vscode/
+build/
+dist/
+data/
+src/ictye_live_dm/logs
 /.hintrc
 python-3.12.0-embed-amd64
 *.exe

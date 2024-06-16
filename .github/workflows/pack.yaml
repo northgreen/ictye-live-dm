@@ -30,8 +30,8 @@ jobs:
       - name: upload_ach
         uses: actions/upload-artifact@v3
         with:
-          name: ictye-live-dm
-          path: ictye-live-dm.zip
+          name: ictye_live_dm
+          path: ictye_live_dm.zip
 
       - name: makensis
         uses: joncloud/makensis-action@v4
@@ -39,5 +39,5 @@ jobs:
       - name: upload_installer
         uses: actions/upload-artifact@v3
         with:
-          name: ictye-live-dm-installer
-          path: ictye-live-dm-installer-x86_64.exe
+          name: ictye_live_dm-installer
+          path: ictye_live_dm-installer-x86_64.exe
