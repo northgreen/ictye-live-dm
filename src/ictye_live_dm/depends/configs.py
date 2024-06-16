@@ -16,17 +16,45 @@ import os
 cfgdir: str = ""
 
 
-def config(cfg: str) -> dict:
-    cfgdir = cfg
+class ConfigManager:
+    _instance = None
+    _register: dict = {}
+    _default: dict = {}
+
+    def __new__(cls, *args, **kwargs):
+        cls._instance = super(ConfigManager, cls).__new__(cls)
+        return cls._instance
+
+    def __getitem__(self, item):
+        if item in self._register:
+            return self._register.get(item)
+        else:
+            return self._default.get(item)
+
+    def set(self, attr: str, default=None):
+        self._default[attr] = default
+
+    def read_default(self, path: str):
+        if not self._default:
+            self._default = self.__load(path)
+
+    def load_config(self, path: str):
+        if not self._register:
+            self._register = self.__load(path)
+
+    def __load(self, path: str):
+        if path.endswith(".yml") or path.endswith(".yaml"):
+            with open(path, "r", encoding="utf-8") as f:
+                return yaml.load(f.read(), Loader=yaml.FullLoader)
+
+
+def config(cfg: str):
+    cfgfile = "./config/system/config.yaml"
+    cfg_manager = ConfigManager()
+    cfg_manager.read_default(cfgfile)
     if cfg:
-        cfgfile = cfg
-    else:
-        cfgfile = "./config/system/config.yaml"
-    with open(cfgfile, "r", encoding="utf-8") as f:
-        configs = yaml.load(f.read(), Loader=yaml.FullLoader)
-    if configs["debug"] == 1:
-        print(f"log:already reading config file: {configs}\n")
-    return configs
+        cfg_manager.load_config(cfg)
+    return cfg_manager
 
 
 def set_config(config_family: str, config: dict) -> bool:

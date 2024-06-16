@@ -42,17 +42,16 @@ def return_file(file: str):
     return healder
 
 
-async def http_handler(request):
+async def http_handler(request: web.Request):
     """
         主文件请求
     """
     return web.HTTPFound("/index")
 
 
-async def http_socket_get(request):
+async def http_socket_get(request: web.Request):
     log.info("return for socket")
-    return web.Response(text=json.dumps({"code": 200, "local": "/ws"}) if config["dev"] else json.dumps(
-        msgs.socket_responce(config).to_dict()))
+    return web.Response(text=json.dumps({"code": 200, "local": "/ws"}))
 
 
 async def http_websocket(request: web.Request):
@@ -71,27 +70,27 @@ async def http_plugin(request: web.Request):
         return web.Response(status=404, text="not found")
 
 
-async def http_style(request):
+async def http_style(request: web.Request):
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/style/{request.match_info['name']}")
 
 
-async def http_js(request):
+async def http_js(request: web.Request):
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/js/{request.match_info['name']}")
 
 
-async def http_lib(request):
+async def http_lib(request: web.Request):
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/js/lib/{request.match_info['name']}")
 
 
-async def http_script(request):
+async def http_script(request: web.Request):
     log.info(f"request for {request.match_info['name']}")
     return web.FileResponse(path=f"web/js/script/{request.match_info['name']}")
 
 
-async def http_api_plugin(request):
+async def http_api_plugin(request: web.Request):
     log.info(f"request for web plugin list")
 
     plugin_list = {"code": 200,
@@ -101,7 +100,7 @@ async def http_api_plugin(request):
     return web.json_response(plugin_list)
 
 
-async def http_cgi(request):
+async def http_cgi(request: web.Request):
     """
     HTTP ic py cgi前端调用
     """

@@ -64,6 +64,10 @@ class PluginMain:
         if self.plugin_type() == "message":
             self.message_list = []
 
+    def plugin_setup(self):
+        """初始化插件"""
+        pass
+
     def plugin_init(self) -> str:
         """
             插件开始被加载时调用

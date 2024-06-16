@@ -13,6 +13,8 @@
 import logging
 import time
 import os
+import importlib
+
 
 
 def setup_logging(config: dict, unportable: bool):
@@ -52,7 +54,24 @@ def setup_logging(config: dict, unportable: bool):
     ch.setLevel(level_dic[config["loglevel"]])
 
     # 定义handler的输出格式
-    formatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
+    try:
+        formatter = importlib.import_module("colorlog").ColoredFormatter(
+            "%(log_color)s[%(asctime)s,%(name)s]%(levelname)s\t%(blue)s%(message)s",
+            datefmt=None,
+            reset=True,
+            log_colors={
+                'DEBUG': 'cyan',
+                'INFO': 'green',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'red,bg_white',
+            },
+            secondary_log_colors={},
+            style='%'
+        )
+    except ModuleNotFoundError:
+        formatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
+
     fh.setFormatter(formatter)
     ch.setFormatter(formatter)
 

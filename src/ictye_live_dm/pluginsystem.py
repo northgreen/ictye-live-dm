@@ -26,11 +26,9 @@ import logging
 import os
 import importlib
 import importlib.util
-from websockets.server import WebSocketServerProtocol
 import aiohttp.web as web
-from .depends import connects
 
-global_config = {}  # 配置
+config = {}  # 配置
 
 
 class Plugin:
@@ -41,7 +39,6 @@ class Plugin:
 
         self.message_plugin_list: list = []  # 消息插件列表
         self.analyzer_plugin_list: list = []  # 分析插件列表
-        self.connect_id_dict: dict[any, list] = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象
         self.plugin_cgi_support: dict = {}  # 消息插件cgi
         self.plugin_js_support: dict = {}  # js支持字典
         self.connect_id_dict_aiohttp = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象(aiohttp)
@@ -51,15 +48,15 @@ class Plugin:
 
     def __lod_init_plugin__(self):
         plugin_name = ""
-        for plugin_file in os.listdir(global_config['plugins']['default_path']):
+        for plugin_file in os.listdir(os.path.join(os.path.dirname(__file__), "plugin")):
             try:
                 # 排除一些非法的文件和缓存目录，还要同时保障能够加载软件包
                 if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(
-                        os.path.join(global_config['plugins']['default_path'],
+                        os.path.join(os.path.join(os.path.dirname(__file__), "plugin"),
                                      plugin_file)) and not plugin_file == "__pycache__":
 
                     plugin_name = os.path.splitext(plugin_file)[0]
-                    path_name = os.path.basename(global_config['plugins']['default_path'])
+                    path_name = os.path.join(os.path.dirname(__file__), "plugin")
 
                     self.logger.info(f"found a plugin '{plugin_name}' in dir {path_name}")
 
@@ -90,16 +87,6 @@ class Plugin:
             except IndexError as e:
                 self.logger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
-    async def remove_connect_in_id_dict(self, id):
-        """
-        当连接关闭时，移除连接
-        :param id 连接id
-        """
-        for i in self.connect_id_dict[id]:
-            if hasattr(i, "callback"):
-                await i.callback()
-        return self.connect_id_dict.pop(id, False)
-
     async def remove_connect_in_id_dict_aiohttp(self, id):
         """
         当连接关闭时，移除连接
@@ -109,29 +96,6 @@ class Plugin:
             if hasattr(i, "callback"):
                 await i.callback()
         return self.connect_id_dict_aiohttp.pop(id, False)
-
-    async def get_plugin_message(self, params, connect: WebSocketServerProtocol):
-        """
-        弹幕对象迭代器，迭代对应参数的弹幕
-        """
-        if connect.id in self.connect_id_dict.keys():
-            # 已经缓存消息迭代器
-            for dm_iter in self.connect_id_dict[connect.id]:
-                async for _dm in dm_iter:
-                    self.logger.debug("get a dm:", _dm)
-                    yield _dm
-        else:
-            # 获取未缓存的消息迭代器
-            self.connect_id_dict[connect.id] = []
-            for plugin in self.message_plugin_list:
-                dm = plugin.dm_iter(params)
-                if dm is None:
-                    continue
-                self.connect_id_dict[connect.id].append(dm)
-
-                async for _dm in dm:
-                    self.logger.debug("get a dm:", _dm)
-                    yield _dm
 
     async def get_plugin_message_aiohttp(self, params, connect: web.WebSocketResponse):
         """
