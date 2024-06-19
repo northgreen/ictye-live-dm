@@ -31,7 +31,7 @@ jobs:
         
       - name: test
         run: |
-          pytest $GITHUB_ACTION_PATH --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
+          pytest $GITHUB_ACTION_PATH\ictye-live-dm --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
 
       - name: upload_results
         uses: actions/upload-artifact@v3
