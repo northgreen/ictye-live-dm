@@ -1,48 +1,29 @@
-#  Copyright (c) 2023-2024 楚天寻箫（ictye）
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-
 import asyncio
-from .depends import pluginmain, plugin_errors
+from .depends import pluginmain, plugin_errors, configs
 import logging
 import os
 import importlib
 import importlib.util
 import aiohttp.web as web
 
-config = {}  # 配置
+config: configs.ConfigManager = configs.ConfigManager()  # 配置
 
 
 class Plugin:
+    _instance = None
+    logger = logging.getLogger(__name__)
+    message_plugin_list: list = []  # 消息插件列表
+    analyzer_plugin_list: list = []  # 分析插件列表
+    plugin_cgi_support: dict = {}  # 消息插件cgi
+    plugin_js_support: dict = {}  # js支持字典
+    connect_id_dict_aiohttp = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象(aiohttp)
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        mlogger = logging.getLogger(__name__)
-
-        self.logger = mlogger
-
-        self.message_plugin_list: list = []  # 消息插件列表
-        self.analyzer_plugin_list: list = []  # 分析插件列表
-        self.plugin_cgi_support: dict = {}  # 消息插件cgi
-        self.plugin_js_support: dict = {}  # js支持字典
-        self.connect_id_dict_aiohttp = {}  # 连接id——消息对象，为了防止重复向插件申请迭代对象(aiohttp)
-
         # 加载默认插件目录
         self.__lod_init_plugin__()
 
@@ -78,7 +59,7 @@ class Plugin:
                         raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
 
                     # 注册脚本cgi接口
-                    if plugin_interface.sprit_cgi_support:
+                    if plugin_interface.spirit_cgi_support:
                         self.plugin_cgi_support[plugin_interface.plugin_name] = plugin_interface.sprit_cgi_lists
                     # 注册插件js
                     if plugin_interface.plugin_js_sprit_support:
@@ -105,7 +86,7 @@ class Plugin:
             # 已经缓存消息迭代器
             for dm_iter in self.connect_id_dict_aiohttp[connect]:
                 async for _dm in dm_iter:
-                    self.logger.debug("get a dm:", _dm)
+                    self.logger.debug("resave a dm:", _dm)
                     yield _dm
         else:
             # 获取未缓存的消息迭代器
@@ -123,7 +104,7 @@ class Plugin:
     async def message_analyzer(self, message):
         # 消息分析插件
         for plugins in self.analyzer_plugin_list:
-            plugins.message_anaylazer(message)
+            plugins.message_analyzer(message)
 
     async def message_filter(self, message) -> dict:
         """

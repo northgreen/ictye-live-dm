@@ -1,25 +1,3 @@
-#  Copyright (c) 2023-2024 楚天寻箫（ictye）
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-
 from . import plugin_errors, msgs
 import asyncio
 import typing
@@ -29,11 +7,7 @@ from aiohttp import web
 
 class PluginMain:
 
-    @typing.final
     def __init__(self):
-        """
-        不要用这个而是用plugin_init来进行插件的初始化，这个仅供内部使用
-        """
         self.stop: bool = False
         """停止标志"""
 
@@ -49,7 +23,7 @@ class PluginMain:
         self.config: dict = dict()
         """配置字典"""
 
-        self.sprit_cgi_support = False
+        self.spirit_cgi_support = False
         """插件cgi支持"""
 
         self.sprit_cgi_lists: dict = dict()
@@ -57,9 +31,6 @@ class PluginMain:
 
         self.plugin_name: str = ""
         """插件名称"""
-
-        self.web: web = web
-        """web前端模块"""
 
         if self.plugin_type() == "message":
             self.message_list = []
@@ -95,7 +66,7 @@ class PluginMain:
         """
         return message
 
-    async def message_anaylazer(self, message):
+    async def message_analyzer(self, message):
         """
         消息分析
         """
@@ -107,7 +78,7 @@ class PluginMain:
         :param request:请求对象
         :return 响应，用aiohttp的就行（已经封装为self.web）
         """
-        if self.sprit_cgi_support:
+        if self.spirit_cgi_support:
             raise plugin_errors.UnexpectedPluginMather("未实现的插件方法")
 
     def dm_iter(self, params: dict) -> object:
@@ -115,7 +86,6 @@ class PluginMain:
         返回弹幕迭代对象
         :param params: 前端的get参数
         :return 消息迭代对象
-
         """
         return self
 
@@ -167,7 +137,7 @@ class PluginMain:
         """
         获取配置
         """
-        return configs.config(configs.cfgdir)
+        return configs.ConfigManager()
 
     @typing.final
     def plugin_type(self) -> str:

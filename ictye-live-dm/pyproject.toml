@@ -9,8 +9,8 @@ authors = [
 ]
 name = "ictye_live_dm"
 version = "1.0"
-license = {file = "LICENSE"}
-readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "GPL License"}
+readme = {file = "../README.md", content-type = "text/markdown"}
 description = "a modular danmuk platform"
 keywords = ["danmuk","live"]
 dependencies = [
@@ -32,3 +32,9 @@ packages = ["src/ictye_live_dm","src/ictye-live-dm/depends"]
 
 [project.scripts]
 ictye-live-dm = "ictye_live_dm.main:main"
+
+[tool.pytest.ini_options]
+minversion = 5.0
+testpaths ="./tests"
+asyncio_mode = "auto"
+log_cli = true

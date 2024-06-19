@@ -1,34 +1,12 @@
-#  Copyright (c) 2023-2024 楚天寻箫（ictye）
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-
 from aiohttp import web
-from .depends import msgs
 import json
 import logging
 import os
 from . import pluginsystem
 from . import livewebsocket
+from .depends import configs
 
-config = dict()
+config: configs.ConfigManager = configs.ConfigManager()
 plugin_system: pluginsystem.Plugin
 log = logging.getLogger(__name__)
 
@@ -120,7 +98,7 @@ async def http_cgi(request: web.Request):
     return req
 
 
-async def http_server(configs):
+async def http_server():
     # http服务器
     log.info("http server started")
 
@@ -137,7 +115,7 @@ async def http_server(configs):
                                   web.get("/api/plugin_list", http_api_plugin),
                                   web.get("/cgi/{name}/{page}", http_cgi)
                                   ]
-    for i in configs["web"]:
+    for i in config["web"]:
         file, path = list(i.items())[0]
         route_list.append(web.get(f"/{file}", return_file(path)))
 
@@ -145,6 +123,6 @@ async def http_server(configs):
 
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, configs["host"], configs["port"])
+    site = web.TCPSite(runner, config["host"], config["port"])
     await site.start()
-    log.info(f"seriver is starting at http://{configs['host']}:{configs['port']}")
+    log.info(f"seriver is starting at http://{config['host']}:{config['port']}")

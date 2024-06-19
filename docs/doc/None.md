@@ -33,7 +33,7 @@ for plugin_file in confi["plugins"]["others_plugin"]:
                 raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
 
             # 注册插件cgi
-            if plugin_main_class.sprit_cgi_support:
+            if plugin_main_class.spirit_cgi_support:
                 if plugin_main_class.sprit_cgi_path:
                     self.plugin_cgi_support[plugin_main_class.sprit_cgi_path] = plugin_main_class.cgi_face
                 else:

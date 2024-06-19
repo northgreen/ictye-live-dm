@@ -1,20 +1,7 @@
-#  Copyright (c) 2024 楚天寻箫（ictye）
-#
-#    此软件基于楚天寻箫非商业开源软件许可协议 1.0发布.
-#    您可以根据该协议的规定，在非商业或商业环境中使用、分发和引用此软件.
-#    惟分发此软件副本时，您不得以商业方式获利，并且不得限制用户获取该应用副本的体验.
-#    如果您修改或者引用了此软件，请按协议规定发布您的修改源码.
-#
-#    此软件由版权所有者提供，没有明确的技术支持承诺，使用此软件和源码造成的任何损失，
-#    版权所有者概不负责。如需技术支持，请联系版权所有者或社区获取最新版本。
-#
-#   更多详情请参阅许可协议文档
-
 import logging
 import time
 import os
 import importlib
-
 
 
 def setup_logging(config: dict, unportable: bool):
@@ -44,7 +31,7 @@ def setup_logging(config: dict, unportable: bool):
         os.makedirs(log_path)
 
     fh = logging.FileHandler(
-        os.path.join(log_path, config["logfile"]["name"] + time.strftime("%Y%m%d_%H%M%S",time.localtime()) + ".log"),
+        os.path.join(log_path, config["logfile"]["name"] + time.strftime("%Y%m%d_%H%M%S", time.localtime()) + ".log"),
         encoding="utf-8")
 
     fh.setLevel(level_dic[config["loglevel"]])
@@ -54,6 +41,7 @@ def setup_logging(config: dict, unportable: bool):
     ch.setLevel(level_dic[config["loglevel"]])
 
     # 定义handler的输出格式
+    filefomatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
     try:
         formatter = importlib.import_module("colorlog").ColoredFormatter(
             "%(log_color)s[%(asctime)s,%(name)s]%(levelname)s\t%(blue)s%(message)s",
@@ -72,7 +60,7 @@ def setup_logging(config: dict, unportable: bool):
     except ModuleNotFoundError:
         formatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
 
-    fh.setFormatter(formatter)
+    fh.setFormatter(filefomatter)
     ch.setFormatter(formatter)
 
     # 给logger添加handler
