@@ -27,10 +27,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r ./ictye-live-dm/requirements.txt
           pip install ./ictye-live-dm/
+          pip install pytest pytest-cov pytest-asyncio pytest-aiohttp
         
       - name: test
         run: |
-          pip install pytest pytest-cov pytest-asyncio pytest-aiohttp
           pytest $GITHUB_ACTION_PATH --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
 
       - name: upload_results
