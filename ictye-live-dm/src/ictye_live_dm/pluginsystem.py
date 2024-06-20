@@ -1,10 +1,12 @@
 import asyncio
-from .depends import pluginmain, plugin_errors, configs
-import logging
-import os
 import importlib
 import importlib.util
+import logging
+import os
+
 import aiohttp.web as web
+
+from .depends import pluginmain, plugin_errors, configs
 
 config: configs.ConfigManager = configs.ConfigManager()  # 配置
 
@@ -26,6 +28,11 @@ class Plugin:
     def __init__(self):
         # 加载默认插件目录
         self.__lod_init_plugin__()
+        self.__lod_extra__()
+
+    def __lod_extra__(self):
+        # TODO: 加載額外插件
+        ...
 
     def __lod_init_plugin__(self):
         plugin_name = ""
@@ -67,6 +74,10 @@ class Plugin:
 
             except IndexError as e:
                 self.logger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
+
+    def list_plugin(self) -> list:
+        ...
+        # TODO: 列出插件和插件描述
 
     async def remove_connect_in_id_dict_aiohttp(self, id):
         """

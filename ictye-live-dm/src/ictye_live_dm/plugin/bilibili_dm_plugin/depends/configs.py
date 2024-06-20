@@ -10,8 +10,9 @@
 #
 #   更多详情请参阅许可协议文档
 
-import yaml
 import os
+
+import yaml
 
 cfgdir: str = ""
 

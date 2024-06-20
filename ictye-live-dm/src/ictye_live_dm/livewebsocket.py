@@ -1,10 +1,12 @@
 import asyncio
 import json
 import logging
-from .depends import msgs,configs
-from . import pluginsystem
-from aiohttp import web
+
 import aiohttp
+from aiohttp import web
+
+from . import pluginsystem
+from .depends import msgs, configs
 
 plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 config: configs.ConfigManager = configs.ConfigManager()

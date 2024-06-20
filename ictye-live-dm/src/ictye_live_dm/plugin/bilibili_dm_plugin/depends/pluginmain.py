@@ -20,11 +20,13 @@
 #
 #   更多详情请参阅许可协议文档
 
-from . import plugin_errors, msgs
 import asyncio
 import typing
-from . import configs as configs
+
 from aiohttp import web
+
+from . import configs as configs
+from . import plugin_errors, msgs
 
 
 class PluginMain:

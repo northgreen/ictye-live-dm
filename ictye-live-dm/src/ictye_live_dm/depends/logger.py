@@ -1,9 +1,9 @@
-import logging
-import time
-import os
 import importlib
+import logging
+import os
+import time
+
 from . import configs
-from ..GUI_main import MainWindow
 from . import gui_log_formatter
 from . import gui_logging_hadler
 

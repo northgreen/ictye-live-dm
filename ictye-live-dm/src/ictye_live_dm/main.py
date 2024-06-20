@@ -1,11 +1,11 @@
+import argparse
+import asyncio
 import logging
-from .depends import logger, configs
+import os
+
 from . import http_server
 from . import pluginsystem
-from . import livewebsocket
-import asyncio
-import os
-import argparse
+from .depends import logger, configs
 
 print("Copyright (c) 2024 ictye")
 window = None
@@ -25,9 +25,15 @@ def run_server(loop=asyncio.get_event_loop()):
         exit(0)
 
 
+def parse_args():
+    ...
+    # TODO: 解析參數
+
+
 def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+    # TODO:應把參數解析放到獨立的地方
     parse = argparse.ArgumentParser(description=""" 
     一个基于python实现的模块化弹幕姬框架\n
     如果沒有任何參數，將會正常啓動

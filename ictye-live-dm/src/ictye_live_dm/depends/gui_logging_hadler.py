@@ -1,5 +1,4 @@
 import logging
-import time
 
 
 class GUI_Handler(logging.Handler):

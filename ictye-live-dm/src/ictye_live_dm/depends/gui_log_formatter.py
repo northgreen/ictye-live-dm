@@ -1,5 +1,4 @@
 import logging
-from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class GuiLogFormatter(logging.Formatter):

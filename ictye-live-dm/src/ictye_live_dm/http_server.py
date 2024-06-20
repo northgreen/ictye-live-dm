@@ -1,9 +1,11 @@
-from aiohttp import web
 import json
 import logging
 import os
-from . import pluginsystem
+
+from aiohttp import web
+
 from . import livewebsocket
+from . import pluginsystem
 from .depends import configs
 
 config: configs.ConfigManager = configs.ConfigManager()

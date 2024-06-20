@@ -1,15 +1,13 @@
 import asyncio
-import logging
 import os
+import sys
+import threading
+
+from PyQt5 import QtWidgets
 
 from ictye_live_dm.depends import configs
-
-from .GUI import Ui_MainWindow
-from PyQt5 import QtWidgets
-import sys
-from .depends import gui_log_formatter
-import threading
 from . import main as server
+from .GUI import Ui_MainWindow
 from .depends import logger
 
 

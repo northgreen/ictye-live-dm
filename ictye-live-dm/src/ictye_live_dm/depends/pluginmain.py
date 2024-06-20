@@ -1,8 +1,8 @@
-from . import plugin_errors, msgs
 import asyncio
 import typing
+
 from . import configs as configs
-from aiohttp import web
+from . import plugin_errors, msgs
 
 
 class PluginMain:
