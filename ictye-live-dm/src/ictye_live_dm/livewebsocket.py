@@ -6,7 +6,7 @@ from . import pluginsystem
 from aiohttp import web
 import aiohttp
 
-plugin_system: pluginsystem.Plugin
+plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 config: configs.ConfigManager = configs.ConfigManager()
 param_list: dict = {}
 loggers = logging.getLogger(__name__)

@@ -2,9 +2,15 @@ import logging
 import time
 import os
 import importlib
+from . import configs
+from ..GUI_main import MainWindow
+from . import gui_log_formatter
+from . import gui_logging_hadler
+
+config = configs.ConfigManager()
 
 
-def setup_logging(config: dict, unportable: bool):
+def setup_logging(unportable: bool, window=None):
     """
     Setup logging configuration
     """
@@ -22,7 +28,6 @@ def setup_logging(config: dict, unportable: bool):
     else:
         log_path = "logs"
     """日志档案路径"""
-
     logger = logging.getLogger()  # 获取全局logger
     logger.setLevel(level_dic[config["loglevel"]])  # 设置日志级别
 
@@ -41,7 +46,18 @@ def setup_logging(config: dict, unportable: bool):
     ch.setLevel(level_dic[config["loglevel"]])
 
     # 定义handler的输出格式
-    filefomatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
+    file_formatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
+    if window:
+        gh = logging.StreamHandler()
+        gformatter = gui_log_formatter.GuiLogFormatter(window)
+        gh.setLevel(level_dic[config["loglevel"]])
+        gh.setFormatter(gformatter)
+        logger.addHandler(gh)
+
+        gh = gui_logging_hadler.GUI_Handler(window)
+        gh.setLevel(level_dic[config["loglevel"]])
+        # logger.addHandler(gh)
+
     try:
         formatter = importlib.import_module("colorlog").ColoredFormatter(
             "%(log_color)s[%(asctime)s,%(name)s]%(levelname)s\t%(blue)s%(message)s",
@@ -60,7 +76,7 @@ def setup_logging(config: dict, unportable: bool):
     except ModuleNotFoundError:
         formatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
 
-    fh.setFormatter(filefomatter)
+    fh.setFormatter(file_formatter)
     ch.setFormatter(formatter)
 
     # 给logger添加handler

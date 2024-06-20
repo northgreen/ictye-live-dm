@@ -7,7 +7,7 @@ from . import livewebsocket
 from .depends import configs
 
 config: configs.ConfigManager = configs.ConfigManager()
-plugin_system: pluginsystem.Plugin
+plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
 
 
