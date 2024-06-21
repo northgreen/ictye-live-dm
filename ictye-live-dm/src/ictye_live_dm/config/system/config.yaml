@@ -6,7 +6,6 @@ web:
  - index: "./web/living room dm.html"
  - tku: "./web/tku.html"
 
-# TODO: 未来会考虑GUI功能，现在这里放着
 GUI: 0
 use_local_plugin: 0
 plugins:
