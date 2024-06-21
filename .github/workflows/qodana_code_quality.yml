@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          ref: "dev"
           fetch-depth: 0
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v4.2.4
