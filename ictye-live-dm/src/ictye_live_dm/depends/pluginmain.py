@@ -1,7 +1,7 @@
 import asyncio
 import typing
 
-from . import configs as configs
+from . import configs
 from . import plugin_errors, msgs
 
 
