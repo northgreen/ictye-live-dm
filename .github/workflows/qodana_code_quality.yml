@@ -14,6 +14,6 @@ jobs:
         with:
           ref: "dev"
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2024.1
+        uses: JetBrains/qodana-action@v5.0.4
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
