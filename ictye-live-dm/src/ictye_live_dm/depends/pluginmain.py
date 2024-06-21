@@ -53,7 +53,6 @@ class PluginMain:
         """
         self.stop = 0
         raise plugin_errors.UnexpectedPluginMessage('插件入口方法没有实现')
-        return self.plugin_type()
 
     async def plugin_main(self):
         """

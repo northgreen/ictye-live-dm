@@ -7,20 +7,20 @@ from . import config_registrar
 cfgdir: str = ""
 
 
-def regist_default(config_registrar: config_registrar.ConfigRegistrar):
+def regist_default(_config_registrar: config_registrar.ConfigRegistrar):
     """
     注册默认配置
     """
-    config_registrar.register("port", default=8083)
-    config_registrar.register("host", default="127.0.0.1")
-    config_registrar.register("web", default={"index": "./web/living room dm.html"})
-    config_registrar.register("GUI", default=False)
-    config_registrar.register("plugins", default={})
-    config_registrar.register("debug", default=False)
-    config_registrar.register("loglevel", default="INFO", option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
-    config_registrar.register("logfile", default={"open": True, "name": "latestlog"})
-    config_registrar.register("dev", default=False)
-    config_registrar.register("use_local_plugin", default=False)
+    _config_registrar.register("port", default=8083)
+    _config_registrar.register("host", default="127.0.0.1")
+    _config_registrar.register("web", default={"index": "./web/living room dm.html"})
+    _config_registrar.register("GUI", default=False)
+    _config_registrar.register("plugins", default={})
+    _config_registrar.register("debug", default=False)
+    _config_registrar.register("loglevel", default="INFO", option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
+    _config_registrar.register("logfile", default={"open": True, "name": "latestlog"})
+    _config_registrar.register("dev", default=False)
+    _config_registrar.register("use_local_plugin", default=False)
 
 
 class ConfigManager:
