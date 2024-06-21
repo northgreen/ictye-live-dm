@@ -28,7 +28,7 @@ Issues = "https://github.com/northgreen/ictye-live-dm/issues"
 Homepage = "https://github.com/northgreen/ictye-live-dm"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ictye_live_dm","src/ictye-live-dm/depends"]
+packages = ["src/ictye_live_dm","src/ictye-live-Danmku/depends"]
 
 [project.optional-dependencies]
 gui = ["PyQt5"]

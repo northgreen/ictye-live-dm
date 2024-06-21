@@ -4,7 +4,6 @@ import os
 import time
 
 from . import configs
-from . import gui_log_formatter
 from . import gui_logging_hadler
 
 config = configs.ConfigManager()
@@ -48,15 +47,9 @@ def setup_logging(unportable: bool, window=None):
     # 定义handler的输出格式
     file_formatter = logging.Formatter("[%(asctime)s,%(name)s] %(levelname)s : %(message)s")
     if window:
-        gh = logging.StreamHandler()
-        gformatter = gui_log_formatter.GuiLogFormatter(window)
-        gh.setLevel(level_dic[config["loglevel"]])
-        gh.setFormatter(gformatter)
-        logger.addHandler(gh)
-
         gh = gui_logging_hadler.GUI_Handler(window)
         gh.setLevel(level_dic[config["loglevel"]])
-        # logger.addHandler(gh)
+        logger.addHandler(gh)
 
     try:
         formatter = importlib.import_module("colorlog").ColoredFormatter(

@@ -13,6 +13,7 @@ config: configs.ConfigManager = configs.ConfigManager()  # 配置
 
 class Plugin:
     _instance = None
+    _inited = False
     logger = logging.getLogger(__name__)
     message_plugin_list: list = []  # 消息插件列表
     analyzer_plugin_list: list = []  # 分析插件列表
@@ -26,15 +27,43 @@ class Plugin:
         return cls._instance
 
     def __init__(self):
+        if self._inited:
+            return
         # 加载默认插件目录
-        self.__lod_init_plugin__()
+        if config["use_local_plugin"]:
+            self.__lod_init_plugin__()
         self.__lod_extra__()
 
+    def __registry_plugin__(self, plugin_module):
+        if not hasattr(plugin_module, "PluginMain"):
+            raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
+
+        plugin_class = getattr(plugin_module, "PluginMain")
+        plugin_interface: pluginmain.PluginMain = plugin_class()
+
+        # 获取插件类型
+        if plugin_interface.plugin_type() == "message":
+            self.message_plugin_list.append(plugin_interface)
+        elif plugin_interface.plugin_type() == "analyzer":
+            self.analyzer_plugin_list.append(plugin_interface)
+        else:
+            raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
+
+        # 注册脚本cgi接口
+        if plugin_interface.spirit_cgi_support:
+            self.plugin_cgi_support[plugin_interface.plugin_name] = plugin_interface.sprit_cgi_lists
+        # 注册插件js
+        if plugin_interface.plugin_js_sprit_support:
+            self.plugin_js_support[plugin_interface.plugin_name] = plugin_interface.plugin_js_sprit
+
     def __lod_extra__(self):
-        # TODO: 加載額外插件
-        ...
+        for plugin in config["plugins"]:
+            self.logger.info(f"loading extra plugin '{plugin}'...")
+            plugin_module = importlib.import_module(f'{plugin}')
+            self.__registry_plugin__(plugin_module)
 
     def __lod_init_plugin__(self):
+        self.logger.info("loading local plugin...")
         plugin_name = ""
         for plugin_file in os.listdir(os.path.join(os.path.dirname(__file__), "plugin")):
             try:
@@ -42,42 +71,21 @@ class Plugin:
                 if os.path.splitext(plugin_file)[1] == ".py" or os.path.isdir(
                         os.path.join(os.path.join(os.path.dirname(__file__), "plugin"),
                                      plugin_file)) and not plugin_file == "__pycache__":
-
                     plugin_name = os.path.splitext(plugin_file)[0]
                     path_name = os.path.join(os.path.dirname(__file__), "plugin")
-
                     self.logger.info(f"found a plugin '{plugin_name}' in dir {path_name}")
-
                     plugin_module = importlib.import_module(f'.plugin.{plugin_name}', package=__package__)
-
-                    # 合法性检查
-                    if not hasattr(plugin_module, "PluginMain"):
-                        raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
-
-                    plugin_class = getattr(plugin_module, "PluginMain")
-                    plugin_interface: pluginmain.PluginMain = plugin_class()
-
-                    # 获取插件类型
-                    if plugin_interface.plugin_type() == "message":
-                        self.message_plugin_list.append(plugin_interface)
-                    elif plugin_interface.plugin_type() == "analyzer":
-                        self.analyzer_plugin_list.append(plugin_interface)
-                    else:
-                        raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
-
-                    # 注册脚本cgi接口
-                    if plugin_interface.spirit_cgi_support:
-                        self.plugin_cgi_support[plugin_interface.plugin_name] = plugin_interface.sprit_cgi_lists
-                    # 注册插件js
-                    if plugin_interface.plugin_js_sprit_support:
-                        self.plugin_js_support[plugin_interface.plugin_name] = plugin_interface.plugin_js_sprit
-
+                    self.__registry_plugin__(plugin_module)  # 注冊插件
             except IndexError as e:
                 self.logger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
     def list_plugin(self) -> list:
-        ...
-        # TODO: 列出插件和插件描述
+        plugins = []
+        for plugin in self.message_plugin_list:
+            plugins.append((plugin.plugin_name, plugin.plugin_desc))
+        for plugin in self.analyzer_plugin_list:
+            plugins.append((plugin.plugin_name, plugin.plugin_desc))
+        return plugins
 
     async def remove_connect_in_id_dict_aiohttp(self, id):
         """
@@ -97,7 +105,7 @@ class Plugin:
             # 已经缓存消息迭代器
             for dm_iter in self.connect_id_dict_aiohttp[connect]:
                 async for _dm in dm_iter:
-                    self.logger.debug("resave a dm:", _dm)
+                    self.logger.debug("resave a Danmku:", _dm)
                     yield _dm
         else:
             # 获取未缓存的消息迭代器
@@ -109,7 +117,7 @@ class Plugin:
                 self.connect_id_dict_aiohttp[connect].append(dm)
 
                 async for _dm in dm:
-                    self.logger.debug("get a dm:", _dm)
+                    self.logger.debug("get a Danmku:", _dm)
                     yield _dm
 
     async def message_analyzer(self, message):

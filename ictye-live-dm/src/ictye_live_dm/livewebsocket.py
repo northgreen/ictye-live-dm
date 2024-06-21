@@ -32,7 +32,7 @@ async def aiohttp_ws(request: web.Request):
             ret = json.loads(message.data)
             if ret["code"] == 200 and ret["msg"] == "ok":  # 连接验证
                 loggers.info("connect with blower success")
-                await ws.send_str(json.dumps(msgs.connect_ok().to_dict()))
+                await ws.send_str(json.dumps(msgs.ConnectOk().to_dict()))
 
                 await asyncio.sleep(0.5)
                 dms: dict

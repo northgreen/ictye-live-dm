@@ -14,6 +14,9 @@ class PluginMain:
         self.plugin_js_sprit_support: bool = False
         """js插件支持"""
 
+        self.plugin_desc: str = "No description"
+        """插件描述"""
+
         self.plugin_js_sprit: str = ""
         """js插件"""
 
@@ -50,6 +53,7 @@ class PluginMain:
         """
         self.stop = 0
         raise plugin_errors.UnexpectedPluginMessage('插件入口方法没有实现')
+        return self.plugin_type()
 
     async def plugin_main(self):
         """
@@ -133,7 +137,7 @@ class PluginMain:
         print(f"plugin is done")
 
     @typing.final
-    def plugin_getconfig(self) -> dict:
+    def plugin_getconfig(self) -> configs.ConfigManager:
         """
         获取配置
         """

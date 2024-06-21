@@ -5,12 +5,12 @@
 """
 
 
-class datas:
-    def to_dict(self, cls: object):
+class Datas:
+    def to_dict(self):
         return dict()
 
 
-class connect_ok:
+class ConnectOk:
     """
     连接认证消息
     """
@@ -22,7 +22,7 @@ class connect_ok:
                 "msg": self.msg}
 
 
-class dm:
+class Danmku:
     def __init__(self, msg: str, who: dict):
         """
         params:

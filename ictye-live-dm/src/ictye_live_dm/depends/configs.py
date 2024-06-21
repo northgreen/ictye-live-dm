@@ -2,13 +2,37 @@ import os
 
 import yaml
 
+from . import config_registrar
+
 cfgdir: str = ""
+
+
+def regist_default(config_registrar: config_registrar.ConfigRegistrar):
+    """
+    注册默认配置
+    """
+    config_registrar.register("port", default=8083)
+    config_registrar.register("host", default="127.0.0.1")
+    config_registrar.register("web", default={"index": "./web/living room dm.html"})
+    config_registrar.register("GUI", default=False)
+    config_registrar.register("plugins", default={})
+    config_registrar.register("debug", default=False)
+    config_registrar.register("loglevel", default="INFO", option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
+    config_registrar.register("logfile", default={"open": True, "name": "latestlog"})
+    config_registrar.register("dev", default=False)
+    config_registrar.register("use_local_plugin", default=False)
 
 
 class ConfigManager:
     _instance = None
-    _register: dict = {}
+    _register: config_registrar.ConfigRegistrar = config_registrar.ConfigRegistrar()
     _default: dict = {}
+    _inited = False
+
+    def __init__(self):
+        if not self._inited:
+            regist_default(self._register)
+        self._inited = True
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -16,17 +40,18 @@ class ConfigManager:
         return cls._instance
 
     def __getitem__(self, item):
-        if item in self._register:
-            return self._register.get(item)
-        else:
-            return self._default.get(item)
+        return self._register[item]
+
+    def __setitem__(self, key, value):
+        self._register[key] = value
 
     def set(self, attr: str, default=None):
         self._default[attr] = default
 
     def read_default(self, path: str):
-        if not self._default:
-            self._default = self.__load(path)
+        default = self.__load(path)
+        for k, v in default.items():
+            self._register.set(k, v)
 
     def load_config(self, path: str):
         if not self._register:

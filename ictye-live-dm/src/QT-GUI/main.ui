@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>Form</class>
  <widget class="QWidget" name="Form">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>971</width>
-    <height>638</height>
+    <width>708</width>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,6 +115,37 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="pluginListPage">
+      <attribute name="title">
+       <string>Plugins</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Total:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLineEdit" name="lineEdit"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton">
+           <property name="text">
+            <string>Submit</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tableWidget"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="setting_Tab">
       <attribute name="title">
        <string>Setting</string>
@@ -127,8 +161,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>919</width>
-            <height>527</height>
+            <width>656</width>
+            <height>384</height>
            </rect>
           </property>
          </widget>

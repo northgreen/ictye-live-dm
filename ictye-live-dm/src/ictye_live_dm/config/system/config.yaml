@@ -8,13 +8,10 @@ web:
 
 # TODO: 未来会考虑GUI功能，现在这里放着
 GUI: 0
-
+use_local_plugin: 0
 plugins:
  - "ictye_live_dm.plugin.bilibili_dm_plugin"
-
-#调试开关，非开发人员勿动(动吧，随便动（bushi)
-debug: 0
-
+debug: 0 #调试开关，非开发人员勿动(动吧，随便动（bushi)
 dev: 1
 
 #日志级别

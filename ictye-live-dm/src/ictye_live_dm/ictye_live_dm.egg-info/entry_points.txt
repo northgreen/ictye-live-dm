@@ -1,2 +1,2 @@
 [console_scripts]
-ictye-live-dm = __main__:main
+ictye-live-Danmku = __main__:main

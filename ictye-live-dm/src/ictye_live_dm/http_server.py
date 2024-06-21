@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 
 from aiohttp import web
 
@@ -125,6 +126,10 @@ async def http_server():
 
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, config["host"], config["port"])
-    await site.start()
-    log.info(f"seriver is starting at http://{config['host']}:{config['port']}")
+    try:
+        site = web.TCPSite(runner, config["host"], config["port"])
+        await site.start()
+        log.info(f"seriver is starting at http://{config['host']}:{config['port']}")
+    except OSError:
+        log.fatal(f"port {config['port']} have been used!")
+        sys.exit(1)
