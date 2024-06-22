@@ -9,7 +9,7 @@ from . import gui_logging_hadler
 config = configs.ConfigManager()
 
 
-def setup_logging(unportable: bool, window=None):
+def setup_logging(unportable: bool = False, window=None):
     """
     Setup logging configuration
     """

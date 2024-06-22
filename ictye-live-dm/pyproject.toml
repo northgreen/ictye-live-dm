@@ -28,12 +28,6 @@ Repository = "https://github.com/northgreen/ictye-live-dm.git"
 Issues = "https://github.com/northgreen/ictye-live-dm/issues"
 Homepage = "https://github.com/northgreen/ictye-live-dm"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/ictye_live_dm","src/ictye-live-Danmku/depends"]
-exclude = [
-  "src/ictye_live_dm/QT-GUI/*"
-]
-
 [project.optional-dependencies]
 gui = ["PyQt5"]
 cli = [
@@ -51,6 +45,12 @@ minversion = 5.0
 testpaths ="./tests"
 asyncio_mode = "auto"
 log_cli = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ictye_live_dm","src/ictye-live-Danmku/depends"]
+exclude = [
+  "src/ictye_live_dm/QT-GUI/*"
+]
 
 [[tool.hatch.build.hooks.build-scripts.scripts]]
 out_dir = ".\\src\\ictye_live_dm\\GUI"

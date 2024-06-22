@@ -5,6 +5,7 @@ import os
 import sys
 import traceback
 
+from . import GUI_main
 from . import http_server
 from . import pluginsystem
 from .depends import logger, configs
@@ -79,57 +80,12 @@ def parse_args():
     # 获取配置
     config = configs.ConfigManager()
     config.read_default(os.path.dirname(__file__) + "/config/system/config.yaml")
-
-    config.set("gui", gui)
+    config.set("GUI", gui)
 
     if configdir:
         config.load_config(configdir)
     if install:
         print(install)
-        exit(0)
-    elif gui:
-        print("starting gui")
-        os.system("pythonw -m ictye_live_dm.GUI_main")
-        exit(0)
-    elif _list:
-        print("\033[33mName", "\t", "Description\033[0m")
-        for plugin in pluginsystem.Plugin().list_plugin():
-            print(plugin[0], "\t", plugin[1])
-        exit(0)
-
-
-def main():
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-    # TODO:應把參數解析放到獨立的地方
-    parse = argparse.ArgumentParser(description="一個模塊化的彈幕姬框架")
-    parse.add_argument('-u', '--unportable', action='store_true', help='非便携性启动')
-    parse.add_argument("-cfg", "--config", default="", help='指定配置目錄')
-    parse.add_argument('-i', '--install', action="append", default=[], help='安裝插件')
-    parse.add_argument('-l', '--list', action="store_true", help='列出所有的插件')
-    parse.add_argument('-g', '--gui', action="store_true", help='启动图形界面')
-    args = parse.parse_args()
-
-    unportable: bool = args.unportable
-    """便携启动开关"""
-    configdir: str = args.config
-    """配置目錄"""
-    install: list = args.install
-    """安裝插件"""
-    _list: bool = args.list
-    GUI: bool = args.gui
-    # 获取配置
-    config = configs.ConfigManager()
-    config.read_default(os.path.dirname(__file__) + "/config/system/config.yaml")
-    if configdir:
-        config.load_config(configdir)
-
-    if install:
-        print(install)
-        exit(0)
-    elif GUI:
-        print("starting GUI")
-        os.system("pythonw -m ictye_live_dm.GUI_main")
         exit(0)
     elif _list:
         print("\033[33mName\033[0m", "\t", "Description")
@@ -137,8 +93,19 @@ def main():
             print("\033[33m" + plugin[0] + "\033[0m", "\t", plugin[1])
         exit(0)
 
+
+def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    parse_args()
+
+    if configs.ConfigManager()["GUI"]:
+        print("starting gui")
+        GUI_main.main()
+        exit(0)
+
     # 获取logger
-    logger.setup_logging(unportable)
+    logger.setup_logging()
     loggers = logging.getLogger(__name__)
     loggers.info("金克拉，你有了吗？")
 
