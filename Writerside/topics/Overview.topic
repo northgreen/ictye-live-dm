@@ -6,8 +6,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd">
 
     <p>
-        Overview articles give background information and provide context to a particular subject.
-        Their goal is to explain a concept, not to teach or give instructions.
+        Ictye Live Danmku 是一個模塊化的彈幕平臺，通過插件的形式來同意獲取平臺的彈幕并且輸出到UI
     </p>
 
     <chapter id="overview-chapter" title="What is &lt;product/service/concept&gt;" >

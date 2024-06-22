@@ -5,6 +5,7 @@ import threading
 import logging
 
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import QTranslator
 
 from ictye_live_dm.depends import configs
 from . import main as server
@@ -92,12 +93,17 @@ def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     app = QtWidgets.QApplication(sys.argv)
-    form = MainWindow()
-    form.show()
 
     # 讀取設定
     config = configs.ConfigManager()
     config.read_default(os.path.dirname(__file__) + "/config/system/config.yaml")
+
+    translater = QTranslator()
+    translater.load(os.path.dirname(__file__) + "/translate/zh-ch_MainUI.qm")
+    app.installTranslator(translater)
+
+    form = MainWindow()
+    form.show()
 
     # 設定logger
     logger.setup_logging(window=form)
