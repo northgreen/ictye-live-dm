@@ -4,7 +4,7 @@
 
 <instance-profile id="pa"
                  name="Plugin Api"
-                 start-page="starter-topic.md">
+                 start-page="Overview.topic">
 
     <toc-element topic="Section-Starting-Page.topic"/>
     <toc-element topic="Overview.topic"/>
