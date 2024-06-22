@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\ictye-live-Danmku\src\QT-GUI\main.ui'
+# Form implementation generated from reading ui file '.\ictye-live-dm\src\QT-GUI\main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -15,7 +15,10 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.setWindowModality(QtCore.Qt.WindowModal)
-        Form.resize(708, 495)
+        Form.resize(710, 499)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Form.setWindowIcon(icon)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -88,7 +91,7 @@ class Ui_Form(object):
         self.settingScrollArea.setWidgetResizable(True)
         self.settingScrollArea.setObjectName("settingScrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 656, 384))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 658, 388))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.settingScrollArea.setWidget(self.scrollAreaWidgetContents)
         self.horizontalLayout_3.addWidget(self.settingScrollArea)

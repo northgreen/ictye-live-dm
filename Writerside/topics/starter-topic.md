@@ -45,7 +45,7 @@ To add switchable content, you can make use of tabs (inject them by starting to 
 Apart from injecting entire XML elements, you can use attributes to configure the behavior of certain elements.
 For example, you can collapse a chapter that contains non-essential information:
 
-#### Supplementary info {collapsible="true"}
+#### Supplementary Info {collapsible="true"}
 Content under a collapsible header will be collapsed by default,
 but you can modify the behavior by adding the following attribute:
 `default-state="expanded"`

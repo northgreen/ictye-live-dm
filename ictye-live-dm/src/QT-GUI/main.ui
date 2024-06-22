@@ -9,12 +9,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>708</width>
-    <height>495</height>
+    <width>729</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Ictye Live Danmmku</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../ictye_live_dm/icon.ico</normaloff>../ictye_live_dm/icon.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -47,6 +51,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="stopButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="maximumSize">
         <size>
          <width>316</width>
@@ -69,7 +76,31 @@
       <attribute name="title">
        <string>Log</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="totalLogLable">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="followCheckBox">
+           <property name="maximumSize">
+            <size>
+             <width>194</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Follow newest log</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QTableWidget" name="logTable">
          <property name="editTriggers">
@@ -142,7 +173,32 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableWidget" name="tableWidget"/>
+        <widget class="QTableWidget" name="tableWidget">
+         <attribute name="horizontalHeaderCascadingSectionResizes">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>New Column</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Plugin name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Description</string>
+          </property>
+         </column>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -150,7 +206,7 @@
       <attribute name="title">
        <string>Setting</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QScrollArea" name="settingScrollArea">
          <property name="widgetResizable">
@@ -161,8 +217,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>656</width>
-            <height>384</height>
+            <width>677</width>
+            <height>388</height>
            </rect>
           </property>
          </widget>

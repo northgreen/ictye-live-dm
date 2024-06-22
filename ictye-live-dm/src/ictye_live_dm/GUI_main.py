@@ -2,6 +2,7 @@ import asyncio
 import os
 import sys
 import threading
+import logging
 
 from PyQt5 import QtWidgets
 
@@ -10,9 +11,13 @@ from . import main as server
 from .GUI import Ui_MainWindow
 from .depends import logger
 
+__logger__ = logging.getLogger(__name__)
+
 
 class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
     _instance = None
+    _server = None
+    _inited = False
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -36,11 +41,26 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
             pass
 
     def __init__(self, parent=None):
+        if self._inited:
+            return
         super(MainWindow, self).__init__()
         self.setupUi(self)
+        self._server = ServerClass()
+        self.startButtoen.clicked.connect(self.start_series)
+        self.stopButton.clicked.connect(self.stop_series)
+
+    def start_series(self):
+        self._server.start()
+        self.startButtoen.setEnabled(False)
+        self.stopButton.setEnabled(True)
+
+    def stop_series(self):
+        self._server.stop()
+        self.startButtoen.setEnabled(True)
+        self.stopButton.setEnabled(False)
 
 
-class SeriverClass:
+class ServerClass:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -50,13 +70,19 @@ class SeriverClass:
 
     def __init__(self):
         self.loop = asyncio.new_event_loop()
+        self.thread = threading.Thread(target=server.run_server, args=(self.loop,))
 
     def start(self):
-        thread = threading.Thread(target=server.run_server, args=(self.loop,))
-        thread.start()
+        __logger__.info("Server start")
+        self.thread = threading.Thread(target=server.run_server, args=(self.loop,))
+        self.thread.start()
 
     def stop(self):
+        __logger__.info("Server stoping")
         self.loop.stop()
+
+    def get_status(self):
+        return self.loop.is_running() and self.thread.is_alive()
 
 
 def main():
@@ -77,8 +103,9 @@ def main():
     logger.setup_logging(False, form)
 
     # 啓動伺服器
-    __server = SeriverClass()
-    __server.start()
+    __server = ServerClass()
+    form.startButtoen.setEnabled(not __server.get_status())
+    form.stopButton.setEnabled(__server.get_status())
     # 啓動程式
     code = app.exec_()
     try:

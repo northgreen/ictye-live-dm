@@ -17,10 +17,6 @@
 #
 #   更多详情请参阅许可协议文档
 
-class datas:
-    def to_dict(self, cls: object):
-        return dict(cls)
-
 
 class connect_ok:
     """
@@ -78,10 +74,11 @@ class socket_responce:
 
 
 class msg_who:
-    def __init__(self, type: int,
+    def __init__(self,
+                 _type: int,
                  name: str,
                  face: str):
-        self.type = type
+        self.type = _type
         self.name = name
         self.face = face
 

@@ -43,12 +43,16 @@ def loop_exception_handler(loop, context):
     sys.excepthook(type(context["exception"]), context["exception"], context["exception"].__traceback__)
 
 
-def run_server(loop=asyncio.get_event_loop()):
+def run_server(loop=asyncio.get_event_loop(), callback=None):
     loop.set_exception_handler(loop_exception_handler)
-    loop.create_task(http_server.http_server())
+    ser = loop.create_task(http_server.http_server())
     loop.create_task(pluginsystem.Plugin().plugin_main_runner())
     try:
         loop.run_forever()
+        res = ser.result()
+        loop.run_until_complete(http_server.runner.cleanup())
+        if callback:
+            callback()
     except KeyboardInterrupt:
         logging.getLogger(__name__).info("Thanks for using ictye_live_dm, see you next time!")
         exit(0)
@@ -69,7 +73,7 @@ def parse_args():
     """配置目錄"""
     install: list = args.install
     """安裝插件"""
-    list: bool = args.list
+    _list: bool = args.list
     gui: bool = args.gui
 
     # 获取配置
@@ -87,7 +91,7 @@ def parse_args():
         print("starting gui")
         os.system("pythonw -m ictye_live_dm.GUI_main")
         exit(0)
-    elif list:
+    elif _list:
         print("\033[33mName", "\t", "Description\033[0m")
         for plugin in pluginsystem.Plugin().list_plugin():
             print(plugin[0], "\t", plugin[1])
@@ -112,7 +116,7 @@ def main():
     """配置目錄"""
     install: list = args.install
     """安裝插件"""
-    list: bool = args.list
+    _list: bool = args.list
     GUI: bool = args.gui
     # 获取配置
     config = configs.ConfigManager()
@@ -127,13 +131,11 @@ def main():
         print("starting GUI")
         os.system("pythonw -m ictye_live_dm.GUI_main")
         exit(0)
-    elif list:
+    elif _list:
         print("\033[33mName\033[0m", "\t", "Description")
         for plugin in pluginsystem.Plugin().list_plugin():
-            print("\033[33m"+plugin[0]+"\033[0m", "\t", plugin[1])
+            print("\033[33m" + plugin[0] + "\033[0m", "\t", plugin[1])
         exit(0)
-
-
 
     # 获取logger
     logger.setup_logging(unportable)

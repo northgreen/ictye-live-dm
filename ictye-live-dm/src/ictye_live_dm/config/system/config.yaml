@@ -13,8 +13,6 @@ plugins:
 debug: 0 #调试开关，非开发人员勿动(动吧，随便动（bushi)
 dev: 1
 
-dev: 1
-
 #日志级别
 # DEBUG:调试级别
 # INFO:一般运行

@@ -14,7 +14,7 @@
 ## 消息封装
 也是json格式，具体如下：
 - root：
-	- msgtype：消息类型，暂时设有弹幕（Danmku）和消息（info）
+	- msgtype：消息类型，暂时设有弹幕（Danmku）和消息（Info）
 	- message body：消息主题，具体如下
 
 ## 消息主体
