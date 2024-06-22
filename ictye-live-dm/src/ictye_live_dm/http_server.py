@@ -12,6 +12,7 @@ from .depends import configs
 config: configs.ConfigManager = configs.ConfigManager()
 plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
+runner: web.TCPSite
 
 
 def return_file(file: str):
@@ -102,9 +103,6 @@ async def http_cgi(request: web.Request):
 
 
 async def http_server():
-    # http服务器
-    log.info("http server started")
-
     app = web.Application()
 
     route_list: [web.RouteDef] = [web.get("/", http_handler),
@@ -124,12 +122,16 @@ async def http_server():
 
     app.add_routes(route_list)
 
+    global runner
     runner = web.AppRunner(app)
     await runner.setup()
+
+    site = web.TCPSite(runner, config["host"], config["port"])
+    # http服务器
+    log.info("http server started")
     try:
-        site = web.TCPSite(runner, config["host"], config["port"])
         await site.start()
-        log.info(f"seriver is starting at http://{config['host']}:{config['port']}")
+        log.info(f"server is starting at http://{config['host']}:{config['port']}")
     except OSError:
         log.fatal(f"port {config['port']} have been used!")
         sys.exit(1)

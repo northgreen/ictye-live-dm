@@ -4,6 +4,8 @@ import logging
 import os
 import sys
 import traceback
+import functools
+import time
 
 from . import http_server
 from . import pluginsystem
@@ -43,12 +45,16 @@ def loop_exception_handler(loop, context):
     sys.excepthook(type(context["exception"]), context["exception"], context["exception"].__traceback__)
 
 
-def run_server(loop=asyncio.get_event_loop()):
+def run_server(loop=asyncio.get_event_loop(), callback=None):
     loop.set_exception_handler(loop_exception_handler)
-    loop.create_task(http_server.http_server())
+    ser = loop.create_task(http_server.http_server())
     loop.create_task(pluginsystem.Plugin().plugin_main_runner())
     try:
         loop.run_forever()
+        res = ser.result()
+        loop.run_until_complete(http_server.runner.cleanup())
+        if callback:
+            callback()
     except KeyboardInterrupt:
         logging.getLogger(__name__).info("Thanks for using ictye_live_dm, see you next time!")
         exit(0)
@@ -130,10 +136,8 @@ def main():
     elif _list:
         print("\033[33mName\033[0m", "\t", "Description")
         for plugin in pluginsystem.Plugin().list_plugin():
-            print("\033[33m"+plugin[0]+"\033[0m", "\t", plugin[1])
+            print("\033[33m" + plugin[0] + "\033[0m", "\t", plugin[1])
         exit(0)
-
-
 
     # 获取logger
     logger.setup_logging(unportable)

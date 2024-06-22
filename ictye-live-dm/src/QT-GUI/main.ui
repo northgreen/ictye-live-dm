@@ -9,12 +9,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>708</width>
-    <height>495</height>
+    <width>710</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Ictye Live Danmmku</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../ictye_live_dm/icon.ico</normaloff>../ictye_live_dm/icon.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -161,8 +165,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>656</width>
-            <height>384</height>
+            <width>658</width>
+            <height>388</height>
            </rect>
           </property>
          </widget>
