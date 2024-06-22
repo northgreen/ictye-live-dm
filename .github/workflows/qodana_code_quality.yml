@@ -21,6 +21,5 @@ jobs:
           results-dir: /home/runner/work/_temp/qodana/results
           cache-dir: /home/runner/work/_temp/qodana/caches
           pr-mode: false
-          args: --project-dir,project
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
