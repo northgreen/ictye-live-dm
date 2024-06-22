@@ -16,6 +16,9 @@ jobs:
           linter: jvm
           version: 2024.1
           use-caches: true
+          results-dir: /home/runner/work/_temp/qodana/results
+          cache-dir: /home/runner/work/_temp/qodana/caches
+          pr-mode: false
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.1
         continue-on-error: true
