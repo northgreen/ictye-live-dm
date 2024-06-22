@@ -1,5 +1,5 @@
 require.config({
-  packages: [
+packages: [
         {
             name: 'crypto-js',
             location: 'https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/',
@@ -42,12 +42,12 @@ define(["crypto-js/md5"],
         }
 
         //处理info消息
-         let create_info = function (msgbody) {
+        let create_info = function (msgbody) {
                 /*创建消息*/
                 let msg = `<div class="special-info">
                             <img src="${msgbody.who.face}" class="infousrico">
                                 <div class="info-text" class="rightimg">
-                                   ${msgbody.msg} 
+                                    ${msgbody.msg} 
                                 </div>
                                 <div class="${msgbody.pic.border?"rightimg-bother":"rightimg_noborder"}">
                                     <img src="${msgbody.pic.pic_url}" class="rightimg">

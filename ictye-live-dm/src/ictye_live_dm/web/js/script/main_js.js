@@ -1,13 +1,12 @@
 require.config({
-    baseUrl:"/"
+    baseUrl: "/"
 })
 define(["js/script/plugin_manager"],
-    function (pm){
-    function main()
-    {
-        console.log("lod ready")
-        //请求ws地址
-        console.log(`
+    function (pm) {
+        function main() {
+            console.log("lod ready")
+            //请求ws地址
+            console.log(`
             __                         ___                                __                                      __          __  __  ______                                             ___             
  __        /\\ \\__                     /\\_ \\    __                        /\\ \\                                    /\\ \\        /\\ \\/\\ \\/\\__  _\\                                           /\\_ \\            
 /\\_\\    ___\\ \\ ,_\\  __  __     __     \\//\\ \\  /\\_\\  __  __     __        \\_\\ \\    ___ ___       __  __  __     __\\ \\ \\____   \\ \\ \\ \\ \\/_/\\ \\/         ___    ___     ___     ____    ___\\//\\ \\      __   
@@ -19,61 +18,52 @@ define(["js/script/plugin_manager"],
                         \\/__/                                                                                                                                                                            
                 `)
 
-        //请求websocket
-        let req = new XMLHttpRequest()
-
-        req.open("get","/get_websocket",true)
-
-        req.onreadystatechange=function(){
-            if(req.readyState === XMLHttpRequest.DONE && req.status === 200){
-                //启动websocket
-                websocket(JSON.parse(req.responseText).local)
-            }
-        }
-
-
-        req.send()
-   }
-   let connect_ok = void 0;
-    function websocket(ura){
-        if("WebSocket" in window) {
-            let socket = new WebSocket(ura)
-
-
-            socket.addEventListener("message",function(event){
-                console.log('Message from server ', event.data)
-
-                if (event.data === "{\"code\": 200, \"msg\": \"connect ok\"}"){
-
-
-                    connect_ok = 1
-                }else if (connect_ok === 1) {
-                    console.info("cok is "+event.data)
-                    let msg = JSON.parse(event.data)
-                    //消息处理
-                    pm.message_handlers(msg)
+            //请求websocket
+            let req = new XMLHttpRequest()
+            req.open("get", "/get_websocket", true)
+            req.onreadystatechange = function () {
+                if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
+                    //启动websocket
+                    websocket(JSON.parse(req.responseText).local)
                 }
-            })
+            }
 
-            socket.onopen=function(){
-                // 获取浏览器get参数
-                let get_params = window.location.href
-                let params = new URLSearchParams(get_params)
-                let param = {}
-                params.forEach(function (value,key){
-                    param[key] = value
+
+            req.send()
+        }
+        let connect_ok = void 0;
+        function websocket(ura) {
+            if ("WebSocket" in window) {
+                let socket = new WebSocket(ura)
+                socket.addEventListener("message", function (event) {
+                    console.log('Message from server ', event.data)
+                    if (event.data === "{\"code\": 200, \"msg\": \"connect ok\"}") {
+                        connect_ok = 1
+                    } else if (connect_ok === 1) {
+                        console.info("cok is " + event.data)
+                        let msg = JSON.parse(event.data)
+                        //消息处理
+                        pm.message_handlers(msg)
+                    }
                 })
-                console.log("params:",param)
 
-                // 发送消息给服务器
-                socket.send(JSON.stringify({"code":200,"msg":"ok","param":param} ))
+                socket.onopen = function () {
+                    // 获取浏览器get参数
+                    let get_params = window.location.href
+                    let params = new URLSearchParams(get_params)
+                    let param = {}
+                    params.forEach(function (value, key) {
+                        param[key] = value
+                    })
+                    console.log("params:", param)
+                    // 发送消息给服务器
+                    socket.send(JSON.stringify({ "code": 200, "msg": "ok", "param": param }))
+                }
+            }
+            else {
+                alert("err! your browser is not supported!!!")
             }
         }
-        else {
-            alert("err! your browser is not supported!!!")
-        }
-    }
-
-    main()
-})
+        main()
+    })
 

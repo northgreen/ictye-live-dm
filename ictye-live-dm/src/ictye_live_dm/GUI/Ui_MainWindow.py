@@ -17,7 +17,7 @@ class Ui_Form(object):
         Form.setWindowModality(QtCore.Qt.WindowModal)
         Form.resize(710, 499)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(".\\ictye-live-dm\\src\\QT-GUI\\../ictye_live_dm/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")

@@ -4,8 +4,6 @@ import logging
 import os
 import sys
 import traceback
-import functools
-import time
 
 from . import http_server
 from . import pluginsystem
