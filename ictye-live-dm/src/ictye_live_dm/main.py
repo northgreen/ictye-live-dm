@@ -69,7 +69,7 @@ def parse_args():
     """配置目錄"""
     install: list = args.install
     """安裝插件"""
-    list: bool = args.list
+    _list: bool = args.list
     gui: bool = args.gui
 
     # 获取配置
@@ -87,7 +87,7 @@ def parse_args():
         print("starting gui")
         os.system("pythonw -m ictye_live_dm.GUI_main")
         exit(0)
-    elif list:
+    elif _list:
         print("\033[33mName", "\t", "Description\033[0m")
         for plugin in pluginsystem.Plugin().list_plugin():
             print(plugin[0], "\t", plugin[1])
@@ -112,7 +112,7 @@ def main():
     """配置目錄"""
     install: list = args.install
     """安裝插件"""
-    list: bool = args.list
+    _list: bool = args.list
     GUI: bool = args.gui
     # 获取配置
     config = configs.ConfigManager()
@@ -127,7 +127,7 @@ def main():
         print("starting GUI")
         os.system("pythonw -m ictye_live_dm.GUI_main")
         exit(0)
-    elif list:
+    elif _list:
         print("\033[33mName\033[0m", "\t", "Description")
         for plugin in pluginsystem.Plugin().list_plugin():
             print("\033[33m"+plugin[0]+"\033[0m", "\t", plugin[1])

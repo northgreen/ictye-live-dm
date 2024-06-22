@@ -12,11 +12,11 @@ src/depends/logger.py
 src/depends/msgs.py
 src/depends/plugin_errors.py
 src/depends/pluginmain.py
-src/ictye_live_dm.egg-info/PKG-INFO
-src/ictye_live_dm.egg-info/SOURCES.txt
-src/ictye_live_dm.egg-info/dependency_links.txt
-src/ictye_live_dm.egg-info/entry_points.txt
-src/ictye_live_dm.egg-info/top_level.txt
+src/ictye_live_dm.egg-Info/PKG-INFO
+src/ictye_live_dm.egg-Info/SOURCES.txt
+src/ictye_live_dm.egg-Info/dependency_links.txt
+src/ictye_live_dm.egg-Info/entry_points.txt
+src/ictye_live_dm.egg-Info/top_level.txt
 src/plugin/bilibili_dm_plugin/__init__.py
 src/plugin/bilibili_dm_plugin/blivedm/__init__.py
 src/plugin/bilibili_dm_plugin/blivedm/handlers.py

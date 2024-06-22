@@ -4,12 +4,6 @@
 所有的函数都应该又to_dict方法来将其转为字典，相反的这个函数能输出打包好的字典
 """
 
-
-class Datas:
-    def to_dict(self):
-        return dict()
-
-
 class ConnectOk:
     """
     连接认证消息
@@ -40,14 +34,14 @@ class Danmku:
                 "who": self.who}
 
 
-class info:
+class Info:
     def __init__(self,
                  msg: str,
                  who: str,
-                 pic: dict):
+                 _pic: dict):
         self.msg = msg
         self.who = who
-        self.pic = pic
+        self.pic = _pic
 
     def to_dict(self):
         return {"msg": self.msg,

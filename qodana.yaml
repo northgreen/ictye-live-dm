@@ -31,3 +31,8 @@ include:
   - name: YAMLSchemaDeprecation
   - name: YAMLDuplicatedKeys
   - name: YAMLRecursiveAlias
+exclude:
+  - name: All
+    paths:
+      - ictye-live-dm\src\ictye_live_dm\plugin\
+      - ictye-live-dm\src\ictye_live_dm\GUI\Ui_MainWindow.py
