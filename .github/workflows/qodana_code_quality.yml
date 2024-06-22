@@ -17,9 +17,7 @@ jobs:
         uses: JetBrains/qodana-action@v2024.1
         continue-on-error: true
         with:
-          linter: jvm
-          version: 2024.1
-          use-caches: true
+          use-caches: false
           results-dir: /home/runner/work/_temp/qodana/results
           cache-dir: /home/runner/work/_temp/qodana/caches
           pr-mode: false
