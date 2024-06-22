@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling","hatch-build-scripts","PyQT5"]
 build-backend = "hatchling.build"
 
 [project]
@@ -30,6 +30,9 @@ Homepage = "https://github.com/northgreen/ictye-live-dm"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ictye_live_dm","src/ictye-live-Danmku/depends"]
+exclude = [
+  "src/ictye_live_dm/QT-GUI/*"
+]
 
 [project.optional-dependencies]
 gui = ["PyQt5"]
@@ -48,3 +51,13 @@ minversion = 5.0
 testpaths ="./tests"
 asyncio_mode = "auto"
 log_cli = true
+
+[[tool.hatch.build.hooks.build-scripts.scripts]]
+out_dir = ".\\src\\ictye_live_dm\\GUI"
+work_dir = ".\\src\\ictye_live_dm\\QT-GUI"
+commands = [
+    "pyuic5 .\\main.ui -o ..\\GUI\\Ui_MainWindow.py"
+]
+artifacts = [
+    "Ui_MainWindow.py"
+]

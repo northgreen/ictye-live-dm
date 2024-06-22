@@ -14,7 +14,6 @@ plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
 runner: web.TCPSite
 
-
 def return_file(file: str):
     async def healder(request):
         nonlocal file
