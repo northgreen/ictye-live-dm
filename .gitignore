@@ -4,7 +4,7 @@ __pycache__/
 .hintrc/
 .vscode/
 build/
-dist/
+dist/*
 data/
 ictye-live-dm/src/ictye_live_dm/logs
 /.hintrc
