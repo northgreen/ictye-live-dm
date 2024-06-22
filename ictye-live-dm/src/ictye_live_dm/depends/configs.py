@@ -46,7 +46,7 @@ class ConfigManager:
         self._register[key] = value
 
     def set(self, attr: str, default=None):
-        self._default[attr] = default
+        self._register[attr] = default
 
     def read_default(self, path: str):
         default = self.__load(path)

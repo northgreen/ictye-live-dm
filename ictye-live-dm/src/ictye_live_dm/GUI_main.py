@@ -100,7 +100,7 @@ def main():
     config.read_default(os.path.dirname(__file__) + "/config/system/config.yaml")
 
     # 設定logger
-    logger.setup_logging(False, form)
+    logger.setup_logging(window=form)
 
     # 啓動伺服器
     __server = ServerClass()
