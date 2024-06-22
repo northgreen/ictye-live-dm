@@ -95,10 +95,11 @@ def parse_args():
 
 
 def main():
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))  # 保證在正確的目錄下工作
 
-    parse_args()
+    parse_args()  # 參數解析
 
+    # 檢查GUI啓動
     if configs.ConfigManager()["GUI"]:
         print("starting gui")
         GUI_main.main()
@@ -107,10 +108,10 @@ def main():
     # 获取logger
     logger.setup_logging()
     loggers = logging.getLogger(__name__)
-    loggers.info("金克拉，你有了吗？")
 
-    # 启动服务器
+    loggers.info("金克拉，你有了吗？")  # 代碼摻了金克拉，一行能當兩行寫（？）
     loggers.info("project starting")
-    run_server(asyncio.get_event_loop())
+
+    run_server(asyncio.get_event_loop())  # 启动服务器
 
     loggers.info("project already stopped")
