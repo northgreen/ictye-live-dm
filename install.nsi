@@ -40,7 +40,7 @@ RequestExecutionLevel admin
 Section "MainSection" SEC01
 
     SetOutPath "$INSTDIR"
-    File /r "ictye-live-dm\*.*"
+    File /r "ictye-live-dm\src\*.*"
 
     WriteUninstaller "$INSTDIR\uninstall.exe"
 

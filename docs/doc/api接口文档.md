@@ -5,7 +5,7 @@
  ``` json
  {"code":200,"msg":ok}
 ```
-服务端返回（msg.connect_ok）：
+服务端返回（msg.ConnectOk）：
 ``` json
 {"code":200,"msg":connect ok}
 ```
@@ -14,7 +14,7 @@
 ## 消息封装
 也是json格式，具体如下：
 - root：
-	- msgtype：消息类型，暂时设有弹幕（dm）和消息（info）
+	- msgtype：消息类型，暂时设有弹幕（Danmku）和消息（info）
 	- message body：消息主题，具体如下
 
 ## 消息主体

@@ -1,0 +1,2 @@
+[console_scripts]
+ictye-live-Danmku = __main__:main
