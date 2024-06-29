@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>868</width>
-    <height>566</height>
+    <height>548</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,7 +70,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="log_Tab">
       <attribute name="title">
@@ -88,14 +88,26 @@
          </item>
          <item>
           <widget class="QCheckBox" name="followCheckBox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="maximumSize">
             <size>
              <width>194</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="tabletTracking">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Follow newest log</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="tristate">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -204,8 +216,23 @@
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QScrollArea" name="settingScrollArea">
+         <property name="lineWidth">
+          <number>3</number>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::AdjustToContents</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents">
           <property name="geometry">
@@ -213,7 +240,7 @@
             <x>0</x>
             <y>0</y>
             <width>816</width>
-            <height>455</height>
+            <height>437</height>
            </rect>
           </property>
          </widget>

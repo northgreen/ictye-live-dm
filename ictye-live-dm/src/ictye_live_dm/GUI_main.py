@@ -5,16 +5,18 @@ import threading
 import logging
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTranslator
+from PyQt5.QtCore import QTranslator, Qt
+from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.uic.properties import QtCore
 
 from ictye_live_dm.depends import configs
 from . import main as server
 from .GUI import Ui_MainWindow
 from .depends import logger
 from . import pluginsystem
+from .GUI import SettingLayOut
 
-__all__ = ["main",
-           "MainWindow"]
+__all__ = ["main", "MainWindow"]
 __logger__ = logging.getLogger(__name__)
 
 
@@ -32,7 +34,29 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         if self._inited:
             return
         super(MainWindow, self).__init__()
+        self.setting_layout = SettingLayOut.SettingLayout()
+        a = QWidget()
+        a.setLayout(self.setting_layout)
         self.setupUi(self)
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+
+        self.settingScrollArea.setAlignment(Qt.AlignLeft)
+        self.settingScrollArea.setWidget(a)
+
+        self.retranslateUi(self)
+        self.tabWidget.setCurrentIndex(2)
+
         self._server = ServerClass()
         self.startButtoen.clicked.connect(self.start_series)
         self.stopButton.clicked.connect(self.stop_series)
@@ -52,6 +76,8 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
             self.logTable.setItem(row, 2, QtWidgets.QTableWidgetItem(log_text))
         except RuntimeError:
             pass
+        finally:
+            self.table_follow()
 
     def start_series(self):
         self._server.start()
@@ -63,6 +89,10 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self.startButtoen.setEnabled(True)
         self.stopButton.setEnabled(False)
 
+    def table_follow(self):
+        if self.followCheckBox.isChecked():
+            self.logTable.scrollToBottom()
+
     def show_plugin_list(self):
         plugins = pluginsystem.Plugin().list_plugin()
         for i in plugins:
@@ -70,7 +100,6 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
             self.pluginListTable.insertRow(row)
             self.pluginListTable.setItem(row, 0, QtWidgets.QTableWidgetItem(i[0]))
             self.pluginListTable.setItem(row, 1, QtWidgets.QTableWidgetItem(i[1]))
-
 
 
 class ServerClass:
