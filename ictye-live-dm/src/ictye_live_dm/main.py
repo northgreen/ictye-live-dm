@@ -50,7 +50,6 @@ def run_server(loop=asyncio.get_event_loop(), callback=None):
     loop.create_task(pluginsystem.Plugin().plugin_main_runner())
     try:
         loop.run_forever()
-        res = ser.result()
         loop.run_until_complete(http_server.runner.cleanup())
         if callback:
             callback()

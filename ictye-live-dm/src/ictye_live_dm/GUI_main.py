@@ -11,7 +11,10 @@ from ictye_live_dm.depends import configs
 from . import main as server
 from .GUI import Ui_MainWindow
 from .depends import logger
+from . import pluginsystem
 
+__all__ = ["main",
+           "MainWindow"]
 __logger__ = logging.getLogger(__name__)
 
 
@@ -24,6 +27,15 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
+
+    def __init__(self, parent=None):
+        if self._inited:
+            return
+        super(MainWindow, self).__init__()
+        self.setupUi(self)
+        self._server = ServerClass()
+        self.startButtoen.clicked.connect(self.start_series)
+        self.stopButton.clicked.connect(self.stop_series)
 
     def submit_log(self, time, log_level, log_text):
         """
@@ -41,15 +53,6 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         except RuntimeError:
             pass
 
-    def __init__(self, parent=None):
-        if self._inited:
-            return
-        super(MainWindow, self).__init__()
-        self.setupUi(self)
-        self._server = ServerClass()
-        self.startButtoen.clicked.connect(self.start_series)
-        self.stopButton.clicked.connect(self.stop_series)
-
     def start_series(self):
         self._server.start()
         self.startButtoen.setEnabled(False)
@@ -59,6 +62,15 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self._server.stop()
         self.startButtoen.setEnabled(True)
         self.stopButton.setEnabled(False)
+
+    def show_plugin_list(self):
+        plugins = pluginsystem.Plugin().list_plugin()
+        for i in plugins:
+            row = self.pluginListTable.rowCount()
+            self.pluginListTable.insertRow(row)
+            self.pluginListTable.setItem(row, 0, QtWidgets.QTableWidgetItem(i[0]))
+            self.pluginListTable.setItem(row, 1, QtWidgets.QTableWidgetItem(i[1]))
+
 
 
 class ServerClass:
@@ -100,9 +112,10 @@ def main():
 
     translater = QTranslator()
     translater.load(os.path.dirname(__file__) + "/translate/zh-ch_MainUI.qm")
-    app.installTranslator(translater)
+    # app.installTranslator(translater)
 
     form = MainWindow()
+    form.show_plugin_list()
     form.show()
 
     # 設定logger

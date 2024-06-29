@@ -3,14 +3,14 @@
  <class>Form</class>
  <widget class="QWidget" name="Form">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>729</width>
-    <height>499</height>
+    <width>868</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,7 +70,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="log_Tab">
       <attribute name="title">
@@ -152,7 +152,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="pluginTotalLable">
          <property name="text">
           <string>Total:</string>
          </property>
@@ -173,7 +173,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableWidget" name="tableWidget">
+        <widget class="QTableWidget" name="pluginListTable">
          <attribute name="horizontalHeaderCascadingSectionResizes">
           <bool>false</bool>
          </attribute>
@@ -183,11 +183,6 @@
          <attribute name="horizontalHeaderStretchLastSection">
           <bool>true</bool>
          </attribute>
-         <column>
-          <property name="text">
-           <string>New Column</string>
-          </property>
-         </column>
          <column>
           <property name="text">
            <string>Plugin name</string>
@@ -217,8 +212,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>677</width>
-            <height>388</height>
+            <width>816</width>
+            <height>455</height>
            </rect>
           </property>
          </widget>
