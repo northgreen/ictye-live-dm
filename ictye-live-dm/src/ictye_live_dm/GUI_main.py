@@ -52,6 +52,8 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
             self.logTable.setItem(row, 2, QtWidgets.QTableWidgetItem(log_text))
         except RuntimeError:
             pass
+        finally:
+            self.table_follow()
 
     def start_series(self):
         self._server.start()
@@ -63,6 +65,10 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self.startButtoen.setEnabled(True)
         self.stopButton.setEnabled(False)
 
+    def table_follow(self):
+        if self.followCheckBox.isChecked():
+            self.logTable.scrollToBottom()
+
     def show_plugin_list(self):
         plugins = pluginsystem.Plugin().list_plugin()
         for i in plugins:
@@ -70,7 +76,6 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
             self.pluginListTable.insertRow(row)
             self.pluginListTable.setItem(row, 0, QtWidgets.QTableWidgetItem(i[0]))
             self.pluginListTable.setItem(row, 1, QtWidgets.QTableWidgetItem(i[1]))
-
 
 
 class ServerClass:
