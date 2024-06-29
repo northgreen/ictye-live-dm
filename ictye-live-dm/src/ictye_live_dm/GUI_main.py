@@ -5,16 +5,18 @@ import threading
 import logging
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTranslator
+from PyQt5.QtCore import QTranslator, Qt
+from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.uic.properties import QtCore
 
 from ictye_live_dm.depends import configs
 from . import main as server
 from .GUI import Ui_MainWindow
 from .depends import logger
 from . import pluginsystem
+from .GUI import SettingLayOut
 
-__all__ = ["main",
-           "MainWindow"]
+__all__ = ["main", "MainWindow"]
 __logger__ = logging.getLogger(__name__)
 
 
@@ -32,7 +34,29 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         if self._inited:
             return
         super(MainWindow, self).__init__()
+        self.setting_layout = SettingLayOut.SettingLayout()
+        a = QWidget()
+        a.setLayout(self.setting_layout)
         self.setupUi(self)
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
+
+        self.settingScrollArea.setAlignment(Qt.AlignLeft)
+        self.settingScrollArea.setWidget(a)
+
+        self.retranslateUi(self)
+        self.tabWidget.setCurrentIndex(2)
+
         self._server = ServerClass()
         self.startButtoen.clicked.connect(self.start_series)
         self.stopButton.clicked.connect(self.stop_series)
