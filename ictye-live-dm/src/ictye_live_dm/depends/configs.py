@@ -7,7 +7,7 @@ from . import config_registrar
 cfgdir: str = ""
 
 
-def regist_default(_config_registrar: config_registrar.ConfigRegistrar):
+def register_default(_config_registrar: config_registrar.ConfigRegistrar):
     """
     注册默认配置
     """
@@ -17,10 +17,12 @@ def regist_default(_config_registrar: config_registrar.ConfigRegistrar):
     _config_registrar.register("GUI", default=False)
     _config_registrar.register("plugins", default={})
     _config_registrar.register("debug", default=False)
-    _config_registrar.register("loglevel", default="INFO", option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
+    _config_registrar.register("loglevel", default="INFO",
+                               option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
     _config_registrar.register("logfile", default={"open": True, "name": "latestlog"})
     _config_registrar.register("dev", default=False)
     _config_registrar.register("use_local_plugin", default=False)
+    _config_registrar.register("style", default="CommonStyle")
 
 
 class ConfigManager:
@@ -31,7 +33,7 @@ class ConfigManager:
 
     def __init__(self):
         if not self._inited:
-            regist_default(self._register)
+            register_default(self._register)
         self._inited = True
 
     def __new__(cls, *args, **kwargs):
@@ -57,7 +59,17 @@ class ConfigManager:
         if not self._register:
             self._register = self.__load(path)
 
-    def __load(self, path: str):
+    def keys(self):
+        return self._register.keys()
+
+    def values(self):
+        return self._register.values()
+
+    def items(self):
+        return self._register.items()
+
+    @staticmethod
+    def __load(path: str):
         if path.endswith(".yml") or path.endswith(".yaml"):
             with open(path, "r", encoding="utf-8") as f:
                 return yaml.load(f.read(), Loader=yaml.FullLoader)

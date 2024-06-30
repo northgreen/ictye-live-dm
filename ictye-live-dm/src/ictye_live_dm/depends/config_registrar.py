@@ -20,7 +20,7 @@ def __get_type_default__(type_: type):
         return ()
     elif type_ == set:
         return set()
-    elif type_ == type(None):
+    elif isinstance(type_, type(None)):
         return None
     else:
         raise ValueError(f"Unsupported type: {type_}")
@@ -37,16 +37,16 @@ class ConfigKey(Generic[T]):
         self.option = option
         self.value = value
 
-    def getdefault(self):
+    def get_default(self):
         return self.default
 
-    def isoptional(self):
+    def is_optional(self):
         return self.optional
 
-    def isoption(self):
+    def is_option(self):
         return self.option is not None
 
-    def getoption(self):
+    def get_option(self):
         return self.option
 
     def set(self, value):
@@ -102,7 +102,7 @@ class ConfigRegistrar:
             raise ValueError(f"Config key '{key}' not registered")
         return self.config[key].get()
 
-    def isoptional(self, key):
+    def is_optional(self, key):
         """
         Check if a config key is optional.
         @param key: key name
@@ -110,7 +110,7 @@ class ConfigRegistrar:
         """
         if key not in self.config:
             raise ValueError(f"Config key '{key}' not registered")
-        return self.config[key].isoptional()
+        return self.config[key].is_optional()
 
     def get_option(self, key):
         """
@@ -158,3 +158,15 @@ class ConfigRegistrar:
 
     def __repr__(self):
         return f"ConfigRegistrar({self.config})"
+
+    def items(self):
+        return self.config.items()
+
+    def keys(self):
+        return self.config.keys()
+
+    def values(self):
+        return self.config.values()
+
+    def __len__(self):
+        return len(self.config)
