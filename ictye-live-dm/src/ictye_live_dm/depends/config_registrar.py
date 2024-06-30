@@ -34,7 +34,7 @@ class ConfigKey(Generic[T]):
     def __init__(self, default: T = None, optional: bool = False, option: list[T] = None, value: T = None):
         self.default = __get_type_default__(type(value)) if default is None else default
         self.optional = optional
-        self.option = option
+        self.option = option if option else [True,False] if type(default) == bool else None
         self.value = value
 
     def get_default(self):

@@ -6,7 +6,7 @@ import threading
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTranslator, Qt
-from PyQt5.QtWidgets import QTreeWidgetItem, QStyledItemDelegate
+from PyQt5.QtWidgets import QTreeWidgetItem, QStyledItemDelegate, QComboBox
 
 from ictye_live_dm.depends import configs
 from . import main as server
@@ -35,7 +35,7 @@ class SettingTreeBuilder:
     def __init__(self, tree_widget):
         self.tree_widget = tree_widget
 
-    def build_tree(self, key, value, value_manager):
+    def build_tree(self, key, value, value_manager, edit_fuction):
         display = [key, str(value)]
         editable = True
         if isinstance(value, dict):
@@ -46,15 +46,25 @@ class SettingTreeBuilder:
             editable = False
 
         parent = QTreeWidgetItem(self.tree_widget, display)
+
+        if value_manager and value_manager.is_option():
+            combo_box = QComboBox()
+            combo_box.addItems([str(item) for item in value_manager.get_option()])
+            self.tree_widget.setItemWidget(parent, 1, combo_box)
+        elif type(value) is bool:
+            combo_box = QComboBox()
+            combo_box.addItems(["True", "False"])
+            self.tree_widget.setItemWidget(parent, 1, combo_box)
+
         if editable:
             parent.setFlags(parent.flags() | Qt.ItemIsEditable)  # 设置父节点为可编辑
 
         if isinstance(value, dict):
             for k, v in value.items():
-                SettingTreeBuilder(parent).build_tree(str(k), v, value_set(v))  # 递归处理子节点
+                SettingTreeBuilder(parent).build_tree(str(k), v, None, value_set(v))  # 递归处理子节点
         elif isinstance(value, list):
             for i, v in enumerate(value):
-                SettingTreeBuilder(parent).build_tree(str(i), v, value_set(v))  # 递归处理子节点
+                SettingTreeBuilder(parent).build_tree(str(i), v, None, value_set(v))  # 递归处理子节点
 
 
 class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
@@ -86,7 +96,7 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self.settingTreeWidget.setItemDelegateForColumn(0, NonEditableDelegate(self))
 
         for key, value in config.items():
-            tree_builder.build_tree(key, value.get(), value.set)
+            tree_builder.build_tree(key, value.get(), value, value.set)
 
     def submit_log(self, time, log_level, log_text):
         """

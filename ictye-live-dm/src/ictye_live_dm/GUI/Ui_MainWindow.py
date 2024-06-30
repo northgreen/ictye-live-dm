@@ -100,6 +100,7 @@ class Ui_Form(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
         self.pluginListTable = QtWidgets.QTableWidget(self.pluginListPage)
         self.pluginListTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.pluginListTable.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
         self.pluginListTable.setObjectName("pluginListTable")
         self.pluginListTable.setColumnCount(2)
         self.pluginListTable.setRowCount(0)
