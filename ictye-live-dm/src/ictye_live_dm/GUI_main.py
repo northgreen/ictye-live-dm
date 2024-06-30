@@ -1,23 +1,43 @@
 import asyncio
+import logging
 import os
 import sys
 import threading
-import logging
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTranslator, Qt
-from PyQt5.QtWidgets import QWidget, QLabel
-from PyQt5.uic.properties import QtCore
+from PyQt5.QtCore import QTranslator
+from PyQt5.QtWidgets import QTreeWidgetItem
 
 from ictye_live_dm.depends import configs
 from . import main as server
+from . import pluginsystem
 from .GUI import Ui_MainWindow
 from .depends import logger
-from . import pluginsystem
-from .GUI import SettingLayOut
 
 __all__ = ["main", "MainWindow"]
 __logger__ = logging.getLogger(__name__)
+
+
+class SettingTreeBuilder:
+    def __init__(self, tree_widget):
+        self.tree_widget = tree_widget
+
+    def build_tree(self, key, value):
+        display = [key, str(value)]
+        if isinstance(value, dict):
+            display[1] = "[Dict]"
+        elif isinstance(value, list):
+            display[1] = "[List]"
+
+        parent = QTreeWidgetItem(self.tree_widget, display)
+        parent.setFlags(parent.flags() | 16 | 32)  # 设置父节点为可编辑
+
+        if isinstance(value, dict):
+            for k, v in value.items():
+                SettingTreeBuilder(parent).build_tree(str(k), v)  # 递归处理子节点
+        elif isinstance(value, list):
+            for i, v in enumerate(value):
+                SettingTreeBuilder(parent).build_tree(str(i), v)  # 递归处理子节点
 
 
 class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
@@ -34,32 +54,20 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         if self._inited:
             return
         super(MainWindow, self).__init__()
-        self.setting_layout = SettingLayOut.SettingLayout()
-        a = QWidget()
-        a.setLayout(self.setting_layout)
         self.setupUi(self)
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-        self.setting_layout.addWidget(QtWidgets.QPushButton("awa"), "qwq")
-
-        self.settingScrollArea.setAlignment(Qt.AlignLeft)
-        self.settingScrollArea.setWidget(a)
-
+        self.tabWidget.setCurrentIndex(0)
+        self.init_setting_tab()
         self.retranslateUi(self)
-        self.tabWidget.setCurrentIndex(2)
-
         self._server = ServerClass()
         self.startButtoen.clicked.connect(self.start_series)
         self.stopButton.clicked.connect(self.stop_series)
+
+    def init_setting_tab(self):
+        config = configs.ConfigManager()
+        tree_builder = SettingTreeBuilder(self.settingTreeWidget)
+
+        for key, value in config.items():
+            tree_builder.build_tree(key, value.get())
 
     def submit_log(self, time, log_level, log_text):
         """
@@ -141,7 +149,12 @@ def main():
 
     translater = QTranslator()
     translater.load(os.path.dirname(__file__) + "/translate/zh-ch_MainUI.qm")
-    # app.installTranslator(translater)
+    app.installTranslator(translater)
+
+    with open(os.path.normpath(os.path.dirname(__file__) + f'/GUI/StyleSheets/{config["style"]}.qss'), 'r',
+              encoding='utf-8') as f:
+        style = f.read()
+        app.setStyleSheet(style)
 
     form = MainWindow()
     form.show_plugin_list()

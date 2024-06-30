@@ -3,13 +3,13 @@ port: 8083
 host: "127.0.0.1"
 #弹幕姬前端配置
 web:
- - index: "./web/living room dm.html"
- - tku: "./web/tku.html"
+  - index: "./web/living room dm.html"
+  - tku: "./web/tku.html"
 
 GUI: 0
 use_local_plugin: 0
 plugins:
- - "ictye_live_dm.plugin.bilibili_dm_plugin"
+  - "ictye_live_dm.plugin.bilibili_dm_plugin"
 debug: 0 #调试开关，非开发人员勿动(动吧，随便动（bushi)
 dev: 1
 
