@@ -5,8 +5,8 @@ import sys
 import threading
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTranslator
-from PyQt5.QtWidgets import QTreeWidgetItem
+from PyQt5.QtCore import QTranslator, Qt
+from PyQt5.QtWidgets import QTreeWidgetItem, QStyledItemDelegate
 
 from ictye_live_dm.depends import configs
 from . import main as server
@@ -18,26 +18,43 @@ __all__ = ["main", "MainWindow"]
 __logger__ = logging.getLogger(__name__)
 
 
+class NonEditableDelegate(QStyledItemDelegate):
+    def createEditor(self, parent, option, index):
+        return None
+
+
+def value_set(value):
+    def __set(v):
+        nonlocal value
+        value = v
+
+    return __set
+
+
 class SettingTreeBuilder:
     def __init__(self, tree_widget):
         self.tree_widget = tree_widget
 
-    def build_tree(self, key, value):
+    def build_tree(self, key, value, value_manager):
         display = [key, str(value)]
+        editable = True
         if isinstance(value, dict):
             display[1] = "[Dict]"
+            editable = False
         elif isinstance(value, list):
             display[1] = "[List]"
+            editable = False
 
         parent = QTreeWidgetItem(self.tree_widget, display)
-        parent.setFlags(parent.flags() | 16 | 32)  # 设置父节点为可编辑
+        if editable:
+            parent.setFlags(parent.flags() | Qt.ItemIsEditable)  # 设置父节点为可编辑
 
         if isinstance(value, dict):
             for k, v in value.items():
-                SettingTreeBuilder(parent).build_tree(str(k), v)  # 递归处理子节点
+                SettingTreeBuilder(parent).build_tree(str(k), v, value_set(v))  # 递归处理子节点
         elif isinstance(value, list):
             for i, v in enumerate(value):
-                SettingTreeBuilder(parent).build_tree(str(i), v)  # 递归处理子节点
+                SettingTreeBuilder(parent).build_tree(str(i), v, value_set(v))  # 递归处理子节点
 
 
 class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
@@ -61,13 +78,15 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self._server = ServerClass()
         self.startButtoen.clicked.connect(self.start_series)
         self.stopButton.clicked.connect(self.stop_series)
+        self.settingTreeWidget.expandAll()
 
     def init_setting_tab(self):
         config = configs.ConfigManager()
         tree_builder = SettingTreeBuilder(self.settingTreeWidget)
+        self.settingTreeWidget.setItemDelegateForColumn(0, NonEditableDelegate(self))
 
         for key, value in config.items():
-            tree_builder.build_tree(key, value.get())
+            tree_builder.build_tree(key, value.get(), value.set)
 
     def submit_log(self, time, log_level, log_text):
         """

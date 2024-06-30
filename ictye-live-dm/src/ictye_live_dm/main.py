@@ -34,7 +34,7 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
     sys.stderr.write(java_style_error)
 
 
-# sys.excepthook = custom_excepthook
+sys.excepthook = custom_excepthook
 
 
 def loop_exception_handler(loop, context):
@@ -45,7 +45,7 @@ def loop_exception_handler(loop, context):
 
 
 def run_server(loop=asyncio.get_event_loop(), callback=None):
-    # loop.set_exception_handler(loop_exception_handler)
+    loop.set_exception_handler(loop_exception_handler)
     ser = loop.create_task(http_server.http_server())
     loop.create_task(pluginsystem.Plugin().plugin_main_runner())
     try:
