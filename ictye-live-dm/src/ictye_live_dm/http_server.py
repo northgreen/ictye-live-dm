@@ -116,9 +116,9 @@ async def http_server():
                                   web.get("/api/plugin_list", http_api_plugin),
                                   web.get("/cgi/{name}/{page}", http_cgi)
                                   ]
-    for i in config["web"]:
-        file, path = list(i.items())[0]
-        route_list.append(web.get(f"/{file}", return_file(path)))
+    for k in config["web"]:
+        file = list(k.keys())[0]
+        route_list.append(web.get(f"/{file}", return_file(k.get(file).get())))
 
     app.add_routes(route_list)
 

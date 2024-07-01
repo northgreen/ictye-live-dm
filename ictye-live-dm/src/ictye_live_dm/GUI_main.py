@@ -3,12 +3,13 @@ import logging
 import os
 import sys
 import threading
+from typing import Union
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTranslator, Qt
 from PyQt5.QtWidgets import QTreeWidgetItem, QStyledItemDelegate, QComboBox
 
-from ictye_live_dm.depends import configs
+from ictye_live_dm.depends import configs, config_registrar
 from . import main as server
 from . import pluginsystem
 from .GUI import Ui_MainWindow
@@ -23,52 +24,43 @@ class NonEditableDelegate(QStyledItemDelegate):
         return None
 
 
-def value_set(value):
-    def __set(v):
-        nonlocal value
-        value = v
-
-    return __set
-
-
 class SettingTreeWidgetItem(QTreeWidgetItem):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, parent, key, values: Union[config_registrar.ConfigTree, config_registrar.ConfigKey]):
+        keys = [str(key), str(values.get_value() if isinstance(values, config_registrar.ConfigTree) else values.get())]
+        if isinstance(values, config_registrar.ConfigKey) and values.has_option():
+            del keys[1]
+        super().__init__(parent, keys)
 
 
 class SettingTreeBuilder:
     def __init__(self, tree_widget):
         self.tree_widget = tree_widget
 
-    def build_tree(self, key, value, value_manager, edit_function):
-        display = [key, str(value)]
-        editable = True
-        if isinstance(value, dict):
-            display[1] = "[Dict]"
-            editable = False
-        elif isinstance(value, list):
-            display[1] = "[List]"
-            editable = False
-        parent = QTreeWidgetItem(self.tree_widget, display)
+    def build_tree(self, config_tree: config_registrar.ConfigTree):
+        parent: QTreeWidgetItem
+        if config_tree.is_list():
+            for i, v in enumerate(config_tree.values()):
+                parent = SettingTreeWidgetItem(self.tree_widget, i, v)
+                parent.setFlags(parent.flags() | Qt.ItemIsEditable)
+                if isinstance(v, config_registrar.ConfigKey) and v.has_option():
+                    combo_box = QComboBox()
+                    combo_box.addItems([str(item) for item in v.get_options()])
+                    self.tree_widget.setItemWidget(parent, 1, combo_box)
 
-        if value_manager and value_manager.is_option():
-            combo_box = QComboBox()
-            combo_box.addItems([str(item) for item in value_manager.get_option()])
-            self.tree_widget.setItemWidget(parent, 1, combo_box)
-        elif type(value) is bool:
-            combo_box = QComboBox()
-            combo_box.addItems(["True", "False"])
-            self.tree_widget.setItemWidget(parent, 1, combo_box)
+                if isinstance(v, config_registrar.ConfigTree):
+                    SettingTreeBuilder(parent).build_tree(v)
 
-        if editable:
-            parent.setFlags(parent.flags() | Qt.ItemIsEditable)  # 设置父节点为可编辑
+        elif config_tree.is_dict():
+            for k, v in config_tree.items():
+                parent = SettingTreeWidgetItem(self.tree_widget, k, v)
+                parent.setFlags(parent.flags() | Qt.ItemIsEditable)
+                if isinstance(v, config_registrar.ConfigKey) and v.has_option():
+                    combo_box = QComboBox()
+                    combo_box.addItems([str(item) for item in v.get_options()])
+                    self.tree_widget.setItemWidget(parent, 1, combo_box)
 
-        if isinstance(value, dict):
-            for k, v in value.items():
-                SettingTreeBuilder(parent).build_tree(str(k), v, None, value_set(v))  # 递归处理子节点
-        elif isinstance(value, list):
-            for i, v in enumerate(value):
-                SettingTreeBuilder(parent).build_tree(str(i), v, None, value_set(v))  # 递归处理子节点
+                if isinstance(v, config_registrar.ConfigTree):
+                    SettingTreeBuilder(parent).build_tree(v)
 
 
 class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
@@ -98,9 +90,8 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         config = configs.ConfigManager()
         tree_builder = SettingTreeBuilder(self.settingTreeWidget)
         self.settingTreeWidget.setItemDelegateForColumn(0, NonEditableDelegate(self))
-
-        for key, value in config.items():
-            tree_builder.build_tree(key, value.get(), value, value.set)
+        config_tree = config.get_config_tree()
+        tree_builder.build_tree(config_tree)
 
     def submit_log(self, time, log_level, log_text):
         """

@@ -28,7 +28,6 @@ def register_default(_config_registrar: config_registrar.ConfigRegistrar):
 class ConfigManager:
     _instance = None
     _register: config_registrar.ConfigRegistrar = config_registrar.ConfigRegistrar()
-    _default: dict = {}
     _inited = False
 
     def __init__(self):
@@ -52,12 +51,11 @@ class ConfigManager:
 
     def read_default(self, path: str):
         default = self.__load(path)
-        for k, v in default.items():
-            self._register.set(k, v)
+        self._register.dump_default(default)
 
     def load_config(self, path: str):
-        if not self._register:
-            self._register = self.__load(path)
+        value = self.__load(path)
+        self._register.dump(value)
 
     def keys(self):
         return self._register.keys()
@@ -67,6 +65,12 @@ class ConfigManager:
 
     def items(self):
         return self._register.items()
+
+    def get_register(self) -> config_registrar.ConfigRegistrar:
+        return self._register
+
+    def get_config_tree(self) -> config_registrar.ConfigTree:
+        return self._register.get_config_tree()
 
     @staticmethod
     def __load(path: str):

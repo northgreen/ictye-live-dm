@@ -58,8 +58,8 @@ class Plugin:
 
     def __lod_extra__(self):
         for plugin in config["plugins"]:
-            self.logger.info(f"loading extra plugin '{plugin}'...")
-            plugin_module = importlib.import_module(f'{plugin}')
+            self.logger.info(f"loading extra plugin '{plugin.get()}'...")
+            plugin_module = importlib.import_module(f'{plugin.get()}')
             self.__registry_plugin__(plugin_module)
 
     def __lod_init_plugin__(self):
