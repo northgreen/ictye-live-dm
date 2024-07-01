@@ -31,11 +31,16 @@ def value_set(value):
     return __set
 
 
+class SettingTreeWidgetItem(QTreeWidgetItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class SettingTreeBuilder:
     def __init__(self, tree_widget):
         self.tree_widget = tree_widget
 
-    def build_tree(self, key, value, value_manager, edit_fuction):
+    def build_tree(self, key, value, value_manager, edit_function):
         display = [key, str(value)]
         editable = True
         if isinstance(value, dict):
@@ -44,7 +49,6 @@ class SettingTreeBuilder:
         elif isinstance(value, list):
             display[1] = "[List]"
             editable = False
-
         parent = QTreeWidgetItem(self.tree_widget, display)
 
         if value_manager and value_manager.is_option():

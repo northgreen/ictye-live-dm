@@ -170,3 +170,4 @@ class ConfigRegistrar:
 
     def __len__(self):
         return len(self.config)
+

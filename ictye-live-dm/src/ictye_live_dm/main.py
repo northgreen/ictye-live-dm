@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import logging
 import os
+import platform
 import sys
 import traceback
 
@@ -19,7 +20,6 @@ is_copyright_print = False
 if not is_copyright_print:
     print("GPL 2024 ictye")
     is_copyright_print = True
-window = None
 
 
 def custom_excepthook(exc_type, exc_value, exc_traceback):
@@ -34,7 +34,7 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
     sys.stderr.write(java_style_error)
 
 
-# sys.excepthook = custom_excepthook
+sys.excepthook = custom_excepthook
 
 
 def loop_exception_handler(loop, context):
@@ -95,6 +95,8 @@ def parse_args():
 
 def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))  # 保證在正確的目錄下工作
+    if platform.system() == 'Linux':
+        print('🐧 Linux萬歲！')
 
     parse_args()  # 參數解析
 

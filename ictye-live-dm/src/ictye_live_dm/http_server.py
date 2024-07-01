@@ -16,12 +16,12 @@ runner: web.TCPSite
 
 
 def return_file(file: str):
-    async def healder(request):
+    async def header(request):
         nonlocal file
         log.info("return for main_page")
         return web.FileResponse(path=file, status=200)
 
-    return healder
+    return header
 
 
 async def http_handler(request: web.Request):
