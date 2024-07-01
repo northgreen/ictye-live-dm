@@ -26,10 +26,21 @@ class NonEditableDelegate(QStyledItemDelegate):
 
 class SettingTreeWidgetItem(QTreeWidgetItem):
     def __init__(self, parent, key, values: Union[config_registrar.ConfigTree, config_registrar.ConfigKey]):
-        keys = [str(key), str(values.get_value() if isinstance(values, config_registrar.ConfigTree) else values.get())]
-        if isinstance(values, config_registrar.ConfigKey) and values.has_option():
-            del keys[1]
+        print(values)
+        self.__value = values
+        keys = [str(key), str("" if isinstance(values, config_registrar.ConfigTree) else values.get())]
         super().__init__(parent, keys)
+
+        if isinstance(values, config_registrar.ConfigKey) and values.has_option():
+            combo_box = QComboBox()
+            combo_box.addItems([str(item) for item in values.get_options()])
+            self.treeWidget().setItemWidget(self, 1, combo_box)
+
+    def setData(self, column, role, value):
+        print(value)
+        if isinstance(self.__value, config_registrar.ConfigKey):
+            self.__value.set(value)
+        super().setData(column, role, value)
 
 
 class SettingTreeBuilder:
@@ -41,11 +52,8 @@ class SettingTreeBuilder:
         if config_tree.is_list():
             for i, v in enumerate(config_tree.values()):
                 parent = SettingTreeWidgetItem(self.tree_widget, i, v)
-                parent.setFlags(parent.flags() | Qt.ItemIsEditable)
-                if isinstance(v, config_registrar.ConfigKey) and v.has_option():
-                    combo_box = QComboBox()
-                    combo_box.addItems([str(item) for item in v.get_options()])
-                    self.tree_widget.setItemWidget(parent, 1, combo_box)
+                if isinstance(v, config_registrar.ConfigKey):
+                    parent.setFlags(parent.flags() | Qt.ItemIsEditable)
 
                 if isinstance(v, config_registrar.ConfigTree):
                     SettingTreeBuilder(parent).build_tree(v)
@@ -53,11 +61,8 @@ class SettingTreeBuilder:
         elif config_tree.is_dict():
             for k, v in config_tree.items():
                 parent = SettingTreeWidgetItem(self.tree_widget, k, v)
-                parent.setFlags(parent.flags() | Qt.ItemIsEditable)
-                if isinstance(v, config_registrar.ConfigKey) and v.has_option():
-                    combo_box = QComboBox()
-                    combo_box.addItems([str(item) for item in v.get_options()])
-                    self.tree_widget.setItemWidget(parent, 1, combo_box)
+                if isinstance(v, config_registrar.ConfigKey):
+                    parent.setFlags(parent.flags() | Qt.ItemIsEditable)
 
                 if isinstance(v, config_registrar.ConfigTree):
                     SettingTreeBuilder(parent).build_tree(v)
@@ -89,7 +94,7 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
     def init_setting_tab(self):
         config = configs.ConfigManager()
         tree_builder = SettingTreeBuilder(self.settingTreeWidget)
-        self.settingTreeWidget.setItemDelegateForColumn(0, NonEditableDelegate(self))
+        # self.settingTreeWidget.setItemDelegateForColumn(0, NonEditableDelegate(self))
         config_tree = config.get_config_tree()
         tree_builder.build_tree(config_tree)
 

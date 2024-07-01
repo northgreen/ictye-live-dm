@@ -163,6 +163,9 @@ class ConfigTree:
             # 对于字典存储，直接使用键来获取值
             return self.__content[key]
 
+    def has_option(self):
+        return False
+
     def __getitem__(self, item):
         return self.get(item)
 
@@ -294,6 +297,7 @@ class ConfigRegistrar:
             self.config = ConfigTree(is_list=True, build_list=value)
 
     def dump_default(self, value):
+        # TODO：要在這裏合并所有配置
         if isinstance(value, dict):
             self.config = ConfigTree(build_dict=value, build_with_default=True) + self.config
         elif isinstance(value, list):
