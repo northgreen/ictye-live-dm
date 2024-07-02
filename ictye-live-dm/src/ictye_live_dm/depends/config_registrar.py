@@ -294,17 +294,63 @@ class ConfigTree:
     def is_list(self) -> bool:
         return self.__is_list
 
+    def to_list(self) -> list:
+        """
+        將樹轉換爲列表和其他python標準内容
+        @return: 列表
+        """
+        ret = []
+        if not self.is_list():
+            raise TypeError("Cannot convert dict to list")
+        for i in self:
+            if isinstance(i, ConfigTree):
+                if i.is_list():
+                    ret.append(i.to_list())
+                else:
+                    ret.append(i.to_dict())
+            elif isinstance(i, ConfigKey):
+                ret.append(i.get())
+            else:
+                raise TypeError("???")
+        return ret
+
     def to_dict(self) -> dict:
-        # TODO
-        if self.__is_list:
+        """
+        將樹的額所有内容都轉換爲字典和python標準内容
+        @return: 字典
+        """
+        ret = {}
+        if self.is_list():
             raise TypeError("Cannot convert list to dict")
-        else:
-            return self.__content
+        for k, v in self:
+            if isinstance(v, ConfigTree):
+                if v.is_list():
+                    ret[k] = v.to_list()
+                else:
+                    ret[k] = v.to_dict()
+            elif isinstance(v, ConfigKey):
+                ret[k] = v.get()
+            else:
+                raise TypeError("???")
+        return ret
 
     def merage(self, other: "ConfigTree") -> "ConfigTree":
-        pass
+        """
+        合併兩個配置樹
+        @param other: 另一個配置樹
+        @return: 合併後的配置樹
+        """
+        # TODO: 未完成的部分
+        if self.is_list() and other.is_list():
+            for i in other.values():
+                pass
+        elif not self.is_list() and not other.is_list():
+            pass
+        else:
+            raise TypeError("Cannot merge list with dict")
 
     def __add__(self, other):
+        # TODO:
         if isinstance(other, ConfigTree):
             if self.is_list() and other.is_list():
                 return ConfigTree(is_list=True, build_list=self.values() + other.values())
@@ -322,10 +368,6 @@ class ConfigTree:
                 raise TypeError("Cannot add ConfigKey to ConfigTree as a dict")
         else:
             raise TypeError("Cannot add ConfigKey to ConfigTree")
-
-    def merge(self, other):
-        # TODO
-        ...
 
 
 class ConfigRegistrar:
@@ -475,3 +517,12 @@ class ConfigRegistrar:
 
     def __len__(self):
         return len(self.config)
+
+
+if __name__ == "__main__":
+    # TODO: 調試代碼
+    import ipdb
+
+    config = ConfigRegistrar()
+    config.register("test", "test", "test", optional=True, option=["test", "test2"])
+    ipdb.set_trace()
