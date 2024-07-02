@@ -26,7 +26,7 @@ class NonEditableDelegate(QStyledItemDelegate):
 
 class SettingTreeWidgetItem(QTreeWidgetItem):
     def __init__(self, parent, key, values: Union[config_registrar.ConfigTree, config_registrar.ConfigKey]):
-        print(values)
+        print(values)  # TODO： 臨時代碼
         self.__value = values
         keys = [str(key), str("" if isinstance(values, config_registrar.ConfigTree) else values.get())]
         super().__init__(parent, keys)
@@ -37,7 +37,7 @@ class SettingTreeWidgetItem(QTreeWidgetItem):
             self.treeWidget().setItemWidget(self, 1, combo_box)
 
     def setData(self, column, role, value):
-        print(value)
+        print(value)  # TODO： 臨時代碼
         if isinstance(self.__value, config_registrar.ConfigKey):
             self.__value.set(value)
         super().setData(column, role, value)
