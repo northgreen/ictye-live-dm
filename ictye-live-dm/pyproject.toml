@@ -53,10 +53,10 @@ exclude = [
 ]
 
 [[tool.hatch.build.hooks.build-scripts.scripts]]
-out_dir = ".\\src\\ictye_live_dm\\GUI"
-work_dir = ".\\src\\ictye_live_dm\\QT-GUI"
+out_dir = "./src/ictye_live_dm/GUI"
+work_dir = "./src/ictye_live_dm/QT-GUI"
 commands = [
-    "pyuic5 .\\main.ui -o ..\\GUI\\Ui_MainWindow.py"
+    "pyuic5 ./main.ui -o ../GUI/Ui_MainWindow.py"
 ]
 artifacts = [
     "Ui_MainWindow.py"
