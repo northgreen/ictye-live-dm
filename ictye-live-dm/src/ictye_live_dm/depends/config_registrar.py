@@ -1,6 +1,4 @@
-from typing import TypeVar, Generic, Union
-
-T = TypeVar('T')
+from typing import Union
 
 
 def __get_type_default__(type_: type):
@@ -21,12 +19,15 @@ def __get_type_default__(type_: type):
         raise ValueError(f"Unsupported type: {type_},may be you can use ConfigTree to build a tree")
 
 
-class ConfigKey(Generic[T]):
+class ConfigKey:
     """
     A config key that can be registered to the ConfigRegistrar.
     """
 
-    def __init__(self, default: T = None, optional: bool = False, option: list[T] = None, value: T = None):
+    def __init__(self, default: Union[str, bool, int, float] = None,
+                 optional: bool = False,
+                 option: list[Union[str, bool, int, float]] = None,
+                 value: Union[str, bool, int, float] = None):
         self.__default = __get_type_default__(type(value)) if default is None else default
         self.__optional = optional
         self.__option = option if option else [True, False] if isinstance(default, bool) else None
@@ -74,6 +75,34 @@ class ConfigKey(Generic[T]):
         return (f"ConfigKey(dfault={self.__default}, is optional={self.__optional}, options={self.__option}, "
                 f"value={self.__value})")
 
+    def __int__(self):
+        value = self.get()
+        if isinstance(value, int):
+            return value
+        else:
+            raise TypeError(f"Cannot convert {value} to int")
+
+    def __float__(self):
+        value = self.get()
+        if isinstance(value, float):
+            return value
+        else:
+            raise TypeError(f"Cannot convert {value} to float")
+
+    def __bool__(self):
+        value = self.get()
+        if isinstance(value, bool):
+            return value
+        else:
+            raise TypeError(f"Cannot convert {value} to bool")
+
+    def __str__(self):
+        value = self.get()
+        if isinstance(value, str):
+            return value
+        else:
+            raise TypeError(f"Cannot convert {value} to str")
+
     def merge(self, other):
         if self.__default is None:
             self.__default = other.get_default()
@@ -98,7 +127,8 @@ class ConfigTree:
                  build_dict: dict = None,  # 字典結構的子節點
                  build_list: list = None,  # 列表結構的子節點
                  build_with_default: bool = False,  # 是否使用默認值構造子節點
-                 allow=None,
+                 allow: list = None,
+                 tree_lock=False,
                  *args: any,
                  **kwargs: any):
         """
@@ -108,8 +138,9 @@ class ConfigTree:
         :param args: 列表結構的子節點
         :param kwargs: 字典結構的子節點
         """
-        if allow is None:
-            allow = [any]
+
+        self.__allow = allow
+        self.__tree_lock = tree_lock
         self.__value: ConfigKey = value
         self.__content: dict[str, Union[ConfigKey, ConfigTree]] = {}
         self.__is_list: bool = is_list
@@ -120,7 +151,7 @@ class ConfigTree:
         else:
             self.__build_dict(kwargs)
 
-        if not build_dict is None or not build_list is None:
+        if build_dict is not None or build_list is not None:
             if self.__is_list:
                 self.__build_list([*args, *build_list], default=build_with_default)
             else:
@@ -130,6 +161,7 @@ class ConfigTree:
         if not self.__is_list:
             raise TypeError("This is not a list")
         for i in value:
+
             if default:
                 if isinstance(i, ConfigKey):
                     self.__list_content.append(i)
@@ -202,10 +234,18 @@ class ConfigTree:
     def read_value(self) -> Union[str, int, float, bool]:
         return self.__value.get()
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: Union[str, int],
+                    value: Union[ConfigKey, "ConfigTree"]):
         self.set(key, value)
 
-    def set(self, key: T, value: T):
+    def set(self, key: Union[str, int],
+            value: Union[ConfigKey, "ConfigTree"]):
+        """
+        設置值
+        @param key: 鍵名
+        @param value: 值
+        @return: None
+        """
         if self.__is_list:
             self.__list_content[int(key)] = value
         else:
@@ -216,6 +256,9 @@ class ConfigTree:
             return iter(self.__list_content)
         else:
             return iter(self.__content)
+
+    def __str__(self):
+        return str(self.__value)
 
     def __repr__(self):
         return (f"ConfigTree(value= {self.__value}, is_list= {self.__is_list},"
@@ -251,9 +294,16 @@ class ConfigTree:
     def is_list(self) -> bool:
         return self.__is_list
 
-    def merage(self) -> None:
+    def to_dict(self) -> dict:
         # TODO
-        ...
+        if self.__is_list:
+            raise TypeError("Cannot convert list to dict")
+        else:
+            return self.__content
+
+    def merage(self, other: "ConfigTree") -> "ConfigTree":
+        pass
+
     def __add__(self, other):
         if isinstance(other, ConfigTree):
             if self.is_list() and other.is_list():

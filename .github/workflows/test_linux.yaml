@@ -1,0 +1,45 @@
+name: test_linux
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+
+jobs:
+  test_linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11","3.12" ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: "dev"
+
+      - name: install python
+        uses: actions/setup-python@v4.7.1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: install depends
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./ictye-live-dm/requirements.txt
+          pip install ./ictye-live-dm/
+          pip install pytest pytest-cov pytest-asyncio pytest-aiohttp PyQt5
+
+      - name: test
+        run: |
+          pytest ./ictye-live-dm --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov --cov-report=html
+
+      - name: upload_results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: |
+            junit/test-results-${{ matrix.python-version }}.xml
+            htmlcov/*
+          # Use always() to always run this step to publish test results when there are test failures
+        if:  ${{ always() }}
+
+
