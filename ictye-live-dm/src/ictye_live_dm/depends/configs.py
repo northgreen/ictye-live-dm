@@ -13,9 +13,9 @@ def register_default(_config_registrar: config_registrar.ConfigRegistrar):
     """
     _config_registrar.register("port", default=8083)
     _config_registrar.register("host", default="127.0.0.1")
-    _config_registrar.register("web", default={"index": "./web/living room dm.html"})
+    _config_registrar.register("web", default=[{"index": "./web/living room dm.html"}])
     _config_registrar.register("GUI", default=False)
-    _config_registrar.register("plugins", default={})
+    _config_registrar.register("plugins", default=[])
     _config_registrar.register("debug", default=False)
     _config_registrar.register("loglevel", default="INFO",
                                option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])

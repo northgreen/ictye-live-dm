@@ -3,7 +3,7 @@ from typing import Union
 
 def __get_type_default__(type_: type):
     """
-    獲取類型的默認值
+    獲取類型的默認值，支持str，boo，int，float，其他的樹形結構請使用ConfigTree
     :param type_: 類型
     :return: 默認值
     """
@@ -24,28 +24,49 @@ class ConfigKey:
     A config key that can be registered to the ConfigRegistrar.
     """
 
-    def __init__(self, default: Union[str, bool, int, float] = None,
+    def __init__(self, default: str | bool | int | float = None,
                  optional: bool = False,
-                 option: list[Union[str, bool, int, float]] = None,
-                 value: Union[str, bool, int, float] = None):
+                 option: list[str | bool | int | float] = None,
+                 value: str | bool | int | float = None):
         self.__default = __get_type_default__(type(value)) if default is None else default
         self.__optional = optional
         self.__option = option if option else [True, False] if isinstance(default, bool) else None
         self.__value = value
 
     def get_default(self):
+        """
+        獲取默認值
+        @return: 默認值
+        """
         return self.__default
 
     def is_optional(self):
+        """
+        檢查是否為可選的
+        @return:
+        """
         return self.__optional
 
     def has_option(self):
+        """
+        檢查是否具有選項
+        @return:
+        """
         return self.__option is not None
 
     def get_options(self):
+        """
+        獲取選項
+        @return: 選項
+        """
         return self.__option
 
     def set(self, value):
+        """
+        設置ConfigKey的值，注意的是，此方法會對類型進行强制轉換
+        @param value: 目的值
+        @return:
+        """
         if self.__option is not None and value not in self.__option:
             raise ValueError(f"Invalid value for unexpected option: {value}")
         if value is None:
@@ -68,11 +89,10 @@ class ConfigKey:
         # 检查是否存在存储的值，如果存在则返回该值，否则返回默认值
         return self.__value if self.__value is not None else self.__default
 
-    def __add__(self, other):
-        return self.merge(other)
-
     def __repr__(self):
-        return (f"ConfigKey(dfault={self.__default}, is optional={self.__optional}, options={self.__option}, "
+        return (f"ConfigKey(dfault={self.__default}, "
+                f"is optional={self.__optional}, "
+                f"options={self.__option}, "
                 f"value={self.__value})")
 
     def __int__(self):
@@ -91,19 +111,24 @@ class ConfigKey:
 
     def __bool__(self):
         value = self.get()
-        if isinstance(value, bool):
-            return value
-        else:
-            raise TypeError(f"Cannot convert {value} to bool")
+        return bool(value)
 
     def __str__(self):
         value = self.get()
         if isinstance(value, str):
             return value
         else:
-            raise TypeError(f"Cannot convert {value} to str")
+            return self.__repr__()
 
     def merge(self, other):
+        """
+        合併兩個ConfigKey
+        1. 如果自身沒有默認值，則會采用other的
+        2. 會采取other的数据。
+        3. 會采取other的option
+        @param other: 另一個ConfigKey
+        @return: 合併後的ConfigKey
+        """
         if self.__default is None:
             self.__default = other.get_default()
 
@@ -186,6 +211,12 @@ class ConfigTree:
                     self.__list_content.append(ConfigKey(i))
 
     def __build_dict(self, value, default=False):
+        """
+        内部構造鍵值對樹的函數
+        @param value: 傳入參數
+        @param default: 是否默認
+        @return:
+        """
         if self.__is_list:
             raise TypeError("This is not a dict")
         for key, value in value.items():
@@ -334,40 +365,25 @@ class ConfigTree:
                 raise TypeError("???")
         return ret
 
-    def merage(self, other: "ConfigTree") -> "ConfigTree":
+    def merge(self, other: "ConfigTree") -> "ConfigTree":
         """
         合併兩個配置樹
         @param other: 另一個配置樹
         @return: 合併後的配置樹
         """
         # TODO: 未完成的部分
-        if self.is_list() and other.is_list():
+        if self.is_list() and other.is_list():  # 兩個都是列表
             for i in other.values():
-                pass
-        elif not self.is_list() and not other.is_list():
-            pass
+                self.__list_content.append(i)
+        elif not self.is_list() and not other.is_list():  # 兩個都是字典
+            for k, v in other.items():
+                if k in self.__content:
+                    self.__content[k].merge(v)
+                else:
+                    self.set(k, v)
         else:
             raise TypeError("Cannot merge list with dict")
-
-    def __add__(self, other):
-        # TODO:
-        if isinstance(other, ConfigTree):
-            if self.is_list() and other.is_list():
-                return ConfigTree(is_list=True, build_list=self.values() + other.values())
-            elif self.is_list() and not other.is_list():
-                return ConfigTree(is_list=True, build_list=self.values() + list(other.values().values()))
-            elif not self.is_list() and other.is_list():
-                return ConfigTree(is_list=True, build_list=list(self.values().values()) + other.values())
-            else:
-                return ConfigTree(build_dict={**other.values(), **self.values()})
-        elif isinstance(other, ConfigKey):
-            if self.is_list():
-                self.__list_content.append(other)
-                return self
-            elif not self.is_list():
-                raise TypeError("Cannot add ConfigKey to ConfigTree as a dict")
-        else:
-            raise TypeError("Cannot add ConfigKey to ConfigTree")
+        return self
 
 
 class ConfigRegistrar:
@@ -425,9 +441,10 @@ class ConfigRegistrar:
     def dump_default(self, value):
         # TODO：要在這裏合并所有配置
         if isinstance(value, dict):
-            self.config = ConfigTree(build_dict=value, build_with_default=True) + self.config
+            self.config = self.config.merge(ConfigTree(build_dict=value))
+            pass
         elif isinstance(value, list):
-            self.config = ConfigTree(is_list=True, build_list=value, build_with_default=True) + self.config
+            self.config = self.config.merge(ConfigTree(is_list=True, build_list=value))
 
     def get(self, key):
         """
@@ -525,4 +542,8 @@ if __name__ == "__main__":
 
     config = ConfigRegistrar()
     config.register("test", "test", "test", optional=True, option=["test", "test2"])
+
+    key1 = ConfigKey("test", optional=True, option=["test", "test2"])
+    key2 = ConfigKey("test2", optional=True, option=["test", "test2"], value="test2")
+    print(repr(key1.merge(key2)))
     ipdb.set_trace()

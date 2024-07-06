@@ -34,7 +34,7 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
     sys.stderr.write(java_style_error)
 
 
-sys.excepthook = custom_excepthook
+# sys.excepthook = custom_excepthook
 
 
 def loop_exception_handler(loop, context):

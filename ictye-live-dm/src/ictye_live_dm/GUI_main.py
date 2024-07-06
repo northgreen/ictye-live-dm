@@ -26,7 +26,7 @@ class NonEditableDelegate(QStyledItemDelegate):
 
 class SettingTreeWidgetItem(QTreeWidgetItem):
     def __init__(self, parent, key, values: Union[config_registrar.ConfigTree, config_registrar.ConfigKey]):
-        print(values)  # TODO： 臨時代碼
+        print(repr(values))  # TODO： 臨時代碼
         self.__value = values
         keys = [str(key), str("" if isinstance(values, config_registrar.ConfigTree) else values.get())]
         super().__init__(parent, keys)
@@ -94,7 +94,6 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
     def init_setting_tab(self):
         config = configs.ConfigManager()
         tree_builder = SettingTreeBuilder(self.settingTreeWidget)
-        # self.settingTreeWidget.setItemDelegateForColumn(0, NonEditableDelegate(self))
         config_tree = config.get_config_tree()
         tree_builder.build_tree(config_tree)
 
