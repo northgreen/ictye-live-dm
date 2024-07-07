@@ -28,6 +28,9 @@ class ConfigKey:
                  optional: bool = False,
                  option: list[str | bool | int | float] = None,
                  value: str | bool | int | float = None):
+        if value is None and default is None:
+            raise ValueError("None ConfigKey is invalid")
+        # self.__value = default if value is None else value
         self.__default = __get_type_default__(type(value)) if default is None else default
         self.__optional = optional
         self.__option = option if option else [True, False] if isinstance(default, bool) else None
@@ -129,7 +132,7 @@ class ConfigKey:
         @param other: 另一個ConfigKey
         @return: 合併後的ConfigKey
         """
-        if self.__default is None:
+        if self.__default is __get_type_default__(type(other.get())):
             self.__default = other.get_default()
 
         self.set(other.get())
@@ -139,6 +142,9 @@ class ConfigKey:
 
         if other.is_optional():
             self.__optional = True
+
+    def __eq__(self, other: "ConfigKey"):
+        return self.get() == other.get()
 
 
 class ConfigTree:
@@ -286,7 +292,7 @@ class ConfigTree:
         if self.__is_list:
             return iter(self.__list_content)
         else:
-            return iter(self.__content)
+            return iter(self.__content.items())
 
     def __str__(self):
         return str(self.__value)
@@ -353,7 +359,7 @@ class ConfigTree:
         ret = {}
         if self.is_list():
             raise TypeError("Cannot convert list to dict")
-        for k, v in self:
+        for k, v in self.items():
             if isinstance(v, ConfigTree):
                 if v.is_list():
                     ret[k] = v.to_list()
@@ -371,10 +377,9 @@ class ConfigTree:
         @param other: 另一個配置樹
         @return: 合併後的配置樹
         """
-        # TODO: 未完成的部分
         if self.is_list() and other.is_list():  # 兩個都是列表
             for i in other.values():
-                self.__list_content.append(i)
+                self.__list_content.append(i)  # TODO：此處邏輯仍然有問題
         elif not self.is_list() and not other.is_list():  # 兩個都是字典
             for k, v in other.items():
                 if k in self.__content:
@@ -439,10 +444,13 @@ class ConfigRegistrar:
             self.config = ConfigTree(is_list=True, build_list=value)
 
     def dump_default(self, value):
-        # TODO：要在這裏合并所有配置
+        """
+        將傳入的作爲默認配置并且合并
+        @param value:
+        @return:
+        """
         if isinstance(value, dict):
             self.config = self.config.merge(ConfigTree(build_dict=value))
-            pass
         elif isinstance(value, list):
             self.config = self.config.merge(ConfigTree(is_list=True, build_list=value))
 
@@ -537,13 +545,5 @@ class ConfigRegistrar:
 
 
 if __name__ == "__main__":
-    # TODO: 調試代碼
-    import ipdb
-
-    config = ConfigRegistrar()
-    config.register("test", "test", "test", optional=True, option=["test", "test2"])
-
-    key1 = ConfigKey("test", optional=True, option=["test", "test2"])
-    key2 = ConfigKey("test2", optional=True, option=["test", "test2"], value="test2")
-    print(repr(key1.merge(key2)))
-    ipdb.set_trace()
+    config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+    result_dict = config.to_dict()
