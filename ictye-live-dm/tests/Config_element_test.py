@@ -11,6 +11,7 @@ def test_init_with_default_value():
     key = ConfigKey(default=5)
     assert key.get_default() == 5
     assert not key.is_optional()
+    assert key.get() == 5
 
 
 def test_init_with_optional_true():

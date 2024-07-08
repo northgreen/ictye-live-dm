@@ -143,8 +143,11 @@ class ConfigKey:
         if other.is_optional():
             self.__optional = True
 
-    def __eq__(self, other: "ConfigKey"):
-        return self.get() == other.get()
+    def __eq__(self, other: Union["ConfigKey", type]):
+        if isinstance(other, ConfigKey):
+            return self.get() == other.get()
+        else:
+            return self.get() == other
 
 
 class ConfigTree:
@@ -180,7 +183,7 @@ class ConfigTree:
         if is_list:
             self.__build_list(args, default=build_with_default)
         else:
-            self.__build_dict(kwargs)
+            self.__build_dict(kwargs, default=build_with_default)
 
         if build_dict is not None or build_list is not None:
             if self.__is_list:
@@ -214,7 +217,7 @@ class ConfigTree:
                 elif isinstance(i, ConfigTree):
                     self.__list_content.append(i)
                 else:
-                    self.__list_content.append(ConfigKey(i))
+                    self.__list_content.append(ConfigKey(value=i))
 
     def __build_dict(self, value, default=False):
         """
@@ -368,7 +371,7 @@ class ConfigTree:
             elif isinstance(v, ConfigKey):
                 ret[k] = v.get()
             else:
-                raise TypeError("???")
+                raise TypeError("??? How can you did it???")
         return ret
 
     def merge(self, other: "ConfigTree") -> "ConfigTree":
@@ -389,6 +392,17 @@ class ConfigTree:
         else:
             raise TypeError("Cannot merge list with dict")
         return self
+
+    def __contains__(self, item):
+        if self.is_list():
+            for i in self.__list_content:
+                if i == item:
+                    return True
+        else:
+            for k, v in self.__content.items():
+                if k == item:
+                    return True
+        return False
 
 
 class ConfigRegistrar:
@@ -413,10 +427,13 @@ class ConfigRegistrar:
 
         if isinstance(value, ConfigTree) or isinstance(value, ConfigKey):
             self.config[key] = value
+            return
         elif isinstance(value, dict):
             self.config[key] = ConfigTree(build_dict=value)
+            return
         elif isinstance(value, list):
             self.config[key] = ConfigTree(is_list=True, build_list=value)
+            return
 
         if isinstance(default, dict):
             self.config[key] = ConfigTree(build_dict=default, build_with_default=True)
@@ -520,7 +537,7 @@ class ConfigRegistrar:
         Convert the config registrar to a dictionary.
         @return: dictionary representation of the config registrar
         """
-        return {key: self.config.get(key).get() for key in self.config}
+        return self.config.to_dict()
 
     def get_config_tree(self):
         return self.config
