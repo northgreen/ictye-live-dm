@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+from typing import Optional
 
 from aiohttp import web
 
@@ -12,7 +13,7 @@ from .depends import configs
 config: configs.ConfigManager = configs.ConfigManager()
 plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
-runner: web.TCPSite
+runner: Optional[web.AppRunner] = None
 
 
 def return_file(file: str):

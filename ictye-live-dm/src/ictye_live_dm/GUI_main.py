@@ -7,7 +7,7 @@ from typing import Union
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTranslator, Qt
-from PyQt5.QtWidgets import QTreeWidgetItem, QStyledItemDelegate, QComboBox
+from PyQt5.QtWidgets import QTreeWidgetItem, QComboBox
 
 from ictye_live_dm.depends import configs, config_registrar
 from . import main as server
@@ -17,11 +17,6 @@ from .depends import logger
 
 __all__ = ["main", "MainWindow"]
 __logger__ = logging.getLogger(__name__)
-
-
-class NonEditableDelegate(QStyledItemDelegate):
-    def createEditor(self, parent, option, index):
-        return None
 
 
 class SettingTreeWidgetItem(QTreeWidgetItem):
@@ -91,6 +86,8 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self.stopButton.clicked.connect(self.stop_series)
         self.settingTreeWidget.expandAll()
 
+        self.status_display_lable.setText("Stopped")
+
     def init_setting_tab(self):
         config = configs.ConfigManager()
         tree_builder = SettingTreeBuilder(self.settingTreeWidget)
@@ -117,11 +114,13 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
 
     def start_series(self):
         self._server.start()
+        self.status_display_lable.setText("Started")
         self.startButtoen.setEnabled(False)
         self.stopButton.setEnabled(True)
 
     def stop_series(self):
         self._server.stop()
+        self.status_display_lable.setText("Stopped")
         self.startButtoen.setEnabled(True)
         self.stopButton.setEnabled(False)
 

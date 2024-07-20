@@ -1,4 +1,12 @@
-# ictye live Danmku
+<div align="center">
+<img width="100" height="100" src="https://github.com/northgreen/ictye-live-dm/raw/dev/icon.png">
+</img>
+<h1 style="margin-top:0">Ictye Live Danmku(ictye-live-dm)</h1>
+<img src="https://img.shields.io/badge/python-3.10-blue">
+</img>
+<img src="https://img.shields.io/badge/license-GPL-green">
+</img>
+</div>
 
 一个简单而又全能的弹幕姬框架（其实就是一个web服务器加上websocket服务器），通过插件来实现弹幕功能
 
@@ -9,7 +17,7 @@
 
 ## 开始使用它
 
-1. 部署ictye live Danmku：你只需要简单的解压它就好，默认情况的启动脚本是为Windows用户提供的，不过在非Windows操作系统上，你仍旧可以使用`requirement.txt`来配置环境并且使用`python -m ictye-live-Danmku`来启动项目
+1. 部署ictye live Danmku：你只需要简单的解压它就好，默认情况的启动脚本是为Windows用户提供的，不过在非Windows操作系统上，你仍旧可以使用`requirement.txt`来配置环境并且使用`python -m ictye-live-dm`来启动项目
 2. 配置项目：
    1. 这个软件是通过插件的形式来实现弹幕的获取，弹幕的分析和处理
    2. `/plugin`里放置python脚本插件，可以在后端提供弹幕，分析弹幕以及提供前端接口等待
