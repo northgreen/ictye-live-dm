@@ -1,22 +1,14 @@
 from typing import Union
+import re
+from abc import ABCMeta, abstractmethod
 
+s_dict = "dict"
+s_list = "list"
 
-def __get_type_default__(type_: type):
-    """
-    獲取類型的默認值，支持str，boo，int，float，其他的樹形結構請使用ConfigTree
-    :param type_: 類型
-    :return: 默認值
-    """
-    if type_ == str:
-        return ""
-    elif type_ == bool:
-        return False
-    elif type_ == int:
-        return 0
-    elif type_ == float:
-        return 0.0
-    else:
-        raise ValueError(f"Unsupported type: {type_},may be you can use ConfigTree to build a tree")
+s_int = "int"
+s_str = "str"
+s_float = "float"
+s_bool = "bool"
 
 
 class ConfigKey:
@@ -83,7 +75,10 @@ class ConfigKey:
         self.__value = type(self.__value)(value)
 
     def get_type(self):
-        return type(self.__value)
+        if self.__value is not None:
+            return type(self.__value)
+        else:
+            return type(self.__default)
 
     def is_set(self):
         return self.__value is not None
@@ -163,16 +158,24 @@ class ConfigTree:
                  build_with_default: bool = False,  # 是否使用默認值構造子節點
                  allow: list = None,
                  tree_lock=False,
+                 schema: "config_schema.ABConfigSchema" = None,
                  *args: any,
                  **kwargs: any):
         """
-        構造函數
-        :param value: 樹的根值
-        :param is_list: 是否為列表結構
-        :param args: 列表結構的子節點
-        :param kwargs: 字典結構的子節點
+        此方法表示配置的树形结构
+        @param value: 根植
+        @param is_list: 是否为列表，一个树的键值对结构和列表的顺序结构是不同的
+        @param build_dict: 此项目用于通过字典构建一个配置树
+        @param build_list: 此项目用于通过列表构建一个配置树
+        @param build_with_default: 在构建ConfigKey的时候，是否选在将提供的数值作为默认值提供，和build_dict和build_list共同使用
+        @param allow: 未实装
+        @param tree_lock: 是否允许对结构进行修改，现已弃用，未实装
+        @param schema: 配置结构验证器，用于自身结构的验证
+        @param args: 作为列表生成配置树的时候可用
+        @param kwargs: 作为键值对生成配置树的时候可用
         """
 
+        self.schema = schema
         self.__allow = allow
         self.__tree_lock = tree_lock
         self.__value: ConfigKey = value
@@ -311,18 +314,27 @@ class ConfigTree:
             return len(self.__content)
 
     def items(self) -> list:
+        """
+        @return: 一个列表，包含所有的项目，如果是字典的话返回的可能为一个包含元组的字典
+        """
         if self.__is_list:
             return self.__list_content
         else:
             return list(self.__content.items())
 
     def keys(self) -> list:
+        """
+        @return:返回键的列表，对于列表来说，这就是它本身
+        """
         if self.__is_list:
             return self.__list_content
         else:
             return list(self.__content.keys())
 
     def values(self) -> Union[list, dict]:
+        """
+        @return: 返回值的列表或字典
+        """
         if self.__is_list:
             return self.__list_content
         else:
@@ -404,13 +416,45 @@ class ConfigTree:
                     return True
         return False
 
+    def __eq__(self, other):
+        if isinstance(other, ConfigTree):
+            if self.is_list() and other.is_list():
+                if len(self.__list_content) != len(other.__list_content):
+                    return False
+                for i in range(len(self.__list_content)):
+                    if self.__list_content[i] != other.__list_content[i]:
+                        return False
+                return True
+            elif not self.is_list() and not other.is_list():
+                if len(self.__content) != len(other.__content):
+                    return False
+                for k, v in self.__content.items():
+                    if k not in other.__content:
+                        return False
+                    if v != other.__content[k]:
+                        return False
+                return True
+        else:
+            return False
+
+    def append(self, value: ConfigKey, key: str = None):
+        if self.__is_list:
+            self.__list_content.append(value)
+        else:
+            self.set(key, value)
+
 
 class ConfigRegistrar:
     """
     A config registrar that can be used to register config keys.
     """
 
+    _inited = False
+
     def __init__(self):
+        if self._inited:
+            return
+        self._inited = True
         self.config = ConfigTree()
 
     def register(self, key, value=None, default=None, optional: bool = False, option: list = None):
@@ -561,6 +605,388 @@ class ConfigRegistrar:
         return len(self.config)
 
 
-if __name__ == "__main__":
-    config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
-    result_dict = config.to_dict()
+class ABConfigSchema(metaclass=ABCMeta):
+
+    def __init__(self,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        self.not_ = not_
+        self.one_of = one_of
+        self.all_of = all_of
+        self.const = const
+        self.description = description
+        self.title = title
+        self.type_ = None
+        self._comment = _comment
+
+    @abstractmethod
+    def verify(self, other: ConfigKey | ConfigTree) -> bool:
+        ...
+
+    @abstractmethod
+    def able(self, other) -> bool:
+        ...
+
+    @classmethod
+    def __subclasshook__(cls, par):
+        marathons = ["verify", "able"]
+        for m in marathons:
+            if cls is ConfigSchema:
+                if not any(m in B.__dict__ for B in par.__mro__):
+                    return NotImplemented
+        return True
+
+
+class ConfigSchema(ABConfigSchema):
+
+    def __init__(self,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.type_ = None
+
+    def verify(self, other) -> bool:
+        if self.const and not other == self.const:
+            return False
+        if self.all_of and not all([o.verify(other) for o in self.all_of]):
+            return False
+        if self.one_of and not any([o.verify(other) for o in self.one_of]):
+            return False
+        if self.not_ and not any([o.verify(other) for o in self.not_]):
+            return False
+        return True
+
+    def able(self, other):
+        if self.type_ == s_dict:
+            return isinstance(other, ConfigTree) and not other.is_list()
+        elif self.type_ == s_list:
+            return isinstance(other, ConfigTree) and other.is_list()
+        elif self.type_ == s_int:
+            return isinstance(other, ConfigKey) and other.get_type() == int
+        elif self.type_ == s_str:
+            return isinstance(other, ConfigKey) and other.get_type() == str
+        elif self.type_ == s_float:
+            return isinstance(other, ConfigKey) and other.get_type() == float
+        elif self.type_ == s_bool:
+            return isinstance(other, ConfigKey) and other.get_type() == bool
+
+
+class StringSchema(ConfigSchema):
+    def __init__(self,
+                 max_length=None,
+                 min_length=None,
+                 pattern=None,
+                 format_=None,
+                 content_media_type=None,
+                 content_encoding=None,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.content_encoding = content_encoding
+        self.content_media_type = content_media_type
+        self.format_ = format_
+        self.pattern = pattern
+
+        self.min_length = min_length
+        self.max_length = max_length
+
+        self.__re = re.compile(pattern) if pattern else None
+
+        self.type_ = s_str
+
+    def verify(self, other: ConfigKey):
+        if not super().verify(other):
+            return False
+        if not self.able(other):
+            return False
+        value: str = other.get()
+        if self.min_length and len(value) <= self.min_length:
+            return False
+        if self.max_length and len(value) >= self.max_length:
+            return False
+        if self.__re and not self.__re.match(value):
+            return False
+        if self.format_:
+            pass  # TODO
+        return True
+
+
+class IntSchema(ConfigSchema):
+
+    def __init__(self,
+                 maximum=None,
+                 minimum=None,
+                 exclusive_maximum=None,
+                 exclusive_minimum=None,
+                 multiple=None,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.type_ = s_int
+        self.min_value = minimum
+        self.max_value = maximum
+        self.exclusive_min_value = exclusive_minimum
+        self.exclusive_max_value = exclusive_maximum
+        self.multiple = multiple
+
+    def verify(self, other: ConfigKey):
+        if not super().verify(other):
+            return False
+        if not self.able(other):
+            return False
+        value: int = other.get()
+        if self.min_value and value < self.min_value:
+            return False
+        if self.max_value and value > self.max_value:
+            return False
+        if self.exclusive_min_value and value <= self.exclusive_min_value:
+            return False
+        if self.exclusive_max_value and value >= self.exclusive_max_value:
+            return False
+        if self.multiple and value % self.multiple != 0:
+            return False
+        return True
+
+
+class FloatSchema(ConfigSchema):
+
+    def __init__(self,
+                 maximum=None,
+                 minimum=None,
+                 exclusive_maximum=None,
+                 exclusive_minimum=None,
+                 multiple=None,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.type_ = s_float
+        self.min_value = minimum
+        self.max_value = maximum
+        self.exclusive_min_value = exclusive_minimum
+        self.exclusive_max_value = exclusive_maximum
+        self.multiple = multiple
+
+    def verify(self, other: ConfigKey):
+        if not super().verify(other):
+            return False
+        if not self.able(other):
+            return False
+        value: float = other.get()
+        if self.min_value and value < self.min_value:
+            return False
+        if self.max_value and value > self.max_value:
+            return False
+        if self.exclusive_min_value and value <= self.exclusive_min_value:
+            return False
+        if self.exclusive_max_value and value >= self.exclusive_max_value:
+            return False
+        if self.multiple and value % self.multiple != 0:
+            return False
+        return True
+
+
+class BoolSchema(ConfigSchema):
+    def __init__(self,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.type_ = s_bool
+
+    def verify(self, other: ConfigKey):
+        if not super().verify(other):
+            return False
+        if not self.able(other):
+            return False
+        return True
+
+
+class DictSchema(ConfigSchema):
+
+    def __init__(self,
+                 properties: dict[str, ConfigSchema],
+                 pattern_properties: dict[str, ConfigSchema] = None,
+                 additional_properties: bool | ConfigSchema = True,
+                 required: list[str] = None,
+                 min_properties: int = None,
+                 max_properties: int = None,
+                 property_names: ConfigSchema = None,
+                 dependent_required: dict[str, list[str]] = None,
+                 dependent_schemas: dict[str, ConfigSchema] = None,
+                 if_: ConfigSchema = None,
+                 then: ConfigSchema = None,
+                 else_: ConfigSchema = None,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.else_ = else_
+        self.then = then
+        self.if_ = if_
+        self.dependent_schemas = dependent_schemas
+        if property_names and property_names.type_ != s_str:
+            raise ValueError("property_names must be string")
+        self.dependent_required = dependent_required
+        self.property_names = property_names
+        self.max_properties = max_properties
+        self.min_properties = min_properties
+        self.required = required
+        self.additional_properties = additional_properties
+        self.pattern_properties = pattern_properties
+        self.type_ = s_dict
+        self.properties = properties
+
+    def verify(self, other: ConfigTree):
+        if not super().verify(other):
+            return False
+        if not self.able(other):
+            return False
+        value_: list = other.items()
+        # 检查需求
+        if (self.required
+                and not all([True if k in self.required else False for k, v in value_])):
+            return False
+        if (self.property_names
+                and not any([self.property_names.verify(v) for k, v in value_ if k in self.properties.keys()])):
+            return False
+        # 最小值和最大值
+        if (self.min_properties
+                and len(value_) < self.min_properties):
+            return False
+        if (self.max_properties
+                and len(value_) > self.max_properties):
+            return False
+        # 验证模式匹配
+        if (self.pattern_properties
+                and not all([any([dv.verify(v)
+                                  for dk, dv in self.pattern_properties.items() if re.match(dk, k)])
+                             for k, v in value_])):
+            return False
+        if self.additional_properties and isinstance(self.additional_properties, bool):
+            if not all([any([dv.verify(v)
+                              for dk, dv in self.properties.items() if k == dk])
+                         for k, v in value_]):
+                return False
+        # 附加
+        if ((self.additional_properties and self.pattern_properties
+             and isinstance(self.additional_properties, ConfigSchema)
+             and not any(
+                    [self.additional_properties.verify(v)
+                     for k, v in value_ if k not in self.properties.keys()
+                                           or k not in [k for dk, dv in self.pattern_properties.items()
+                                                        if re.match(dk, k)]])) or
+                (self.additional_properties and not self.pattern_properties
+                 and isinstance(self.additional_properties, ConfigSchema)
+                 and not any(
+                            [self.additional_properties.verify(v)
+                             for k, v in value_ if k not in self.properties.keys()
+                             ]))):
+            return False
+        elif self.additional_properties:
+            pass
+        else:
+            if (not all([k in self.properties.keys() for k, v in value_])
+                    or not all([k in [k for dk, dv in self.pattern_properties.items() if re.match(dk, k)]
+                                for k, v in value_])):
+                return False
+        return True
+
+
+class ListSchema(ConfigSchema):
+
+    def __init__(self,
+                 items: list[ABConfigSchema] | ABConfigSchema = None,
+                 min_items: int = None,
+                 max_items: int = None,
+                 unique_items: bool = None,
+                 title: str = "",
+                 description: str = "",
+                 _comment: str = "",
+                 const: ConfigTree | ConfigKey = None,
+                 all_of: list["ABConfigSchema"] = None,
+                 one_of: list["ABConfigSchema"] = None,
+                 not_: list["ABConfigSchema"] = None,
+                 ):
+        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        self.type_ = s_list
+        self.items = items
+        self.min_items = min_items
+        self.max_items = max_items
+        self.unique_items = unique_items
+
+    def verify(self, other: ConfigTree):
+        if not super().verify(other):
+            return False
+        if not self.able(other):
+            return False
+        value_: list = other.items()
+        if (self.min_items
+                and len(value_) < self.min_items):
+            return False
+        if (self.max_items
+                and len(value_) > self.max_items):
+            return False
+        if (self.unique_items
+                and len(value_) != len(set(value_))):
+            return False
+        if not all([self.items[i].verify(v) for i, v in enumerate(value_)]):
+            return False
+        return True
+
+
+def __get_type_default__(type_: type):
+    """
+    獲取類型的默認值，支持str，boo，int，float，其他的樹形結構請使用ConfigTree
+    :param type_: 類型
+    :return: 默認值
+    """
+    if type_ == str:
+        return ""
+    elif type_ == bool:
+        return False
+    elif type_ == int:
+        return 0
+    elif type_ == float:
+        return 0.0
+    else:
+        raise ValueError(f"Unsupported type: {type_},may be you can use ConfigTree to build a tree")

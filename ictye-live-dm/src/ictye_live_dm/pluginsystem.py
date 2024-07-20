@@ -39,12 +39,14 @@ class Plugin:
             raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
 
         plugin_class = getattr(plugin_module, "PluginMain")
+        if not issubclass(plugin_class, pluginmain.PluginMain):
+            raise plugin_errors.PluginTypeError("插件主类继承PluginMain类")
         plugin_interface: pluginmain.PluginMain = plugin_class()
 
         # 获取插件类型
-        if plugin_interface.plugin_type() == "message":
+        if plugin_interface.type == "message":
             self.message_plugin_list.append(plugin_interface)
-        elif plugin_interface.plugin_type() == "analyzer":
+        elif plugin_interface.type == "analyzer":
             self.analyzer_plugin_list.append(plugin_interface)
         else:
             raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")

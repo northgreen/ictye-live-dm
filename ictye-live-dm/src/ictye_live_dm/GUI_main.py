@@ -91,6 +91,8 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self.stopButton.clicked.connect(self.stop_series)
         self.settingTreeWidget.expandAll()
 
+        self.status_display_lable.setText("Stopped")
+
     def init_setting_tab(self):
         config = configs.ConfigManager()
         tree_builder = SettingTreeBuilder(self.settingTreeWidget)
@@ -117,11 +119,13 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
 
     def start_series(self):
         self._server.start()
+        self.status_display_lable.setText("Started")
         self.startButtoen.setEnabled(False)
         self.stopButton.setEnabled(True)
 
     def stop_series(self):
         self._server.stop()
+        self.status_display_lable.setText("Stopped")
         self.startButtoen.setEnabled(True)
         self.stopButton.setEnabled(False)
 
