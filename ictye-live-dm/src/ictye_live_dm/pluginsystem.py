@@ -6,7 +6,7 @@ import os
 
 import aiohttp.web as web
 
-from .depends import pluginmain, plugin_errors, configs
+from .depends import pluginmain, plugin_errors, configs,config_registrar
 
 config: configs.ConfigManager = configs.ConfigManager()  # 配置
 
@@ -39,12 +39,14 @@ class Plugin:
             raise plugin_errors.NoMainMather("函数未实现主方法或者主方法名称错误")
 
         plugin_class = getattr(plugin_module, "PluginMain")
+        if not issubclass(plugin_class, pluginmain.PluginMain):
+            raise plugin_errors.PluginTypeError("插件主类继承PluginMain类")
         plugin_interface: pluginmain.PluginMain = plugin_class()
 
         # 获取插件类型
-        if plugin_interface.plugin_type() == "message":
+        if plugin_interface.type == "message":
             self.message_plugin_list.append(plugin_interface)
-        elif plugin_interface.plugin_type() == "analyzer":
+        elif plugin_interface.type == "analyzer":
             self.analyzer_plugin_list.append(plugin_interface)
         else:
             raise plugin_errors.PluginTypeError("未知的插件类型，该不会是插件吃了金克拉了吧？")
@@ -58,9 +60,14 @@ class Plugin:
 
     def __lod_extra__(self):
         for plugin in config["plugins"]:
-            self.logger.info(f"loading extra plugin '{plugin}'...")
-            plugin_module = importlib.import_module(f'{plugin}')
+            self.logger.info(f"loading extra plugin '{plugin.get()}'...")
+            plugin_module = importlib.import_module(f'{plugin.get()}')
             self.__registry_plugin__(plugin_module)
+
+    def register_plugin(self, plugin: str):
+        plugin_module = importlib.import_module(plugin)
+        self.__registry_plugin__(plugin_module)
+        config["plugins"].append(config_registrar.ConfigKey(plugin))
 
     def __lod_init_plugin__(self):
         self.logger.info("loading local plugin...")

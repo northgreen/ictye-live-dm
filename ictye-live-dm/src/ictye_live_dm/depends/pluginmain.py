@@ -1,47 +1,83 @@
 import asyncio
 import typing
+from abc import abstractmethod, ABCMeta
 
+from . import config_registrar
 from . import configs
-from . import plugin_errors, msgs
+from . import msgs
 
 
-class PluginMain:
+class PluginConfig:
+
+    def __init__(self, plugin_name: str):
+        self.__config = config_registrar.ConfigTree()
+
+    def __get__(self, instance, owner: "PluginMain"):
+        return self.__config
+
+    def register(self, value, name: str, default: typing.Any = None, schema: config_registrar.ConfigSchema = None):
+        ...
+
+
+class PluginMain(metaclass=ABCMeta):
+    _instance = None
+    _initialized = False
+
+    plugin_js_sprit_support: bool = False
+    """js插件支持"""
+
+    plugin_desc: str = "No description"
+    """插件描述"""
+
+    plugin_version: str = "0.0.0"
+    """插件版本号"""
+
+    plugin_dev_beach: str = ""
+    """插件开发分支"""
+
+    plugin_author: str = "Costume Author"
+    """插件作者"""
+
+    plugin_name: str = ""
+    """插件名称"""
+
+    plugin_js_sprit: str = ""
+    """js插件"""
+
+    type: str = str()
+    """插件类型"""
+
+    config: dict = dict()
+    """配置字典"""
+
+    spirit_cgi_support = False
+    """插件cgi支持"""
+
+    sprit_cgi_lists: dict = dict()
+    """cgi列表"""
+
+    plugin_config = PluginConfig(plugin_name)
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(self):
+        if self._initialized:
+            return
+
         self.stop: bool = False
         """停止标志"""
-
-        self.plugin_js_sprit_support: bool = False
-        """js插件支持"""
-
-        self.plugin_desc: str = "No description"
-        """插件描述"""
-
-        self.plugin_js_sprit: str = ""
-        """js插件"""
-
-        self.type: str = str()
-        """插件类型"""
-
-        self.config: dict = dict()
-        """配置字典"""
-
-        self.spirit_cgi_support = False
-        """插件cgi支持"""
-
-        self.sprit_cgi_lists: dict = dict()
-        """cgi列表"""
-
-        self.plugin_name: str = ""
-        """插件名称"""
 
         if self.plugin_type() == "message":
             self.message_list = []
 
     def plugin_setup(self):
         """初始化插件"""
-        pass
+        ...
 
+    @abstractmethod
     def plugin_init(self) -> str:
         """
             插件开始被加载时调用
@@ -51,21 +87,20 @@ class PluginMain:
 
             return:如果是”message“则表示这是个消息提供插件，如果是”analyzer“则表示这个插件是用来获取中间消息并且进行处理的。
         """
-        self.stop = 0
-        raise plugin_errors.UnexpectedPluginMessage('插件入口方法没有实现')
+        ...
 
+    @abstractmethod
     async def plugin_main(self):
         """
         插件的主方法，此方法停止时插件也会被视为运行完毕
         """
-        pass
+        ...
 
     async def message_filter(self, message) -> msgs.msg_box:
         """
         消息过滤器,用于自动处理消息，比如翻译或者敏感词过滤
         :param message:待处理的消息
         :return 消息
-
         """
         return message
 
@@ -73,7 +108,7 @@ class PluginMain:
         """
         消息分析
         """
-        pass
+        ...
 
     async def sprit_cgi(self, request):
         """
@@ -81,8 +116,7 @@ class PluginMain:
         :param request:请求对象
         :return 响应，用aiohttp的就行（已经封装为self.web）
         """
-        if self.spirit_cgi_support:
-            raise plugin_errors.UnexpectedPluginMather("未实现的插件方法")
+        ...
 
     def dm_iter(self, params: dict) -> object:
         """
@@ -132,8 +166,7 @@ class PluginMain:
         """
         插件回调
         """
-
-        print(f"plugin is done")
+        ...
 
     @typing.final
     def plugin_getconfig(self) -> configs.ConfigManager:
@@ -152,3 +185,24 @@ class PluginMain:
         if not self.type:
             self.type = self.plugin_init()
         return self.type
+
+    @classmethod
+    def __subclasshook__(cls, par):
+        if not any("type" in B.__dict__ for B in par.__mro__):
+            return NotImplemented
+
+        marathons = ["plugin_init"]
+        if par.type == "message":
+            marathons.append("dm_iter")
+        elif par.type == "analyzer":
+            marathons.append("message_analyzer")
+        else:
+            return NotImplemented
+
+        if par.spirit_cgi_support:
+            marathons.append("sprit_cgi")
+
+        for m in marathons:
+            if not any(m in B.__dict__ for B in par.__mro__):
+                return NotImplemented
+        return True

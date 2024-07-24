@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+from typing import Optional
 
 from aiohttp import web
 
@@ -12,15 +13,15 @@ from .depends import configs
 config: configs.ConfigManager = configs.ConfigManager()
 plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
-runner: web.TCPSite
+runner: Optional[web.AppRunner] = None
 
 def return_file(file: str):
-    async def healder(request):
+    async def header(request):
         nonlocal file
         log.info("return for main_page")
         return web.FileResponse(path=file, status=200)
 
-    return healder
+    return header
 
 
 async def http_handler(request: web.Request):
@@ -115,9 +116,9 @@ async def http_server():
                                   web.get("/api/plugin_list", http_api_plugin),
                                   web.get("/cgi/{name}/{page}", http_cgi)
                                   ]
-    for i in config["web"]:
-        file, path = list(i.items())[0]
-        route_list.append(web.get(f"/{file}", return_file(path)))
+    for k in config["web"]:
+        file = list(k.keys())[0]
+        route_list.append(web.get(f"/{file}", return_file(k.get(file).get())))
 
     app.add_routes(route_list)
 

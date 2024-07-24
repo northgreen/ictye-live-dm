@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import logging
 import os
+import platform
 import sys
 import traceback
 
@@ -19,7 +20,6 @@ is_copyright_print = False
 if not is_copyright_print:
     print("GPL 2024 ictye")
     is_copyright_print = True
-window = None
 
 
 def custom_excepthook(exc_type, exc_value, exc_traceback):
@@ -34,7 +34,7 @@ def custom_excepthook(exc_type, exc_value, exc_traceback):
     sys.stderr.write(java_style_error)
 
 
-sys.excepthook = custom_excepthook
+# sys.excepthook = custom_excepthook
 
 
 def loop_exception_handler(loop, context):
@@ -45,12 +45,11 @@ def loop_exception_handler(loop, context):
 
 
 def run_server(loop=asyncio.get_event_loop(), callback=None):
-    loop.set_exception_handler(loop_exception_handler)
+    # loop.set_exception_handler(loop_exception_handler)
     ser = loop.create_task(http_server.http_server())
     loop.create_task(pluginsystem.Plugin().plugin_main_runner())
     try:
         loop.run_forever()
-        res = ser.result()
         loop.run_until_complete(http_server.runner.cleanup())
         if callback:
             callback()
@@ -95,10 +94,12 @@ def parse_args():
 
 
 def main():
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))  # 保證在正確的目錄下工作
+    if platform.system() == 'Linux':
+        print('🐧 Linux萬歲！')
 
-    parse_args()
-
+    parse_args()  # 參數解析
+    # 檢查GUI啓動
     if configs.ConfigManager()["GUI"]:
         print("starting gui")
         GUI_main.main()
@@ -107,10 +108,10 @@ def main():
     # 获取logger
     logger.setup_logging()
     loggers = logging.getLogger(__name__)
-    loggers.info("金克拉，你有了吗？")
 
-    # 启动服务器
+    loggers.info("金克拉，你有了吗？")  # 代碼摻了金克拉，一行能當兩行寫（？）
     loggers.info("project starting")
-    run_server(asyncio.get_event_loop())
+
+    run_server(asyncio.get_event_loop())  # 启动服务器
 
     loggers.info("project already stopped")

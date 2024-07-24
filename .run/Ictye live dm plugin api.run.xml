@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Ictye live dm plugin api" type="StardustRunConfiguration" factoryName="build-pdf">
+    <option name="copyright" />
+    <option name="description" />
+    <option name="folderPath" value="$PROJECT_DIR$" />
+    <option name="footer" />
+    <option name="header" />
+    <option name="instanceId" value="pa" />
+    <option name="instanceName" value="Plugin Api" />
+    <option name="layout" />
+    <option name="logoPath" />
+    <option name="title" />
+    <method v="2" />
+  </configuration>
+</component>

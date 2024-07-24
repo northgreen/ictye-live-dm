@@ -35,7 +35,7 @@ def setup_logging(unportable: bool = False, window=None):
         os.makedirs(log_path)
 
     fh = logging.FileHandler(
-        os.path.join(log_path, config["logfile"]["name"] + time.strftime("%Y%m%d_%H%M%S", time.localtime()) + ".log"),
+        os.path.join(log_path, config["logfile"]["name"].get() + time.strftime("%Y%m%d_%H%M%S", time.localtime()) + ".log"),
         encoding="utf-8")
 
     fh.setLevel(level_dic[config["loglevel"]])

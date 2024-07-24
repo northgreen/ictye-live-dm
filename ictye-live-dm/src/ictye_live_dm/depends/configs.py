@@ -7,31 +7,32 @@ from . import config_registrar
 cfgdir: str = ""
 
 
-def regist_default(_config_registrar: config_registrar.ConfigRegistrar):
+def register_default(_config_registrar: config_registrar.ConfigRegistrar):
     """
     注册默认配置
     """
     _config_registrar.register("port", default=8083)
     _config_registrar.register("host", default="127.0.0.1")
-    _config_registrar.register("web", default={"index": "./web/living room dm.html"})
+    _config_registrar.register("web", default=[{"index": "./web/living room dm.html"}])
     _config_registrar.register("GUI", default=False)
-    _config_registrar.register("plugins", default={})
+    _config_registrar.register("plugins", default=[])
     _config_registrar.register("debug", default=False)
-    _config_registrar.register("loglevel", default="INFO", option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
+    _config_registrar.register("loglevel", default="INFO",
+                               option=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FATAL"])
     _config_registrar.register("logfile", default={"open": True, "name": "latestlog"})
     _config_registrar.register("dev", default=False)
     _config_registrar.register("use_local_plugin", default=False)
+    _config_registrar.register("style", default="CommonStyle")
 
 
 class ConfigManager:
     _instance = None
     _register: config_registrar.ConfigRegistrar = config_registrar.ConfigRegistrar()
-    _default: dict = {}
     _inited = False
 
     def __init__(self):
         if not self._inited:
-            regist_default(self._register)
+            register_default(self._register)
         self._inited = True
 
     def __new__(cls, *args, **kwargs):
@@ -50,14 +51,29 @@ class ConfigManager:
 
     def read_default(self, path: str):
         default = self.__load(path)
-        for k, v in default.items():
-            self._register.set(k, v)
+        self._register.dump_default(default)
 
     def load_config(self, path: str):
-        if not self._register:
-            self._register = self.__load(path)
+        value = self.__load(path)
+        self._register.dump(value)
 
-    def __load(self, path: str):
+    def keys(self):
+        return self._register.keys()
+
+    def values(self):
+        return self._register.values()
+
+    def items(self):
+        return self._register.items()
+
+    def get_register(self) -> config_registrar.ConfigRegistrar:
+        return self._register
+
+    def get_config_tree(self) -> config_registrar.ConfigTree:
+        return self._register.get_config_tree()
+
+    @staticmethod
+    def __load(path: str):
         if path.endswith(".yml") or path.endswith(".yaml"):
             with open(path, "r", encoding="utf-8") as f:
                 return yaml.load(f.read(), Loader=yaml.FullLoader)
