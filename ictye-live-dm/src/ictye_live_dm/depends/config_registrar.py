@@ -1,6 +1,7 @@
 from typing import Union
 import re
 from abc import ABCMeta, abstractmethod
+from deprecated.sphinx import deprecated
 
 s_dict = "dict"
 s_list = "list"
@@ -10,23 +11,26 @@ s_str = "str"
 s_float = "float"
 s_bool = "bool"
 
+py_data_type = int | float | str | bool
+py_struct_type = dict | list
+
 
 class ConfigKey:
     """
-    A config key that can be registered to the ConfigRegistrar.
+    一個鍵值，用以存儲配置
     """
 
-    def __init__(self, default: str | bool | int | float = None,
+    def __init__(self, default: py_data_type = None,
                  optional: bool = False,
-                 option: list[str | bool | int | float] = None,
-                 value: str | bool | int | float = None):
+                 option: list[py_data_type] = None,
+                 value: py_data_type = None):
         if value is None and default is None:
             raise ValueError("None ConfigKey is invalid")
-        # self.__value = default if value is None else value
+        self.__value = default if value is None else value
         self.__default = __get_type_default__(type(value)) if default is None else default
         self.__optional = optional
         self.__option = option if option else [True, False] if isinstance(default, bool) else None
-        self.__value = value
+        # self.__value = value
 
     def get_default(self):
         """
@@ -56,24 +60,6 @@ class ConfigKey:
         """
         return self.__option
 
-    def set(self, value):
-        """
-        設置ConfigKey的值，注意的是，此方法會對類型進行强制轉換
-        @param value: 目的值
-        @return:
-        """
-        if self.__option is not None and value not in self.__option:
-            raise ValueError(f"Invalid value for unexpected option: {value}")
-        if value is None:
-            return
-        if self.__value is None:
-            if self.__default is None:
-                self.__value = type(value)
-                self.__default = __get_type_default__(type(self.__value))
-            self.__value = type(self.__default)(value)
-            return
-        self.__value = type(self.__value)(value)
-
     def get_type(self):
         if self.__value is not None:
             return type(self.__value)
@@ -83,9 +69,36 @@ class ConfigKey:
     def is_set(self):
         return self.__value is not None
 
+    @property
+    def value(self):
+        return self.__value if self.__value is not None else self.__default
+
+    @value.setter
+    def value(self, value):
+        if self.has_option() and value not in self.__option:
+            raise ValueError(f"Invalid value for unexpected option: {value}")
+        if value is None:
+            return
+        if self.__default is None:
+            self.__default = __get_type_default__(type(self.__value))
+        if self.__value is None:
+            self.__value = type(self.__default)(value)
+            return
+        self.__value = type(self.__value)(value)
+
+    @deprecated(version="2.0", reason="Use value instead")
+    def set(self, value):
+        """
+        設置ConfigKey的值，注意的是，此方法會對類型進行强制轉換
+        @param value: 目的值
+        @return:
+        """
+        self.value = value
+
+    @deprecated(version="2.0", reason="Use value instead")
     def get(self):
         # 检查是否存在存储的值，如果存在则返回该值，否则返回默认值
-        return self.__value if self.__value is not None else self.__default
+        return self.value
 
     def __repr__(self):
         return (f"ConfigKey(dfault={self.__default}, "
@@ -94,31 +107,31 @@ class ConfigKey:
                 f"value={self.__value})")
 
     def __int__(self):
-        value = self.get()
+        value = self.value
         if isinstance(value, int):
             return value
         else:
             raise TypeError(f"Cannot convert {value} to int")
 
     def __float__(self):
-        value = self.get()
+        value = self.value
         if isinstance(value, float):
             return value
         else:
             raise TypeError(f"Cannot convert {value} to float")
 
     def __bool__(self):
-        value = self.get()
+        value = self.value
         return bool(value)
 
     def __str__(self):
-        value = self.get()
+        value = self.value
         if isinstance(value, str):
             return value
         else:
             return self.__repr__()
 
-    def merge(self, other):
+    def merge(self, other: "ConfigKey"):
         """
         合併兩個ConfigKey
         1. 如果自身沒有默認值，則會采用other的
@@ -127,10 +140,10 @@ class ConfigKey:
         @param other: 另一個ConfigKey
         @return: 合併後的ConfigKey
         """
-        if self.__default is __get_type_default__(type(other.get())):
+        if self.__default is __get_type_default__(type(other.value)):
             self.__default = other.get_default()
 
-        self.set(other.get())
+        self.value = other.value
 
         if other.has_option():
             self.__option = other.get_options()
@@ -138,11 +151,11 @@ class ConfigKey:
         if other.is_optional():
             self.__optional = True
 
-    def __eq__(self, other: Union["ConfigKey", type]):
+    def __eq__(self, other: Union["ConfigKey", py_data_type]):
         if isinstance(other, ConfigKey):
-            return self.get() == other.get()
+            return self.value == other.value
         else:
-            return self.get() == other
+            return self.value == other
 
 
 class ConfigTree:
@@ -158,7 +171,7 @@ class ConfigTree:
                  build_with_default: bool = False,  # 是否使用默認值構造子節點
                  allow: list = None,
                  tree_lock=False,
-                 schema: "config_schema.ABConfigSchema" = None,
+                 schema: "ConfigSchema" = None,
                  *args: any,
                  **kwargs: any):
         """
@@ -198,7 +211,6 @@ class ConfigTree:
         if not self.__is_list:
             raise TypeError("This is not a list")
         for i in value:
-
             if default:
                 if isinstance(i, ConfigKey):
                     self.__list_content.append(i)
@@ -268,20 +280,20 @@ class ConfigTree:
     def has_option() -> bool:
         return False
 
-    def __getitem__(self, item) -> Union[ConfigKey]:
+    def __getitem__(self, item) -> ConfigKey:
         return self.get(item)
 
     def get_value(self) -> ConfigKey:
         return self.__value
 
-    def read_value(self) -> Union[str, int, float, bool]:
-        return self.__value.get()
+    def read_value(self) -> py_data_type:
+        return self.__value.value
 
-    def __setitem__(self, key: Union[str, int],
+    def __setitem__(self, key: str | int,
                     value: Union[ConfigKey, "ConfigTree"]):
         self.set(key, value)
 
-    def set(self, key: Union[str, int],
+    def set(self, key: str | int,
             value: Union[ConfigKey, "ConfigTree"]):
         """
         設置值
@@ -331,7 +343,7 @@ class ConfigTree:
         else:
             return list(self.__content.keys())
 
-    def values(self) -> Union[list, dict]:
+    def values(self) -> py_struct_type:
         """
         @return: 返回值的列表或字典
         """
@@ -361,7 +373,7 @@ class ConfigTree:
                 else:
                     ret.append(i.to_dict())
             elif isinstance(i, ConfigKey):
-                ret.append(i.get())
+                ret.append(i.value)
             else:
                 raise TypeError("???")
         return ret
@@ -381,7 +393,7 @@ class ConfigTree:
                 else:
                     ret[k] = v.to_dict()
             elif isinstance(v, ConfigKey):
-                ret[k] = v.get()
+                ret[k] = v.value
             else:
                 raise TypeError("??? How can you did it???")
         return ret
@@ -496,7 +508,7 @@ class ConfigRegistrar:
         """
         if key not in self.config:
             raise ValueError(f"Config key '{key}' not registered")
-        self.config.get(key).set(value)
+        self.config.get(key).value = value
 
     def dump(self, value):
         if isinstance(value, dict):
@@ -525,7 +537,7 @@ class ConfigRegistrar:
             raise ValueError(f"Config key '{key}' not registered")
         value = self.config.get(key)
         if isinstance(value, ConfigKey):
-            return value.get()
+            return value.value
         elif isinstance(value, ConfigTree):
             return value
         else:
@@ -605,17 +617,36 @@ class ConfigRegistrar:
         return len(self.config)
 
 
+# config schemas
+ic_cfg_type = ConfigTree | ConfigKey
+
+
 class ABConfigSchema(metaclass=ABCMeta):
+    """
+    抽象架構認證基礎
+    """
 
     def __init__(self,
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
+        """
+        配置驗證器的抽象構造方法
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
         self.not_ = not_
         self.one_of = one_of
         self.all_of = all_of
@@ -626,11 +657,21 @@ class ABConfigSchema(metaclass=ABCMeta):
         self._comment = _comment
 
     @abstractmethod
-    def verify(self, other: ConfigKey | ConfigTree) -> bool:
+    def verify(self, other: ic_cfg_type) -> bool:
+        """
+        驗證
+        @param other: 需要認證的對象
+        @return: 是否成功驗證
+        """
         ...
 
     @abstractmethod
     def able(self, other) -> bool:
+        """
+        驗證此架構認證器是否適用於特定的類型
+        @param other: 需要認證的對象
+        @return: 此驗證器是否適用於目標對象
+        """
         ...
 
     @classmethod
@@ -649,12 +690,24 @@ class ConfigSchema(ABConfigSchema):
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        配置驗證器的構造方法
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.type_ = None
 
     def verify(self, other) -> bool:
@@ -684,6 +737,10 @@ class ConfigSchema(ABConfigSchema):
 
 
 class StringSchema(ConfigSchema):
+    """
+    字符串驗證器
+    """
+
     def __init__(self,
                  max_length=None,
                  min_length=None,
@@ -694,12 +751,29 @@ class StringSchema(ConfigSchema):
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        @param max_length: 最長長度
+        @param min_length: 最短長度
+        @param pattern: 匹配模式
+        @param format_: 格式
+        @param content_media_type:
+        @param content_encoding:
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.content_encoding = content_encoding
         self.content_media_type = content_media_type
         self.format_ = format_
@@ -717,7 +791,7 @@ class StringSchema(ConfigSchema):
             return False
         if not self.able(other):
             return False
-        value: str = other.get()
+        value: str = other.value
         if self.min_length and len(value) <= self.min_length:
             return False
         if self.max_length and len(value) >= self.max_length:
@@ -730,6 +804,7 @@ class StringSchema(ConfigSchema):
 
 
 class IntSchema(ConfigSchema):
+    """對整數進行驗證"""
 
     def __init__(self,
                  maximum=None,
@@ -740,12 +815,28 @@ class IntSchema(ConfigSchema):
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        @param maximum: 最大值
+        @param minimum: 最小值
+        @param exclusive_maximum: 最大值（不包含）
+        @param exclusive_minimum: 最小值（不包含）
+        @param multiple: 倍數
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.type_ = s_int
         self.min_value = minimum
         self.max_value = maximum
@@ -758,7 +849,7 @@ class IntSchema(ConfigSchema):
             return False
         if not self.able(other):
             return False
-        value: int = other.get()
+        value: int = other.value
         if self.min_value and value < self.min_value:
             return False
         if self.max_value and value > self.max_value:
@@ -773,6 +864,9 @@ class IntSchema(ConfigSchema):
 
 
 class FloatSchema(ConfigSchema):
+    """
+    對浮點數進行驗證
+    """
 
     def __init__(self,
                  maximum=None,
@@ -783,12 +877,28 @@ class FloatSchema(ConfigSchema):
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        @param maximum: 最大值
+        @param minimum: 最小值
+        @param exclusive_maximum: 最大值（不包含）
+        @param exclusive_minimum: 最小值（不包含）
+        @param multiple: 倍數
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.type_ = s_float
         self.min_value = minimum
         self.max_value = maximum
@@ -801,7 +911,7 @@ class FloatSchema(ConfigSchema):
             return False
         if not self.able(other):
             return False
-        value: float = other.get()
+        value: float = other.value
         if self.min_value and value < self.min_value:
             return False
         if self.max_value and value > self.max_value:
@@ -820,12 +930,23 @@ class BoolSchema(ConfigSchema):
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.type_ = s_bool
 
     def verify(self, other: ConfigKey):
@@ -837,6 +958,9 @@ class BoolSchema(ConfigSchema):
 
 
 class DictSchema(ConfigSchema):
+    """
+    對於給定Dict類型進行驗證
+    """
 
     def __init__(self,
                  properties: dict[str, ConfigSchema],
@@ -847,7 +971,7 @@ class DictSchema(ConfigSchema):
                  max_properties: int = None,
                  property_names: ConfigSchema = None,
                  dependent_required: dict[str, list[str]] = None,
-                 dependent_schemas: dict[str, ConfigSchema] = None,
+                 dependent_schemas: dict[str, dict[str, ConfigSchema]] = None,
                  if_: ConfigSchema = None,
                  then: ConfigSchema = None,
                  else_: ConfigSchema = None,
@@ -856,10 +980,35 @@ class DictSchema(ConfigSchema):
                  _comment: str = "",
                  const: ConfigTree | ConfigKey = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        字典模式匹配，用於驗證k-v格式
+        @param properties: 對象的屬性，對於給定的鍵使用給定的模式驗證
+        @param pattern_properties: 匹配驗證，對於匹配k的屬性使用給定的模式驗證
+        @param additional_properties: 附加屬性，如果為假，則允許存在properties和pattern_properties中不存在的鍵，當指定
+        config schema的時候，則所有附加的鍵都必須與給定的config schema進行驗證
+        @param required: 指定必須的k
+        @param min_properties: 最少的屬性數量
+        @param max_properties: 最多的屬性數量
+        @param property_names: 只驗證名稱而不管它們的值
+        @param dependent_required: 需求列表，儅k存在時，list中指定的所以k都必須存在
+        @param dependent_schemas: 关键字要求当给定的属性存在时，有条件地应用子模式
+        @param if_:
+        @param then:
+        @param else_:
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.else_ = else_
         self.then = then
         self.if_ = if_
@@ -876,19 +1025,21 @@ class DictSchema(ConfigSchema):
         self.type_ = s_dict
         self.properties = properties
 
+    def __find_additional_properties(self, other: ConfigTree) -> dict:
+        k_set: dict = {}
+        for k, v in other.items():
+            if k in self.properties.keys():
+                k_set[k] = v
+            if any([re.match(dk, k) for dk, dv in self.pattern_properties]):
+                k_set[k] = v
+        return k_set
+
     def verify(self, other: ConfigTree):
         if not super().verify(other):
             return False
         if not self.able(other):
             return False
         value_: list = other.items()
-        # 检查需求
-        if (self.required
-                and not all([True if k in self.required else False for k, v in value_])):
-            return False
-        if (self.property_names
-                and not any([self.property_names.verify(v) for k, v in value_ if k in self.properties.keys()])):
-            return False
         # 最小值和最大值
         if (self.min_properties
                 and len(value_) < self.min_properties):
@@ -896,31 +1047,39 @@ class DictSchema(ConfigSchema):
         if (self.max_properties
                 and len(value_) > self.max_properties):
             return False
+        # 检查需求
+        if (self.required
+                and not all([True if k in self.required else False for k, v in value_])):
+            return False
+        if (self.property_names
+                and not any([self.property_names.verify(v) for k, v in value_ if k in self.properties.keys()])):
+            return False
         # 验证模式匹配
         if (self.pattern_properties
                 and not all([any([dv.verify(v)
-                                  for dk, dv in self.pattern_properties.items() if re.match(dk, k)])
+                                  for dk, dv in self.pattern_properties if re.match(dk, k)])
                              for k, v in value_])):
             return False
         if self.additional_properties and isinstance(self.additional_properties, bool):
             if not all([any([dv.verify(v)
-                              for dk, dv in self.properties.items() if k == dk])
-                         for k, v in value_]):
+                             for dk, dv in self.properties if k == dk])
+                        for k, v in value_]):
                 return False
+        # TODO
         # 附加
         if ((self.additional_properties and self.pattern_properties
              and isinstance(self.additional_properties, ConfigSchema)
              and not any(
-                    [self.additional_properties.verify(v)
-                     for k, v in value_ if k not in self.properties.keys()
-                                           or k not in [k for dk, dv in self.pattern_properties.items()
-                                                        if re.match(dk, k)]])) or
+                        [self.additional_properties.verify(v)
+                         for k, v in value_ if k not in self.properties.keys()
+                                               or k not in [k for dk, dv in self.pattern_properties.items()
+                                                            if re.match(dk, k)]])) or
                 (self.additional_properties and not self.pattern_properties
                  and isinstance(self.additional_properties, ConfigSchema)
                  and not any(
-                            [self.additional_properties.verify(v)
-                             for k, v in value_ if k not in self.properties.keys()
-                             ]))):
+                                [self.additional_properties.verify(v)
+                                 for k, v in value_ if k not in self.properties.keys()
+                                 ]))):
             return False
         elif self.additional_properties:
             pass
@@ -944,10 +1103,26 @@ class ListSchema(ConfigSchema):
                  _comment: str = "",
                  const: ConfigTree | ConfigKey = None,
                  all_of: list["ABConfigSchema"] = None,
+                 any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
                  not_: list["ABConfigSchema"] = None,
                  ):
-        super().__init__(title, description, _comment, const, all_of, one_of, not_)
+        """
+        列表模式匹配，用於驗證k-v格式
+        @param items: 對象的屬性
+        @param min_items: 最多包含的物件的數量
+        @param max_items: 最少包含物件的數量
+        @param unique_items: 需求的物件的數量
+        @param title: 標題
+        @param description: 描述
+        @param _comment: 注釋
+        @param const: 常量，代表如果傳入的配置必須和const完全一致
+        @param all_of: 必須對所有子模式都有效
+        @param any_of: 必须对任何子模式有效
+        @param one_of: 必须对恰好一个子模式有效
+        @param not_: 不能对给定的模式有效
+        """
+        super().__init__(title, description, _comment, const, all_of, any_of, one_of, not_)
         self.type_ = s_list
         self.items = items
         self.min_items = min_items
@@ -980,13 +1155,7 @@ def __get_type_default__(type_: type):
     :param type_: 類型
     :return: 默認值
     """
-    if type_ == str:
-        return ""
-    elif type_ == bool:
-        return False
-    elif type_ == int:
-        return 0
-    elif type_ == float:
-        return 0.0
+    if type_ == str or type_ == bool or type_ == int or type_ == float:
+        return type_()
     else:
         raise ValueError(f"Unsupported type: {type_},may be you can use ConfigTree to build a tree")

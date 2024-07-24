@@ -1,4 +1,12 @@
-# ictye live Danmku
+<div align="center">
+<img src="https://github.com/northgreen/ictye-live-dm/raw/dev/icon.png">
+</img>
+<h1 style="margin-top:0">Ictye Live Danmku(ictye-live-dm)</h1>
+<img src="https://img.shields.io/badge/python-3.10-blue">
+</img>
+<img src="https://img.shields.io/badge/license-GPL-green">
+</img>
+</div>
 
 一个简单而又全能的弹幕姬框架（其实就是一个web服务器加上websocket服务器），通过插件来实现弹幕功能
 

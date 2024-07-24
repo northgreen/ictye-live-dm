@@ -7,7 +7,7 @@ from typing import Union
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTranslator, Qt
-from PyQt5.QtWidgets import QTreeWidgetItem, QStyledItemDelegate, QComboBox
+from PyQt5.QtWidgets import QTreeWidgetItem, QComboBox
 
 from ictye_live_dm.depends import configs, config_registrar
 from . import main as server
@@ -17,11 +17,6 @@ from .depends import logger
 
 __all__ = ["main", "MainWindow"]
 __logger__ = logging.getLogger(__name__)
-
-
-class NonEditableDelegate(QStyledItemDelegate):
-    def createEditor(self, parent, option, index):
-        return None
 
 
 class SettingTreeWidgetItem(QTreeWidgetItem):

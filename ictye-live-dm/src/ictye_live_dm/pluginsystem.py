@@ -6,7 +6,7 @@ import os
 
 import aiohttp.web as web
 
-from .depends import pluginmain, plugin_errors, configs
+from .depends import pluginmain, plugin_errors, configs,config_registrar
 
 config: configs.ConfigManager = configs.ConfigManager()  # 配置
 
@@ -63,6 +63,11 @@ class Plugin:
             self.logger.info(f"loading extra plugin '{plugin.get()}'...")
             plugin_module = importlib.import_module(f'{plugin.get()}')
             self.__registry_plugin__(plugin_module)
+
+    def register_plugin(self, plugin: str):
+        plugin_module = importlib.import_module(plugin)
+        self.__registry_plugin__(plugin_module)
+        config["plugins"].append(config_registrar.ConfigKey(plugin))
 
     def __lod_init_plugin__(self):
         self.logger.info("loading local plugin...")

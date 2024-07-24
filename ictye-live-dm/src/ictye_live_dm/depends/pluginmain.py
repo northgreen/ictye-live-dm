@@ -9,7 +9,7 @@ from . import msgs
 
 class PluginConfig:
 
-    def __init__(self):
+    def __init__(self, plugin_name: str):
         self.__config = config_registrar.ConfigTree()
 
     def __get__(self, instance, owner: "PluginMain"):
@@ -22,7 +22,6 @@ class PluginConfig:
 class PluginMain(metaclass=ABCMeta):
     _instance = None
     _initialized = False
-    plugin_config = PluginConfig()
 
     plugin_js_sprit_support: bool = False
     """js插件支持"""
@@ -56,6 +55,8 @@ class PluginMain(metaclass=ABCMeta):
 
     sprit_cgi_lists: dict = dict()
     """cgi列表"""
+
+    plugin_config = PluginConfig(plugin_name)
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
