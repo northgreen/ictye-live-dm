@@ -1,5 +1,5 @@
 <div align="center">
-<img width="50" height="50" src="https://github.com/northgreen/ictye-live-dm/raw/dev/icon.png">
+<img width="100" height="100" src="https://github.com/northgreen/ictye-live-dm/raw/dev/icon.png">
 </img>
 <h1 style="margin-top:0">Ictye Live Danmku(ictye-live-dm)</h1>
 <img src="https://img.shields.io/badge/python-3.10-blue">
