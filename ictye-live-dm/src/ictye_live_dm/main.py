@@ -99,7 +99,6 @@ def main():
         print('🐧 Linux萬歲！')
 
     parse_args()  # 參數解析
-
     # 檢查GUI啓動
     if configs.ConfigManager()["GUI"]:
         print("starting gui")

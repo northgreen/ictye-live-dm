@@ -15,7 +15,6 @@ plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
 runner: Optional[web.AppRunner] = None
 
-
 def return_file(file: str):
     async def header(request):
         nonlocal file

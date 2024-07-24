@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 # Form implementation generated from reading ui file './main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
@@ -289,7 +290,6 @@ class Ui_Form(object):
         self.verticalLayout_3.addWidget(self.settingScrollArea)
         self.tabWidget.addTab(self.setting_Tab, "")
         self.verticalLayout.addWidget(self.tabWidget)
-
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(Form)
