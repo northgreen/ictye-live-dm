@@ -15,6 +15,7 @@ plugin_system: pluginsystem.Plugin = pluginsystem.Plugin()
 log = logging.getLogger(__name__)
 runner: Optional[web.AppRunner] = None
 
+
 def return_file(file: str):
     async def header(request):
         nonlocal file
@@ -91,7 +92,7 @@ async def http_cgi(request: web.Request):
         if request.match_info["name"] in plugin_system.plugin_cgi_support:
             if request.match_info["page"] in plugin_system.plugin_cgi_support[request.match_info["name"]]:
                 req = await plugin_system.plugin_cgi_support[request.match_info["name"]][request.match_info["page"]](
-                    request)
+                        request)
             else:
                 req = web.Response(status=404, text="no such path")
         else:

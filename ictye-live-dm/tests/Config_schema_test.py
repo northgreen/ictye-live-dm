@@ -76,7 +76,7 @@ def test_bool_schema(config_key_bool):
 def test_dict_schema(config_tree_dict):
     properties = {
         'name': StringSchema(),
-        'age': IntSchema()
+        'age' : IntSchema()
     }
     schema = DictSchema(properties)
     assert schema.verify(config_tree_dict) == True

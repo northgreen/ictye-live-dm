@@ -82,11 +82,13 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
         self.init_setting_tab()
         self.retranslateUi(self)
         self._server = ServerClass()
+
         self.startButtoen.clicked.connect(self.start_series)
         self.stopButton.clicked.connect(self.stop_series)
+
         self.settingTreeWidget.expandAll()
 
-        self.status_display_lable.setText("Stopped")
+        self.status_display_lable.setText("Stopped")  # set default status
 
     def init_setting_tab(self):
         config = configs.ConfigManager()
@@ -129,12 +131,15 @@ class MainWindow(QtWidgets.QWidget, Ui_MainWindow.Ui_Form):
             self.logTable.scrollToBottom()
 
     def show_plugin_list(self):
-        plugins = pluginsystem.Plugin().list_plugin()
+        plugins = pluginsystem.Plugin().list_plugin_desc()
         for i in plugins:
             row = self.pluginListTable.rowCount()
             self.pluginListTable.insertRow(row)
-            self.pluginListTable.setItem(row, 0, QtWidgets.QTableWidgetItem(i[0]))
-            self.pluginListTable.setItem(row, 1, QtWidgets.QTableWidgetItem(i[1]))
+            self.pluginListTable.setItem(row, 0, QtWidgets.QTableWidgetItem(i["name"]))
+            self.pluginListTable.setItem(row, 1, QtWidgets.QTableWidgetItem(i["author"]))
+            self.pluginListTable.setItem(row, 2, QtWidgets.QTableWidgetItem(i["version"]))
+            self.pluginListTable.setItem(row, 3, QtWidgets.QTableWidgetItem(i["type"]))
+            self.pluginListTable.setItem(row, 4, QtWidgets.QTableWidgetItem(i["description"]))
 
 
 class ServerClass:

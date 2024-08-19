@@ -6,7 +6,7 @@ import os
 
 import aiohttp.web as web
 
-from .depends import pluginmain, plugin_errors, configs,config_registrar
+from .depends import pluginmain, plugin_errors, configs, config_registrar
 
 config: configs.ConfigManager = configs.ConfigManager()  # 配置
 
@@ -87,11 +87,19 @@ class Plugin:
                 self.logger.error(f"failed to import plugin :\n{plugin_name} {str(e)}")
 
     def list_plugin(self) -> list:
-        plugins = []
+        plugins: list = []
         for plugin in self.message_plugin_list:
             plugins.append((plugin.plugin_name, plugin.plugin_desc))
         for plugin in self.analyzer_plugin_list:
             plugins.append((plugin.plugin_name, plugin.plugin_desc))
+        return plugins
+
+    def list_plugin_desc(self) -> list:
+        plugins: list = []
+        for plugin in self.message_plugin_list:
+            plugins.append(plugin.plugin_descriptor)
+        for plugin in self.analyzer_plugin_list:
+            plugins.append(plugin.plugin_descriptor)
         return plugins
 
     async def remove_connect_in_id_dict_aiohttp(self, id):

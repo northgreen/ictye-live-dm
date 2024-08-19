@@ -27,7 +27,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="shangdiyagou">
        <property name="minimumSize">
         <size>
          <width>223</width>
@@ -79,7 +79,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -158,12 +158,18 @@
         </layout>
        </item>
        <item>
-        <widget class="QListWidget" name="adress_content_list"/>
+        <widget class="QTreeWidget" name="treeWidget">
+         <column>
+          <property name="text">
+           <string/>
+          </property>
+         </column>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_8">
          <item>
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="location">
            <property name="text">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;Location &lt;/span&gt;&lt;a href=&quot;http://127.0.0.1:8082&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://127.0.0.1:8082&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
@@ -183,7 +189,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="openInBlsower">
            <property name="text">
             <string>open in blsower</string>
            </property>
@@ -313,7 +319,6 @@
          <property name="selectionMode">
           <enum>QAbstractItemView::NoSelection</enum>
          </property>
-
          <attribute name="horizontalHeaderCascadingSectionResizes">
           <bool>false</bool>
          </attribute>
@@ -325,7 +330,7 @@
          </attribute>
          <column>
           <property name="text">
-           <string>Plugin name</string>
+           <string>Plugin Name</string>
           </property>
          </column>
          <column>
@@ -336,6 +341,11 @@
          <column>
           <property name="text">
            <string>Version</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Plugin Type</string>
           </property>
          </column>
          <column>

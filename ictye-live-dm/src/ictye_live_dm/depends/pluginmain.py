@@ -12,11 +12,34 @@ class PluginConfig:
     def __init__(self, plugin_name: str):
         self.__config = config_registrar.ConfigTree()
 
-    def __get__(self, instance, owner: "PluginMain"):
+    def __get__(self, instance, owner: "PluginMain") -> config_registrar.ConfigTree:
         return self.__config
 
-    def register(self, value, name: str, default: typing.Any = None, schema: config_registrar.ConfigSchema = None):
-        ...
+    def register(self, value: config_registrar.ConfigKey | dict | config_registrar.ConfigTree, name: str,
+                 default: typing.Any = None, schema: config_registrar.ConfigSchema = None):
+        if isinstance(value, dict):
+            self.__config.set(name, config_registrar.ConfigTree(build_dict=value, default=default, schema=schema))
+        elif isinstance(value, list):
+            self.__config.set(name, config_registrar.ConfigTree(build_list=value, default=default, schema=schema))
+        elif isinstance(value, config_registrar.ConfigKey):
+            self.__config.set(name, value)
+        elif isinstance(value, config_registrar.ConfigTree):
+            self.__config.set(name, value)
+        else:
+            self.__config.set(name, config_registrar.ConfigKey(value=value, default=default))
+
+
+class PluginDesc:
+
+    def __get__(self, instance: "PluginMain", owner: "PluginMain") -> dict:
+        return {
+            "name"       : instance.plugin_name,
+            "version"    : instance.plugin_version,
+            "author"     : instance.plugin_author,
+            "description": instance.plugin_desc,
+            "type"       : instance.type,
+            "dev_branch" : instance.plugin_dev_beach,
+        }
 
 
 class PluginMain(metaclass=ABCMeta):
@@ -57,6 +80,7 @@ class PluginMain(metaclass=ABCMeta):
     """cgi列表"""
 
     plugin_config = PluginConfig(plugin_name)
+    plugin_descriptor = PluginDesc()
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -141,6 +165,11 @@ class PluginMain(metaclass=ABCMeta):
         """
         assert self.plugin_name != ""
         self.config = configs.read_config(self.plugin_name)
+
+    @typing.final
+    def get_description(self) -> str:
+        # TODO: 完善插件描述
+        ...
 
     def __aiter__(self):
         if self.plugin_type() == "message":

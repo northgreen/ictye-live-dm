@@ -619,6 +619,7 @@ class ConfigRegistrar:
 
 # config schemas
 ic_cfg_type = ConfigTree | ConfigKey
+"""ictye 配置類型"""
 
 
 class ABConfigSchema(metaclass=ABCMeta):
@@ -1025,12 +1026,12 @@ class DictSchema(ConfigSchema):
         self.type_ = s_dict
         self.properties = properties
 
-    def __find_additional_properties(self, other: ConfigTree) -> dict:
+    def __find_additional_properties(self,  other: ConfigTree, additional: bool = True) -> dict:
         k_set: dict = {}
         for k, v in other.items():
-            if k in self.properties.keys():
+            if (k in self.properties.keys()) and additional:
                 k_set[k] = v
-            if any([re.match(dk, k) for dk, dv in self.pattern_properties]):
+            if any([re.match(dk, k) for dk, dv in self.pattern_properties]) and additional:
                 k_set[k] = v
         return k_set
 
@@ -1101,7 +1102,7 @@ class ListSchema(ConfigSchema):
                  title: str = "",
                  description: str = "",
                  _comment: str = "",
-                 const: ConfigTree | ConfigKey = None,
+                 const: ic_cfg_type = None,
                  all_of: list["ABConfigSchema"] = None,
                  any_of: list["ABConfigSchema"] = None,
                  one_of: list["ABConfigSchema"] = None,
