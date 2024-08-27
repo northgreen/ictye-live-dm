@@ -196,7 +196,14 @@ class ConfigTree:
         self.__is_list: bool = is_list
         self.__list_content: list[Union[ConfigKey, ConfigTree]] = []
 
-        if is_list:
+        if build_dict is None and build_list is not None:
+            self.__is_list = True
+        elif build_dict is not None and build_list is None:
+            self.__is_list = False
+        elif build_dict is not None and build_list is not None:
+            raise ValueError("Cannot build a tree with both dict and list")
+
+        if self.__is_list:
             self.__build_list(args, default=build_with_default)
         else:
             self.__build_dict(kwargs, default=build_with_default)
@@ -211,26 +218,17 @@ class ConfigTree:
         if not self.__is_list:
             raise TypeError("This is not a list")
         for i in value:
-            if default:
-                if isinstance(i, ConfigKey):
-                    self.__list_content.append(i)
-                elif isinstance(i, dict):
-                    self.__list_content.append(ConfigTree(build_dict=i, build_with_default=True))
-                elif isinstance(i, list):
-                    self.__list_content.append(ConfigTree(is_list=True, build_list=i, build_with_default=True))
-                elif isinstance(i, ConfigTree):
-                    self.__list_content.append(i)
-                else:
-                    self.__list_content.append(ConfigKey(default=i))
+            if isinstance(i, ConfigKey):
+                self.__list_content.append(i)
+            elif isinstance(i, dict):
+                self.__list_content.append(ConfigTree(build_dict=i, build_with_default=default))
+            elif isinstance(i, list):
+                self.__list_content.append(ConfigTree(is_list=True, build_list=i, build_with_default=default))
+            elif isinstance(i, ConfigTree):
+                self.__list_content.append(i)
             else:
-                if isinstance(i, ConfigKey):
-                    self.__list_content.append(i)
-                elif isinstance(i, dict):
-                    self.__list_content.append(ConfigTree(build_dict=i))
-                elif isinstance(i, list):
-                    self.__list_content.append(ConfigTree(is_list=True, build_list=i))
-                elif isinstance(i, ConfigTree):
-                    self.__list_content.append(i)
+                if default:
+                    self.__list_content.append(ConfigKey(default=i))
                 else:
                     self.__list_content.append(ConfigKey(value=i))
 
@@ -244,30 +242,21 @@ class ConfigTree:
         if self.__is_list:
             raise TypeError("This is not a dict")
         for key, value in value.items():
-            if default:
-                if isinstance(value, ConfigKey):
-                    self.__content[key] = value
-                elif isinstance(value, dict):
-                    self.__content[key] = ConfigTree(build_dict=value, build_with_default=True)
-                elif isinstance(value, list):
-                    self.__content[key] = ConfigTree()
-                elif isinstance(value, ConfigTree):
-                    self.__content[key] = value
-                else:
-                    self.__content[key] = ConfigKey(default=value)
+            if isinstance(value, ConfigKey):
+                self.__content[key] = value
+            elif isinstance(value, dict):
+                self.__content[key] = ConfigTree(build_dict=value, build_with_default=default)
+            elif isinstance(value, list):
+                self.__content[key] = ConfigTree(build_list=value, build_with_default=default)
+            elif isinstance(value, ConfigTree):
+                self.__content[key] = value
             else:
-                if isinstance(value, ConfigKey):
-                    self.__content[key] = value
-                elif isinstance(value, dict):
-                    self.__content[key] = ConfigTree(build_dict=value)
-                elif isinstance(value, list):
-                    self.__content[key] = ConfigTree(is_list=True, build_list=value)
-                elif isinstance(value, ConfigTree):
-                    self.__content[key] = value
+                if default:
+                    self.__content[key] = ConfigKey(default=value)
                 else:
-                    self.__content[key] = ConfigKey(value)
+                    self.__content[key] = ConfigKey(value=value)
 
-    def get(self, key: str) -> Union[ConfigKey]:
+    def get(self, key: str|int) -> Union[ConfigKey,"ConfigTree",None]:
         # 检查存储内容是否为列表
         if self.__is_list:
             # 将键转换为整数并返回对应索引处的值
@@ -330,7 +319,10 @@ class ConfigTree:
         @return: 一个列表，包含所有的项目，如果是字典的话返回的可能为一个包含元组的字典
         """
         if self.__is_list:
-            return self.__list_content
+            ret = []
+            for i in range(len(self.__list_content)):
+                ret.append((i, self.__list_content[i]))
+            return ret
         else:
             return list(self.__content.items())
 

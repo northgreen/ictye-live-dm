@@ -1,4 +1,7 @@
 import os
 import pytest
 
-os.system("pip install "+os.path.dirname(os.path.dirname(__file__)))
+import pip
+
+#os.system("pip install "+os.path.dirname(os.path.dirname(__file__)))
+pip.main(['install', os.path.dirname(os.path.dirname(__file__))])

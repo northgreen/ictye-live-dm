@@ -124,6 +124,82 @@ class TestConfigTree:
         assert isinstance(config._ConfigTree__list_content[0], ConfigKey)
         assert isinstance(config._ConfigTree__list_content[1], ConfigTree)
 
+    def test_init_dict_with_default_value(self):
+        # 测试以字典作爲默认值初始化
+        test_dict = {'key1': 'value1', 'key2': {'subkey': 'subvalue'}}
+        config = ConfigTree(build_dict=test_dict, build_with_default=True)
+        assert config.get('key1').get() == 'value1'
+        assert config.get('key2').get('subkey').get() =='subvalue'
+
+    def test_dict_contains(self):
+        # 测试是否包含某个键
+        config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        assert 'key1' in config
+        assert 'key2' in config
+        assert 'key3' not in config
+
+    def test_list_contains(self):
+        # 测试是否包含某个索引
+        config = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        assert "value1" in config
+        assert "value2" in config
+        assert "value3" not in config
+
+    def test_list_eq(self):
+        # 测试列表是否相等
+        config1 = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        config2 = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        assert config1 == config2
+        config3 = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value3')])
+        assert config1!= config3
+        config4 = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2'), ConfigKey('value3')])
+        assert config1!= config4
+        config5 = ConfigKey('value1')
+        assert config1!= config5
+
+    def test_dict_eq(self):
+        # 测试字典是否相等
+        config1 = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        config2 = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        assert config1 == config2
+        config3 = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key3': ConfigKey('value3')})
+        assert config1!= config3
+        config4 = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2'), 'key3': ConfigKey('value3')})
+        assert config1!= config4
+        config5 = ConfigKey('value1')
+        assert config1!= config5
+
+    def test_list_append(self):
+        # 测试列表添加元素
+        config = ConfigTree(is_list=True)
+        config.append(ConfigKey('value1'))
+        assert len(config._ConfigTree__list_content) == 1
+        assert config._ConfigTree__list_content[0].get() == 'value1'
+
+    def test_dict_set(self):
+        # 测试字典添加元素
+        config = ConfigTree()
+        config.set('key', ConfigKey('value'))
+        assert 'key' in config._ConfigTree__content
+        assert config._ConfigTree__content['key'].get() == 'value'
+
+    def test_init_list_with_default_value(self):
+        # 测试以列表作爲默认值初始化
+        test_list = [ConfigKey('value1'), {'subkey': 'subvalue'}]
+        config = ConfigTree(is_list=True, build_list=test_list, build_with_default=True)
+        assert config.get(0).get() == 'value1'
+        assert config.get(1).get('subkey').get() =='subvalue'
+
+    def test_dict_len(self):
+        # 测试字典长度
+        config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        assert len(config) == 2
+
+    def test_list_len(self):
+        # 测试列表长度
+        config = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        assert len(config) == 2
+
     def test_get(self):
         # 测试获取值
         config = ConfigTree(build_dict={'key': ConfigKey('value')})
@@ -146,20 +222,31 @@ class TestConfigTree:
         config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
         result_dict = config.to_dict()
         assert result_dict == {'key1': 'value1', 'key2': 'value2'}
+        config2 = ConfigTree(build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        with pytest.raises(TypeError):
+            config2.to_dict()
+        config3 = ConfigTree(build_dict={'key1': ConfigTree(build_dict={'subkey': ConfigKey('value1')})})
+        assert config3.to_dict() == {'key1': {'subkey': 'value1'}}
 
     def test_to_list(self):
         # 测试转换为列表
         config = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
         result_list = config.to_list()
         assert result_list == ['value1', 'value2']
+        config2 = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        with pytest.raises(TypeError):
+            config2.to_list()
+        config3 = ConfigTree(build_list=[ConfigTree(build_dict={'subkey': ConfigKey('value1')})])
+        assert config3.to_list() == [{'subkey': 'value1'}]
 
     def test_merge_dict_with_dict(self):
         # 测试合并两个字典
-        config1 = ConfigTree(build_dict={'key1': ConfigKey('value1')})
-        config2 = ConfigTree(build_dict={'key2': ConfigKey('value2')})
+        config1 = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        config2 = ConfigTree(build_dict={'key2': ConfigKey('value2'), 'key3': ConfigKey('value3')})
         config1.merge(config2)
-        assert 'key1' in config1._ConfigTree__content
-        assert 'key2' in config1._ConfigTree__content
+        assert config1.get('key1').get() == 'value1'
+        assert config1.get('key2').get() == 'value2'
+        assert config1.get('key3').get() == 'value3'
 
     def test_merge_list_with_list(self):
         # 测试合并两个列表
@@ -174,6 +261,27 @@ class TestConfigTree:
         config2 = ConfigTree(is_list=True, build_list=[ConfigKey('value2')])
         with pytest.raises(TypeError):
             config1.merge(config2)
+
+    def test_keys(self):
+        # 测试获取键列表
+        config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        assert config.keys() == ['key1', 'key2']
+
+    def test_values(self):
+        # 测试获取值列表
+        config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        assert config.values() == {'key1':ConfigKey('value1'), 'key2':ConfigKey('value2')}
+
+        config2 = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        assert config2.values() == [ConfigKey('value1'), ConfigKey('value2')]
+
+    def test_items(self):
+        # 测试获取键值对列表
+        config = ConfigTree(build_dict={'key1': ConfigKey('value1'), 'key2': ConfigKey('value2')})
+        assert config.items() == [('key1', 'value1'), ('key2', 'value2')]
+
+        config2 = ConfigTree(is_list=True, build_list=[ConfigKey('value1'), ConfigKey('value2')])
+        assert config2.items() == [(0, 'value1'), (1, 'value2')]
 
 
 # 使用pytest运行测试

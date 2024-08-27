@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>863</width>
-    <height>740</height>
+    <width>865</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,10 +79,10 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
-      <enum>Qt::ElideNone</enum>
+      <enum>Qt::ElideLeft</enum>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -105,14 +105,14 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_4">
+          <spacer name="horizontalSpacer_7">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>228</width>
-             <height>28</height>
+             <width>40</width>
+             <height>20</height>
             </size>
            </property>
           </spacer>
@@ -143,7 +143,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_5">
+          <spacer name="horizontalSpacer_4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -176,7 +176,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_6">
+          <spacer name="horizontalSpacer_5">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -372,8 +372,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>789</width>
-            <height>651</height>
+            <width>794</width>
+            <height>619</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout">
@@ -416,7 +416,7 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_10">
                <item>
-                <spacer name="horizontalSpacer_9">
+                <spacer name="horizontalSpacer">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -511,31 +511,28 @@
           <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
          <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
+          <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
          <property name="sizeAdjustPolicy">
-          <enum>QAbstractScrollArea::AdjustToContents</enum>
+          <enum>QAbstractScrollArea::AdjustIgnored</enum>
          </property>
          <property name="widgetResizable">
           <bool>true</bool>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>789</width>
-            <height>651</height>
+            <width>790</width>
+            <height>629</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
-              <spacer name="horizontalSpacer_3">
+              <spacer name="horizontalSpacer_6">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -569,7 +566,7 @@
               <cursorShape>ArrowCursor</cursorShape>
              </property>
              <property name="editTriggers">
-              <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+              <set>QAbstractItemView::NoEditTriggers</set>
              </property>
              <column>
               <property name="text">
@@ -611,16 +608,13 @@
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <spacer name="horizontalSpacer">
+              <spacer name="horizontalSpacer_3">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::MinimumExpanding</enum>
-               </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>90</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -632,22 +626,6 @@
                 <string>Apply</string>
                </property>
               </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>90</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
              </item>
             </layout>
            </item>

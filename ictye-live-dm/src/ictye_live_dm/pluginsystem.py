@@ -4,6 +4,7 @@ import importlib.util
 import logging
 import os
 
+
 import aiohttp.web as web
 
 from .depends import pluginmain, plugin_errors, configs, config_registrar
@@ -160,36 +161,36 @@ class Plugin:
         """
         运行插件主方法
         """
-        message_plugin = []
-        anaylazer_tasks = []
+        message_tasks = []
+        analyzer_tasks = []
         for plugin in self.analyzer_plugin_list:
             tsk = asyncio.get_event_loop().create_task(plugin.plugin_main())
             tsk.add_done_callback(lambda l: asyncio.ensure_future(self.analyzer_plugin_callback(plugin)))
-            anaylazer_tasks.append(tsk)
+            analyzer_tasks.append(tsk)
         for plugin in self.message_plugin_list:
             tsk = asyncio.get_event_loop().create_task(plugin.plugin_main())
             tsk.add_done_callback(lambda l: asyncio.ensure_future(self.message_plugin_call_back(plugin)))
-            message_plugin.append(tsk)
+            message_tasks.append(tsk)
 
         while True:
-            for tsk in message_plugin:
+            for tsk in message_tasks:
                 if tsk.done():
-                    message_plugin.remove(tsk)
-            for tsk in anaylazer_tasks:
+                    message_tasks.remove(tsk)
+            for tsk in analyzer_tasks:
                 if tsk.done():
-                    anaylazer_tasks.remove(tsk)
+                    analyzer_tasks.remove(tsk)
             await asyncio.sleep(1)
 
     async def message_plugin_call_back(self, obj):
         try:
             obj.plugin_callback()
         except Exception as e:
-            self.logger.error(f"a error is happened:{str(e)}")
+            self.logger.error(f"a error is happened in message plugin callback:{str(e)}")
         self.message_plugin_list.remove(obj)
 
     async def analyzer_plugin_callback(self, obj):
         try:
             obj.plugin_callback()
         except Exception as e:
-            self.logger.error(f"a error is happened:{str(e)}")
+            self.logger.error(f"a error is happened in analyzer plugin callback:{str(e)}")
         self.analyzer_plugin_list.remove(obj)

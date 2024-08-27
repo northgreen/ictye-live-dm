@@ -84,6 +84,7 @@ def test_dict_schema(config_tree_dict):
     assert schema.verify(config_tree_dict) == False
 
 
+
 # Tests for ListSchema
 def test_list_schema(config_tree_list):
     schema = ListSchema(items=[StringSchema()])

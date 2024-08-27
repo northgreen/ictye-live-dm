@@ -1,18 +1,8 @@
-/* ================================================ *
-author:lei
-lastedited:2020.2
-* ================================================ */
-/*hover*/
-/*actived*/
-/*gradient start*/
-/*gradient end*/
-
 QWidget
 {
     color: #222;
     background-color: #FDFDFD;
 }
-
 QFrame{
     color: #222;
     background-color: #FDFDFD;/*不能设置为transparent*/
@@ -22,9 +12,6 @@ QMainWindow::separator{
     border-style: outset;
     width: 4px;
     height: 4px;
-}
-QMainWindow::separator:hover{
-    background: #8BF;
 }
 QSplitter::handle{
     border: 1px solid #999999;
@@ -51,7 +38,6 @@ QLabel {
     padding: 1px;
 }
 
-
 /* A QLabel is a QFrame ... */
 /* A QToolTip is a QLabel ... */
 QToolTip {
@@ -65,7 +51,7 @@ QToolTip {
 /* TextBox                                         */
 /* =============================================== */
 QLineEdit {
-    background: #FDFDFD;/*不建议设为透明，否则table编辑时会字显示*/
+    background: #FDFDFD;
     selection-background-color: #8BF;
     border: 1px solid #999999;
     border-radius: 2px;
@@ -104,6 +90,7 @@ QTextEdit:hover{
 QTextEdit:focus{
     border-color: #EA2;
 }
+
 /* =============================================== */
 /* Button                                          */
 /* =============================================== */
@@ -135,8 +122,6 @@ QPushButton:pressed
 QPushButton:focus, QPushButton:default {
     border-color: #EA2; /* make the default button prominent */
 }
-
-
 QToolButton,QToolButton:unchecked { /* ToolBar里的按钮和带下拉菜单的按钮 */
     border: 1px solid transparent;
     border-radius: 3px;
@@ -148,6 +133,7 @@ QToolButton:checked{
     background-color: #8BF;
     border-color: #59F;
 }
+
 QToolButton:hover{
     background-color: #8BF;
     border-color: #59F;
@@ -167,10 +153,11 @@ QToolButton[popupMode="1"]{
     padding-right: 15px; /* make way for the popup button */
     border: 1px solid #999999;
     min-height: 15px;
-    /*background: qlineargradient(x1:0, y1:0 ,x2:0, y2:1
+    background: qlineargradient(x1:0, y1:0 ,x2:0, y2:1
         stop: 0 #EEEEEF, stop: 0.05 #DADADF, stop: 0.5 #DADADF
-        stop: 0.95 #EEEEEF stop: 1#EEEEEF)*/
+        stop: 0.95 #EEEEEF stop: 1#EEEEEF)
 }
+
 QToolButton[popupMode="1"]:hover{
     background-color: #8BF;
     border-color: #59F;
@@ -186,7 +173,6 @@ QToolButton::menu-button {
     border-bottom-right-radius: 2px;
     width: 16px;
 }
-
 
 /* =============================================== */
 /* Slider ProgressBar                              */
@@ -269,9 +255,10 @@ QScrollBar::add-page, QScrollBar::sub-page {
 QScrollArea{
     border: none;
 }
-/*QScrollArea  QAbstractSlider{
+QScrollArea  QAbstractSlider{
     border-radius: 0px;
-}*/
+}
+
 /* =============================================== */
 /* DockWidget                                       */
 /* =============================================== */
@@ -303,6 +290,7 @@ QGroupBox::title {
 	top: 0.1em;
     background-color: #FDFDFD;
 }
+
 /* =============================================== */
 /* ToolBox                                         */
 /* =============================================== */
@@ -340,11 +328,13 @@ QTabWidget::tab-bar {
     left: 0px;
 }
 QTabBar::tab {
+    border-radius: 3px;
     background: #FDFDFD;
     border: 1px solid #999999;
     padding: 3px 5px;
 }
 QTabBar::tab:hover {
+    
     background: #8BF;
     border-color: transparent;
 }
@@ -406,7 +396,7 @@ QHeaderView::section:checked {
 /* =============================================== */
 /* QTableWidget                                    */
 /* =============================================== */
-QTableWidget, QTableView
+QTableWidget
 {
     gridline-color: #999999;    /*表格中的网格线条颜色*/
     background: #FDFDFD;
@@ -416,30 +406,9 @@ QTableWidget, QTableView
     selection-background-color:#8BF;   /*鼠标选中时背景色*/
     border:1px solid #999999;  /*边框线的宽度、颜色*/
     /*border:none;    去除边界线*/
-    /*border-radius:5px;*/
+    border-radius:5px;
     /*padding:10px 10px;*/  /*表格与边框的间距*/
 }
-QTableView::item, QTabWidget::item{
-    background: transparent;
-	outline-style: none;
-	border: none;
-}
-
-QTableView::item:hover {
-	background: #8BF;
-    border: 1px solid #EA2;
-}
-
-QTableView::item:selected {
-	background: #8BF;
-	color: #EEEEEF;
-}
-
-QTableView::item:selected:active {
-	background: #59F;
-	color: #EEEEEF;
-}
-
 QTableWidget QComboBox{
     margin: 2px;
     border: none;
